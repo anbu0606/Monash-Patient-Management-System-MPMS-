@@ -1,0 +1,8 @@
+fname:John
+lname:Doe
+mobile_num:+61421867041
+dob:10-12-2002
+gender:M
+address:1/6 Irwin Street Clayton VIC 3168
+upcoming_appointments:[]
+cancelled_appointments:[]
