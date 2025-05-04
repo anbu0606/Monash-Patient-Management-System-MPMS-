@@ -2,7 +2,8 @@ from menu import Menu
 from validator import Validator
 from patient import Patient
 from admin import Admin
-
+from appointment_slot import AppointmentSlot, load_appointment_slots, save_appointment_slots
+from appointment import Appointment
 class MPMS:
     """
     This class contains the core logic of the Monash Patient Management System. 
@@ -128,8 +129,8 @@ class MPMS:
                 # Profile Page Logic
                 self.user_profile_page(patient)
             elif user_input == "2":
+                self.appointment_slot(patient)
                 # Book Appointment Logic
-                pass
             elif user_input == "3":
                 # Upcoming Appointment Logic
                 pass
@@ -192,6 +193,60 @@ class MPMS:
                 patient = self.get_patient_object(email)
                 self.patient_home(patient)
     
+
+    def appointment_slot(self, user):
+        slots = load_appointment_slots()
+        available_slots = [slot for slot in slots if slot.availability]
+        self.menu.show_appointment_slots_page(slots)
+
+        user_input = input("Enter the slot number to book the appointment ").strip()
+        if Validator.is_input_back(user_input):
+            if self.is_user_admin:
+                self.admin_home(user)
+            else:
+                self.patient_home(user)
+            return
+        
+        if not user_input.isdigit():
+            print("Invalid input, please enter the slot number!!")
+            input()
+            self.appointment_slot(user)
+            return
+        
+        slot_index = int(user_input) -1
+
+        if slot_index < 0 or slot_index >= len(available_slots):
+            print("Invalid")
+            input()
+            self.appointment_slot(user)
+            return
+        
+        slot_confirmation = available_slots[slot_index]
+        slot_confirmation.availability = False
+        slot_confirmation.status = "Booked"
+
+        save_appointment_slots(slots)
+
+        booked_slot_details = Appointment(
+        clinic_name=slot_confirmation.clinic_name,
+        gp_name=slot_confirmation.gp_name,
+        date=slot_confirmation.date,
+        start_time=slot_confirmation.start_time,
+        duration=slot_confirmation.duration,
+        clinic_suburb=slot_confirmation.clinic_suburb,
+        reason_for_visit=slot_confirmation.reason_for_visit,
+        availability=False,
+        status="Booked")
+        
+        Appointment.save_appointment(booked_slot_details)
+
+        print("Appointment booked! hooray!")
+
+        if self.is_user_admin:
+                self.admin_home(user)
+        else:
+            self.patient_home(user) 
+
     def user_profile_page(self, user):
         is_input_valid = False
         attempt = 0

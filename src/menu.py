@@ -149,3 +149,24 @@ Please enter the Option Number or LOGOUT
 {user_obj}
             ''')
         self.show_back_prompt()
+
+    def show_appointment_slots_page(self, slots):
+        self.clear_screen()
+        print(self.banner)
+        available_slots = [slot for slot in slots if slot.availability]
+    
+        print("\nAvailable Appointment Slots:\n")
+        for i, slot in enumerate(available_slots, start=1):
+            print(f"Slot {i}:")
+            print(f"  Clinic: {slot.clinic_name}")
+            print(f"  GP: {slot.gp_name}")
+            print(f"  Date: {slot.date}")
+            print(f"  Time: {slot.start_time}")
+            print(f"  Duration: {slot.duration}")
+            print(f"  Suburb: {slot.clinic_suburb}")
+            print(f"  Reason: {slot.reason_for_visit}")
+            print(f"  Status: {slot.status}")
+            print("-" * 50)
+        self.show_back_prompt()
+
+

@@ -29,14 +29,26 @@ class AppointmentSlot:
     #This method is for deserialisation, which means that we can turn saved data into a 
     #real object
     @classmethod
+    # def from_string(cls, slot_text):
+    #     attributes = {}
+    #     lines = slot_text.strip().splitlines()
+
+    #     for line in lines:
+    #         # Skip curly bracket lines in the txt file
+    #         if line in ("{", "}"):  
+    #             continue
+    #         key, value = line.split(":", 1)
+    #         attributes[key.strip()] = value.strip()
     def from_string(cls, slot_text):
         attributes = {}
         lines = slot_text.strip().splitlines()
 
         for line in lines:
-            # Skip curly bracket lines in the txt file
-            if line in ("{", "}"):  
+            line = line.strip()
+            if not line or line.startswith("{") or line.startswith("}"):
                 continue
+            if ":" not in line:
+                continue  # Malformed line, skip
             key, value = line.split(":", 1)
             attributes[key.strip()] = value.strip()
         return cls(
@@ -56,7 +68,7 @@ class AppointmentSlot:
 # for each slot in the txt file
 def load_appointment_slots(filename="appointment_slot.txt"):
     # Reads the entire file
-    with open(filename, "r") as f:
+    with open(f"src\\{filename}", "r") as f:
         content = f.read()
 
     # Split the file contents into blocks using the closing curly brace "}" as a marker
@@ -75,6 +87,6 @@ def load_appointment_slots(filename="appointment_slot.txt"):
 #call this to make sure that it is saved into the txt file
 def save_appointment_slots(slots, filename="appointment_slot.txt"):
     # Save all slots, each enclosed in curly braces
-    with open(filename, "w") as f:
+    with open(f"src\\{filename}", "w") as f:
         for slot in slots:
             f.write(str(slot))
