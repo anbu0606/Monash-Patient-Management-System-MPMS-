@@ -1,6 +1,7 @@
 from menu import Menu
 from validator import Validator
 from patient import Patient
+from admin import Admin
 
 class MPMS:
     """
@@ -34,8 +35,64 @@ class MPMS:
         Args:
             admin (Admin):  Stores the admin object.
         """
-        self.menu.show_admin_home_page() ################## INCOMPLETE
+        is_valid_input = False # Flag variable to enable loop logic
+        attempt = 0 # Variable to store the number of input attempts by user
+        # Loop logic for taking user input.
+        while(not is_valid_input):
+            self.menu.show_admin_home_page(attempt)
+            user_input = input("Your Input: ").strip()
+            if Validator.is_input_logout(user_input):
+                attempt = -2 # Standard attempt value for Logout
+                break
+            elif user_input == "1":
+                # Profile Page Logic
+                self.user_profile_page(admin)
+            elif user_input == "2":
+                # GP Report Generation Logic
+                pass
+            elif user_input == "3":
+                # Clinic Report Generation Logic
+                pass
+            elif user_input == "4":
+                # Manage Clinic Logic
+                pass
+            elif user_input == "5":
+                # Manage GP Logic
+                pass
+            elif user_input == "6":
+                # Manage Appointment Slots Logic
+                pass
+            elif user_input == "7":
+                # Manage Patient Appointments Logic
+                pass
+            else:
+                attempt += 1
+        # If  loop breaks, it is always a logout case but we check for attempt value anyway to enable future expansion of user actions.
+        if attempt == -2:
+            self.is_user_admin = True # Reset value in case Admin logs out.
+            self.user_login() # Go to login page function to emulate logging out.
+
+        #self.menu.show_admin_home_page() ################## INCOMPLETE
     
+    def get_admin_object(self, admin_email):
+        """
+        This function creates a admin object and restores its instance state using a text file storing object state.
+
+        Args:
+            admin_email (str):    Stores the email of the admin whose object is to be initialised.
+        """
+        admin = Admin() # Create default admin object
+        # Read appropriate admin file and load object state.
+        with open(f"src\{admin_email[:5]}.txt", "r") as file:  
+            lines = file.readlines()
+        for line in lines:
+            line = line.rstrip().split(":")
+            method_name = line[0] # Get attribute name
+            value = line[1] # Get attribute value
+            setattr(admin, method_name, value) # Set values for the respective attributes.
+        return admin
+
+
     def get_patient_object(self, patient_email):
         """
         This function creates a patient object and restores its instance state using a text file storing object state.
@@ -122,12 +179,12 @@ class MPMS:
             print("Exiting...")
         else:
             if self.is_user_admin:
-                admin = None
+                admin = self.get_admin_object(email)
                 # admin = Admin(
                 #     email = "admin@monash.edu",
-                #     fname = "Alexa",
-                #     lname = "Monash",
-                #     mobile_num = "+61 428654982",
+                #     fname = "Jack",
+                #     lname = "Gellar",
+                #     mobile_num = "+61 411234328",
                 #     password = "Admin1234!"
                 #     )
                 self.admin_home(admin)

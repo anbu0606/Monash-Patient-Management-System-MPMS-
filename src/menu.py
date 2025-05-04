@@ -36,7 +36,7 @@ class Menu:
         else:
             subprocess.run('clear', shell=True)
     
-    def show_admin_home_page(self):
+    def show_admin_home_page(self,attempt_number):
         """
         Displays the Admin home page on the terminal
         """
@@ -45,6 +45,21 @@ class Menu:
         print('''
                                                                      ADMIN HOME PAGE
                                                        Hi, Admin! What would you like to do today?
+            ''')
+        # Display error message is not first attempt
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        self.show_logout_prompt()
+        print('''
+1. View Profile
+2. GP Report Generation
+3. Clinic Report Generation
+4. Manage Clinic
+5. Manage GP
+6. Manage Appointment Slots
+7. Manage Patient Appointments
+
+Please enter the Option Number or LOGOUT
             ''')
     
     def show_back_prompt(self):
