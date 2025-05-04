@@ -1,3 +1,5 @@
+email:patient1@student.monash.edu
+password:Monash1234!
 fname:John
 lname:Doe
 mobile_num:+61421867041

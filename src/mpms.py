@@ -62,6 +62,6 @@ class MPMS:
             else:
                 patient = self.get_patient_object(email)
                 #self.menu.show_patient_home_page()
-
+    
 mpms = MPMS()
 mpms.start_app()
