@@ -34,7 +34,7 @@ class MPMS:
         Args:
             admin (Admin):  Stores the admin object.
         """
-        self.menu.show_admin_home_page()
+        self.menu.show_admin_home_page() ################## INCOMPLETE
     
     def get_patient_object(self, patient_email):
         """
@@ -143,8 +143,12 @@ class MPMS:
             user_input = input("Your Input: ").strip()
             if Validator.is_input_back(user_input):
                 attempt = -1
+                break
         if attempt == -1:
-            pass
+            if self.is_user_admin:
+                self.admin_home(user)
+            else:
+                self.patient_home(user)
 
 if __name__ == "__main__":
     mpms = MPMS()

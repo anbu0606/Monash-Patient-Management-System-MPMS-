@@ -128,6 +128,7 @@ Please enter the Option Number or LOGOUT
         else:
             user_role = "PATIENT"
         self.clear_screen()
+        print(self.banner)
         print(f'''
                                                                      {user_role} PROFILE PAGE
 {user_obj}
