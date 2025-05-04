@@ -1,0 +1,8 @@
+fname:Jane
+lname:Doe
+mobile_num:+61420868721
+dob:23-01-1999
+gender:F
+address:13 Lerina Street Oakleigh VIC 3168
+upcoming_appointments:[]
+cancelled_appointments:[]
