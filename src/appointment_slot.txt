@@ -1,0 +1,22 @@
+{
+clinic_name:Clayton Clinic
+gp_name:Dr. Smith
+date:10-05-2025
+start_time:09:00
+duration:25
+clinic_suburb:Clayton
+reason_for_visit:General Consultation
+availability:True
+status:Available
+}
+{
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Lee
+date:11-05-2025
+start_time:10:00
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:True
+status:Available
+}
