@@ -4,6 +4,7 @@ class Patient:
         self.fname = None
         self.lname = None
         self.password = None
+        self.mobile_num = None
         self.dob = None
         self.gender = None
         self.address = None
@@ -17,6 +18,7 @@ Patient Details:
                 lname:      {self.lname}
                 email:      {self.email}
                 password:   {self.password}
+                mobile_num: {self.mobile_num}
                 dob:        {self.dob}
                 gender:     {self.gender}
                 address:    {self.address}
@@ -46,6 +48,9 @@ Patient Details:
 
     def get_password(self):
         return self.password
+    
+    def get_mobile_num(self):
+        return self.mobile_num
 
     def get_upcoming_appt(self):
         return self.upcoming_appt
@@ -74,6 +79,9 @@ Patient Details:
 
     def set_password(self, new_password):
         self.password = new_password
+
+    def set_mobile_num(self, new_mobile_num):
+        self.password = new_mobile_num
 
     def set_upcoming_appt(self, new_upcoming_appt):
         self.upcoming_appt = new_upcoming_appt
