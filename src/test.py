@@ -11,7 +11,7 @@ def clear_screen():
         subprocess.run('clear', shell=True)
 
 def main():
-    """The main function of the program"""
+    """The main function of the program 2"""
     print("Hello World")
     time.sleep(2)
     clear_screen()
