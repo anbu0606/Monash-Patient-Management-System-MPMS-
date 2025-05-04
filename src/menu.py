@@ -51,7 +51,7 @@ class Menu:
         """
         Displays the standard prompt to inform the user that they can enter "BACK" as input on this screen.
         """
-        print('''Enter \033[34m"BACK"\033[0m to Exit Application\n''')
+        print('''Enter \033[34m"BACK"\033[0m to go back to previous page\n''')
 
     def show_error_message(self, type):
         """
@@ -82,7 +82,7 @@ class Menu:
         # Display error message if not first attempt
         if attempt_number > 0:
             self.show_error_message("login")
-        self.show_back_prompt()
+        print('''Enter \033[34m"EXIT"\033[0m to go back to previous page\n''')
     
     def show_logout_prompt(self):
         """
@@ -132,3 +132,4 @@ Please enter the Option Number or LOGOUT
                                                                      {user_role} PROFILE PAGE
 {user_obj}
             ''')
+        self.show_back_prompt()

@@ -9,6 +9,12 @@ class Validator:
         return False
     
     @staticmethod
+    def is_input_exit(user_input):
+        if user_input == "EXIT":
+            return True
+        return False
+    
+    @staticmethod
     def is_input_logout(user_input):
         if user_input == "LOGOUT":
             return True
