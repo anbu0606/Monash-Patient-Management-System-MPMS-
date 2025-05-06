@@ -1,23 +1,26 @@
-import time, sys, subprocess
-"""This is a testing file for the FIT5136 Applied3 Group6 repository"""
+from patient import Patient
+from admin import Admin
+from menu import Menu
+from mpms import MPMS
 
-def clear_screen():
-    """This function clears the terminal screen"""
-    #Code from the internet. Not sure if we can use it or not.
-    #Checks for host machine's OS and runs appropriate clear screen command.
-    if sys.platform == 'win32':
-        subprocess.run('cls', shell=True)
-    else:
-        subprocess.run('clear', shell=True)
+menu = Menu()
+mpms = MPMS()
+menu.clear_screen()
 
-def main():
-    """The main function of the program 2"""
-    print("Hello World")
-    time.sleep(2)
-    clear_screen()
-    #Srihari's second comment
+Patient.load_patients()
+patient_email = "patient1@student.monash.edu"
+patient = Patient.get_patient_object(patient_email)
+print(patient)
 
-if __name__ == '__main__':
-    main()
-    #srihari's comment
-    #aparna's comment
+Admin.load_admins()
+admin_email = "admin@monash.edu"
+admin = Admin.get_admin_object(admin_email)
+print(admin)
+
+print(isinstance(admin, Admin))
+
+pd = mpms.get_valid_user_details("patient")
+print(pd)
+
+ad = mpms.get_valid_user_details("admin")
+print(ad)

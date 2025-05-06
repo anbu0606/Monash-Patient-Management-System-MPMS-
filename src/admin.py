@@ -1,23 +1,70 @@
 class Admin:
-    def __init__(self):
-        self.email = None
-        self.fname = None
-        self.lname = None
-        self.mobile_num = None
-        self.password = None
-        
+    _admin_list = [] # Keeping a list allows for future increase in admin numbers despite our current scope
+
+    def __init__(
+            self,
+            email = None,
+            fname = None,
+            lname = None,
+            mobile_sum = None,
+            password = None
+        ):
+        self.email = email
+        self.fname = fname
+        self.lname = lname
+        self.mobile_num = mobile_sum
+        self.password = password
+        Admin._admin_list.append(self)
     
     def __str__(self):
         return f'''
-Patient Details:
-                fname:      {self.fname}
-                lname:      {self.lname}
-                email:      {self.email}
-                mobile_num: {self.mobile_num}
-                password:   {self.password}
+Admin Details:
+                First name:     {self.fname}
+                Last name:      {self.lname}
+                Email:          {self.email}
+                Mobile number:  {self.mobile_num}
+                password:       {self.password}
 '''
     
+    @classmethod
+    def get_admin_object(cls, admin_email):
+        """
+        This function searches the admin list for the admin with the email passed and returns the admin object.
+
+        Args:
+            admin_email (str):    Stores the email of the admin whose object is to be initialised.
+        """
+        for admin in cls._admin_list:
+            if admin.email == admin_email:
+                return admin
+        raise ValueError(f"Admin with email {admin_email} not found in database.")
+
+    @classmethod
+    def load_admins(cls, filename="admin.txt"):
+        """
+        This function creates admin objects and restores their instance state using a text file storing object state.
+        It then stores the admin objects in a class variable.
+
+        Args:
+            filename(str):  A string storing the name of the text file from which data will be extracted. 
+        """
+        with open(f"src\\{filename}", "r") as file:  
+            admins_raw_data = [y.rstrip().split("\n") for y in file.read().split("|\n")] # Store each admin's raw data in a list
+        for admin_raw_data in admins_raw_data:
+            admin = Admin()
+            for key_value in admin_raw_data:
+                if ":" not in key_value:
+                    continue # Malformed line, skip
+                key_value = key_value.split(":")
+                key = key_value[0]
+                value = key_value[1]
+                setattr(admin, key, value)
+    
     # Accessors
+    @classmethod
+    def get_admin_list(cls):
+        return cls._admin_list
+    
     def get_email(self):
         return self.email
 
