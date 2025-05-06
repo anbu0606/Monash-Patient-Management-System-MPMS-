@@ -1,4 +1,5 @@
 from menu import Menu
+from user import User
 from patient import Patient
 from admin import Admin
 from appointment_slot import AppointmentSlot
