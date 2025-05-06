@@ -1,5 +1,16 @@
 class Appointment:
-    def __init__(self, clinic_name, gp_name, date, start_time, duration, clinic_suburb, reason_for_visit, status="Booked", availability=False):
+    def __init__(
+            self,
+            clinic_name = None,
+            gp_name = None,
+            date = None,
+            start_time = None,
+            duration = None,
+            clinic_suburb = None,
+            reason_for_visit = None,
+            status = "Booked",
+            availability = False
+        ):
         self.clinic_name = clinic_name
         self.gp_name = gp_name
         self.date = date
@@ -8,9 +19,7 @@ class Appointment:
         self.clinic_suburb = clinic_suburb
         self.reason_for_visit = reason_for_visit
         self.status = status
-        self.availability = availability
-
-        
+        self.availability = availability        
     
     def __str__(self):
         return f"""{{
@@ -26,9 +35,6 @@ class Appointment:
     
     def to_file_string(self):
         return f"{self.clinic_name}|{self.gp_name}|{self.date}|{self.start_time}|{self.duration}|{self.clinic_suburb}|{self.reason_for_visit}|{self.status}"
-
-
-
     
     @staticmethod
     def save_appointment(appointment):

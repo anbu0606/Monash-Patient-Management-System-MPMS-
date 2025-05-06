@@ -1,87 +1,148 @@
 class Patient:
-    def __init__(self):
-        self.email = None
-        self.fname = None
-        self.lname = None
-        self.password = None
-        self.mobile_num = None
-        self.dob = None
-        self.gender = None
-        self.address = None
-        self.upcoming_appt = None
-        self.cancelled_appt = None
+    _patient_list = []
+    
+    def __init__(
+            self,
+            email = None,
+            fname = None,
+            lname = None,
+            password = None,
+            mobile_num = None,
+            dob = None,
+            gender = None,
+            address = None,
+            upcoming_appointments = [],
+            cancelled_appointments = []
+        ):
+        self.email = email
+        self.fname = fname
+        self.lname = lname
+        self.password = password
+        self.mobile_num = mobile_num
+        self.dob = dob
+        self.gender = gender
+        self.address = address
+        self.upcoming_appointments = upcoming_appointments
+        self.cancelled_appointments = cancelled_appointments
+        Patient._patient_list.append(self)
     
     def __str__(self):
         return f'''
 Patient Details:
-                fname:      {self.fname}
-                lname:      {self.lname}
-                email:      {self.email}
-                password:   {self.password}
-                mobile_num: {self.mobile_num}
-                dob:        {self.dob}
-                gender:     {self.gender}
-                address:    {self.address}
+                First name:     {self.fname}
+                Last  name:     {self.lname}
+                Email:          {self.email}
+                Password:       {self.password}
+                Mobile number:  {self.mobile_num}
+                DOB:            {self.dob}
+                Gender:         {self.gender}
+                Address:        {self.address}
 '''
     
+    def append_upcoming_appointments(self, appointment_obj):
+        self.upcoming_appointments.append(appointment_obj)
+
+    @classmethod
+    def get_patient_object(cls, patient_email):
+        """
+        This function searches the patient list for the patient with the email passed and returns the patient object.
+
+        Args:
+            patient_email (str):    Stores the email of the patient whose object is to be initialised.
+        """
+        for patient in cls._patient_list:
+            if patient.email == patient_email:
+                return patient
+        raise ValueError(f"Patient with email {patient_email} not found in database.")
+    
+    @classmethod
+    def load_patients(cls, filename="patient.txt"):
+        """
+        This function creates patient objects and restores their instance state using a text file storing object state.
+        It then stores the patient objects in a class variable.
+
+        Args:
+            filename(str):  A string storing the name of the text file from which data will be extracted. 
+        """
+        with open(f"src\\{filename}", "r") as file:  
+            patients_raw_data = [y.rstrip().split("\n") for y in file.read().split("|\n")] # Store each patient's raw data in a list
+        for patient_raw_data in patients_raw_data:
+            patient = Patient()
+            for key_value in patient_raw_data:
+                if ":" not in key_value:
+                    continue # Malformed line, skip
+                key_value = key_value.split(":")
+                key = key_value[0]
+                value = key_value[1]
+                if value[0] == "[":
+                    if key == "upcoming_appointments":
+                        value = []
+                    elif key == "cancelled_appointments":
+                        value = []
+                setattr(patient, key, value)
+
     # Accessors
-    def get_address(self):
-        return self.address
+    @classmethod
+    def get_patient_list(cls):
+        return cls._patient_list
+    
+    # def get_address(self):
+    #     return self.address
 
-    def get_cancelled_appt(self):
-        return self.cancelled_appt
+    # def get_cancelled_appt(self):
+    #     return self.cancelled_appt
 
-    def get_dob(self):
-        return self.dob
+    # def get_dob(self):
+    #     return self.dob
 
     def get_email(self):
         return self.email
 
-    def get_fname(self):
-        return self.fname
+    # def get_fname(self):
+    #     return self.fname
 
-    def get_gender(self):
-        return self.gender
+    # def get_gender(self):
+    #     return self.gender
 
-    def get_lname(self):
-        return self.lname
+    # def get_lname(self):
+    #     return self.lname
 
-    def get_password(self):
-        return self.password
+    # def get_password(self):
+    #     return self.password
     
-    def get_mobile_num(self):
-        return self.mobile_num
+    # def get_mobile_num(self):
+    #     return self.mobile_num
 
-    def get_upcoming_appt(self):
-        return self.upcoming_appt
+    # def get_upcoming_appt(self):
+    #     return self.upcoming_appt
 
-    # Mutators
-    def set_address(self, new_address):
-        self.address = new_address
+    # # Mutators
+    # def set_address(self, new_address):
+    #     self.address = new_address
     
-    def set_cancelled_appt(self, new_cancelled_appt):
-        self.cancelled_appt = new_cancelled_appt
+    # def set_cancelled_appt(self, new_cancelled_appt):
+    #     self.cancelled_appt = new_cancelled_appt
 
-    def set_dob(self, new_dob):
-        self.dob = new_dob
+    # def set_dob(self, new_dob):
+    #     self.dob = new_dob
 
-    def set_email(self, new_email):
-        self.email = new_email
+    # def set_email(self, new_email):
+    #     self.email = new_email
 
-    def set_fname(self, new_fname):
-        self.fname = new_fname
+    # def set_fname(self, new_fname):
+    #     self.fname = new_fname
 
-    def set_gender(self, new_gender):
-        self.gender = new_gender
+    # def set_gender(self, new_gender):
+    #     self.gender = new_gender
         
-    def set_lname(self, new_lname):
-        self.lname = new_lname
+    # def set_lname(self, new_lname):
+    #     self.lname = new_lname
 
-    def set_password(self, new_password):
-        self.password = new_password
+    # def set_password(self, new_password):
+    #     self.password = new_password
 
-    def set_mobile_num(self, new_mobile_num):
-        self.password = new_mobile_num
+    # def set_mobile_num(self, new_mobile_num):
+    #     self.password = new_mobile_num
 
-    def set_upcoming_appt(self, new_upcoming_appt):
-        self.upcoming_appt = new_upcoming_appt
+    # def set_upcoming_appt(self, new_upcoming_appt):
+    #     self.upcoming_appt = new_upcoming_appt
