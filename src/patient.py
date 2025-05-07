@@ -34,14 +34,11 @@ Patient Details:
                 DOB:            {self.dob}
                 Gender:         {self.gender}
                 Address:        {self.address}
-                Upmcing:        {self.upcoming_appointments}
 '''
     
     def append_upcoming_appointments(self, appointment_obj):
         self.upcoming_appointments.append(appointment_obj)
-    
-    #def append_previous_appointments(self, appointment_obj):
-        #self.previous_appointments.append(appointment_obj)
+
 
     @classmethod
     def get_patient_object(cls, patient_email):
