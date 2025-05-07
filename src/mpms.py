@@ -132,11 +132,23 @@ class MPMS:
         elif user_action == "book_appointment":
             self.book_appointment(patient)
         elif user_action == "previous_appointments":
-            pass
+            self.previous_appointments(patient)
         elif user_action == "upcoming_appointments":
             self.upcoming_appointments(patient)
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to patient_home() in MPMS Class.")
+
+    def previous_appointments(self, patient):
+        """
+        Display a list of the patient's previous appointments.
+        
+        Args:
+            patient (Patient): The patient object
+        """
+        previous_appts = Appointment.load_previous_appointments(patient.email)
+        
+        self.menu.show_previous_appointments_page(previous_appts)
+        self.patient_home(patient)
 
     def set_is_user_admin(self, value):
         self.is_user_admin = value
