@@ -11,8 +11,8 @@ class Patient:
             dob = None,
             gender = None,
             address = None,
-            upcoming_appointments = [],
-            cancelled_appointments = []
+            upcoming_appointments = None,
+            cancelled_appointments = None
         ):
         self.email = email
         self.fname = fname
@@ -37,6 +37,7 @@ Patient Details:
                 DOB:            {self.dob}
                 Gender:         {self.gender}
                 Address:        {self.address}
+                Upmcing:        {self.upcoming_appointments}
 '''
     
     def append_upcoming_appointments(self, appointment_obj):
@@ -64,6 +65,7 @@ Patient Details:
         Args:
             filename(str):  A string storing the name of the text file from which data will be extracted. 
         """
+        patients_list = []
         with open(f"src\\{filename}", "r") as file:  
             patients_raw_data = [y.rstrip().split("\n") for y in file.read().split("|\n")] # Store each patient's raw data in a list
         for patient_raw_data in patients_raw_data:
@@ -74,12 +76,11 @@ Patient Details:
                 key_value = key_value.split(":")
                 key = key_value[0]
                 value = key_value[1]
-                if value[0] == "[":
-                    if key == "upcoming_appointments":
-                        value = []
-                    elif key == "cancelled_appointments":
-                        value = []
+                if value == "[]":
+                    value = []
                 setattr(patient, key, value)
+            patients_list.append(patient)
+        return patients_list
 
     # Accessors
     @classmethod
@@ -88,6 +89,9 @@ Patient Details:
     
     # def get_address(self):
     #     return self.address
+
+    def get_upcoming_appointments(self):
+        return self.upcoming_appointments
 
     # def get_cancelled_appt(self):
     #     return self.cancelled_appt
@@ -144,5 +148,5 @@ Patient Details:
     # def set_mobile_num(self, new_mobile_num):
     #     self.password = new_mobile_num
 
-    # def set_upcoming_appt(self, new_upcoming_appt):
-    #     self.upcoming_appt = new_upcoming_appt
+    def set_upcoming_apppointments(self, new_upcoming_appt):
+        self.upcoming_appointments = new_upcoming_appt
