@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Appointment:
     def __init__(
             self,
@@ -43,7 +45,7 @@ class Appointment:
     def load_book_appointment(email):
         booked_appointments= []
         try:
-            with open("src/booked_appointment.txt", "r") as f:
+            with open("src/appointments.txt", "r") as f:
                 for line in f:
                     fields = line.strip().split("|")
                     if fields[0] == email:
@@ -62,8 +64,54 @@ class Appointment:
             pass
         return booked_appointments
 
+    @staticmethod
+    def load_previous_appointments(email):
+        """
+        Load appointments that have already occurred or been cancelled.
+        
+        Args:
+            email (str): The patient's email to filter appointments
+            
+        Returns:
+            list: List of Appointment objects that are past or cancelled
+        """
+        previous_appointments = []
+        try:
+            current_date = datetime.now().strftime("%d-%m-%Y")
+            
+            with open("src/appointments.txt", "r") as f:
+                for line in f:
+                    fields = line.strip().split("|")
+                    if fields[0] == email:
+                        # Check if appointment has status "Attended" or "Cancelled"
+                        # or if the appointment date has passed
+                        status = fields[8]
+                        date = fields[3]
+                        
+                        # Convert date strings to datetime objects for comparison
+                        appointment_date = datetime.strptime(date, "%d-%m-%Y")
+                        current_datetime = datetime.now()
+                        
+                        is_past_date = appointment_date.date() < current_datetime.date()
+                        is_completed_status = status in ["Attended", "Cancelled by Clinic", "Cancelled by Patient"]
+                        
+                        if is_past_date or is_completed_status:
+                            previous_appointments.append(Appointment(
+                                email=fields[0],
+                                clinic_name=fields[1],
+                                gp_name=fields[2],
+                                date=fields[3],
+                                start_time=fields[4],
+                                duration=fields[5],
+                                clinic_suburb=fields[6],
+                                reason_for_visit=fields[7],
+                                status=fields[8]
+                            ))
+        except FileNotFoundError:
+            pass
+        return previous_appointments
 
     @staticmethod
     def save_appointment(appointment):
-        with open(f"src/booked_appointment.txt", "a") as f:
+        with open(f"src/appointments.txt", "a") as f:
             f.write(appointment.to_file_string() + "\n")
