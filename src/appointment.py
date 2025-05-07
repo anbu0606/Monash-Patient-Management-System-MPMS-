@@ -110,6 +110,51 @@ class Appointment:
         except FileNotFoundError:
             pass
         return previous_appointments
+    
+    @staticmethod
+    def load_upcoming_appointments(email):
+        """
+        Load appointments that are scheduled for the future with status "Booked".
+        
+        Args:
+            email (str): The patient's email to filter appointments
+            
+        Returns:
+            list: List of Appointment objects that are upcoming
+        """
+        upcoming_appointments = []
+        try:
+            with open("src/appointments.txt", "r") as f:
+                for line in f:
+                    fields = line.strip().split("|")
+                    if fields[0] == email:
+                        # Check if appointment has status "Booked"
+                        # and if the appointment date is in the future
+                        status = fields[8]
+                        date = fields[3]
+                        
+                        # Convert date strings to datetime objects for comparison
+                        appointment_date = datetime.strptime(date, "%d-%m-%Y")
+                        current_datetime = datetime.now()
+                        
+                        is_future_date = appointment_date.date() >= current_datetime.date()
+                        is_booked_status = status == "Booked"
+                        
+                        if is_future_date and is_booked_status:
+                            upcoming_appointments.append(Appointment(
+                                email=fields[0],
+                                clinic_name=fields[1],
+                                gp_name=fields[2],
+                                date=fields[3],
+                                start_time=fields[4],
+                                duration=fields[5],
+                                clinic_suburb=fields[6],
+                                reason_for_visit=fields[7],
+                                status=fields[8]
+                            ))
+        except FileNotFoundError:
+            pass
+        return upcoming_appointments
 
     @staticmethod
     def save_appointment(appointment):
