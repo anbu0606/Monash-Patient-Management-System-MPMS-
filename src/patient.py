@@ -1,4 +1,5 @@
-class Patient:
+from user import User
+class Patient(User):
     _patient_list = []
     
     def __init__(
@@ -14,11 +15,7 @@ class Patient:
             upcoming_appointments = [],
             cancelled_appointments = []
         ):
-        self.email = email
-        self.fname = fname
-        self.lname = lname
-        self.password = password
-        self.mobile_num = mobile_num
+        super().__init__(email, fname, lname, password, mobile_num)
         self.dob = dob
         self.gender = gender
         self.address = address

@@ -1,4 +1,5 @@
-class Admin:
+from user import User
+class Admin(User):
     _admin_list = [] # Keeping a list allows for future increase in admin numbers despite our current scope
 
     def __init__(
@@ -6,14 +7,10 @@ class Admin:
             email = None,
             fname = None,
             lname = None,
-            mobile_sum = None,
+            mobile_num = None,
             password = None
         ):
-        self.email = email
-        self.fname = fname
-        self.lname = lname
-        self.mobile_num = mobile_sum
-        self.password = password
+        super().__init__(email, fname, lname, password, mobile_num)
         Admin._admin_list.append(self)
     
     def __str__(self):
