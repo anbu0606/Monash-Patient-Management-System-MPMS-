@@ -236,6 +236,46 @@ Please enter the Option Number or LOGOUT
         else:
             return self.show_patient_home_page(attempt_number+1)
     
+    def show_previous_appointments_page(self, appointments):
+        """
+        Displays the previous appointments page with a list of past appointments.
+        
+        Args:
+            appointments (list): List of past Appointment objects
+        """
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                                                PREVIOUS APPOINTMENTS
+        """)
+        
+        if not appointments:
+            print("\nYou have no previous appointments to display.\n")
+        else:
+            print("\nYour Previous Appointments:\n")
+            for i, appt in enumerate(appointments, start=1):
+                print(f"Appointment {i}:")
+                print(f"  Clinic: {appt.clinic_name}")
+                print(f"  GP: {appt.gp_name}")
+                print(f"  Date: {appt.date}")
+                print(f"  Time: {appt.start_time}")
+                print(f"  Duration: {appt.duration} minutes")
+                print(f"  Suburb: {appt.clinic_suburb}")
+                print(f"  Reason: {appt.reason_for_visit}")
+                print(f"  Status: {appt.status}")
+                print("-" * 50)
+        
+        
+        self.show_logout_prompt()
+        self.show_back_prompt()
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            print("trying to go back")
+            return "back"
+        
+
     def show_profile_page(self, attempt_number, user_obj, is_user_admin):
         """
         Displays the user profile page with user details.
