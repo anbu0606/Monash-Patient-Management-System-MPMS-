@@ -6,7 +6,7 @@ start_time:09
 duration:25
 clinic_suburb:Clayton
 reason_for_visit:General Consultation
-availability:True
+availability:False
 status:Booked
 |
 clinic_name:Mulgrave Clinic
@@ -16,6 +16,16 @@ start_time:10
 duration:15
 clinic_suburb:Mulgrave
 reason_for_visit:Specialist Referral
-availability:True
+availability:False
+status:Booked
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:11-05-2025
+start_time:9
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
 status:Booked
 |

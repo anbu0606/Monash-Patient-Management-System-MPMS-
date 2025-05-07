@@ -51,9 +51,9 @@ class MPMS:
         available_slots = [slot for slot in slots if slot.availability]
         user_action = self.menu.show_appointment_slots_page(slots)
         if user_action == "logout":
-            pass
+            pass #########################################################3
         elif user_action == "back":
-            pass
+            pass #########################################################
         elif user_action.isdigit():
             slot_index = int(user_action) - 1
             confirmed_slot = available_slots[slot_index]
@@ -69,7 +69,8 @@ class MPMS:
                 clinic_suburb = confirmed_slot.clinic_suburb,
                 reason_for_visit = confirmed_slot.reason_for_visit,
                 availability = False,
-                status = "Booked"
+                status = "Booked",
+                email = patient.email
                 )
             patient.append_upcoming_appointments(booked_appointment)
             Appointment.save_appointment(booked_appointment)
@@ -78,6 +79,17 @@ class MPMS:
         else:
             raise ValueError(f"Invalid user_action:{user_action} argument returned to book_appointment() in MPMS Class.")
     
+    def upcoming_appointments(self,patient):
+        upcoming_appointments = patient.get_upcoming_appointments()
+        for appointment in upcoming_appointments:
+            print(appointment)
+            print("-"*50)
+        # if not upcoming:
+        #     print("OOPS! No appointment found! Error 404! ^._.^")
+        # else:
+        #     for i in upcoming:
+        #         print(i)
+
     def get_valid_user_details(self, user_type):
         valid_details = {}
         if user_type == "admin":
@@ -91,6 +103,9 @@ class MPMS:
     def load_system_state(self):
         AppointmentSlot.load_appointment_slots()
         Patient.load_patients()
+        self.patient_list = Patient.get_patient_list()
+        for patient in self.patient_list:
+            patient.set_upcoming_apppointments(Appointment.load_book_appointment(patient.email))
         Admin.load_admins()
     
     def logout(self, user):
@@ -119,7 +134,7 @@ class MPMS:
         elif user_action == "previous_appointments":
             pass
         elif user_action == "upcoming_appointments":
-            pass
+            self.upcoming_appointments(patient)
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to patient_home() in MPMS Class.")
 

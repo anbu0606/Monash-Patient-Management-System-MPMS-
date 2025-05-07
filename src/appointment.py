@@ -9,7 +9,8 @@ class Appointment:
             clinic_suburb = None,
             reason_for_visit = None,
             status = "Booked",
-            availability = False
+            availability = False,
+            email = None
         ):
         self.clinic_name = clinic_name
         self.gp_name = gp_name
@@ -19,10 +20,12 @@ class Appointment:
         self.clinic_suburb = clinic_suburb
         self.reason_for_visit = reason_for_visit
         self.status = status
-        self.availability = availability        
+        self.availability = availability   
+        self.email = email     
     
     def __str__(self):
         return f"""{{
+        email:{self.email}
         clinic_name:{self.clinic_name}
         gp_name:{self.gp_name}
         date:{self.date}
@@ -34,8 +37,32 @@ class Appointment:
     }}"""
     
     def to_file_string(self):
-        return f"{self.clinic_name}|{self.gp_name}|{self.date}|{self.start_time}|{self.duration}|{self.clinic_suburb}|{self.reason_for_visit}|{self.status}"
+        return f"{self.email}|{self.clinic_name}|{self.gp_name}|{self.date}|{self.start_time}|{self.duration}|{self.clinic_suburb}|{self.reason_for_visit}|{self.status}"
     
+    @staticmethod
+    def load_book_appointment(email):
+        booked_appointments= []
+        try:
+            with open("src/booked_appointment.txt", "r") as f:
+                for line in f:
+                    fields = line.strip().split("|")
+                    if fields[0] == email:
+                        booked_appointments.append(Appointment(
+                            email=fields[0],
+                            clinic_name=fields[1],
+                            gp_name=fields[2],
+                            date=fields[3],
+                            start_time=fields[4],
+                            duration=fields[5],
+                            clinic_suburb=fields[6],
+                            reason_for_visit=fields[7],
+                            status=fields[8]
+                        ))
+        except FileNotFoundError:
+            pass
+        return booked_appointments
+
+
     @staticmethod
     def save_appointment(appointment):
         with open(f"src/booked_appointment.txt", "a") as f:
