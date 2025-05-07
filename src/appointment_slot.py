@@ -12,7 +12,6 @@ class AppointmentSlot:
             clinic_suburb = None,
             reason_for_visit = None,
             availability = True,
-            status = "Available"
             ):
         self.clinic_name = clinic_name
         self.gp_name = gp_name
@@ -22,7 +21,6 @@ class AppointmentSlot:
         self.clinic_suburb = clinic_suburb
         self.reason_for_visit = reason_for_visit
         self.availability = availability
-        self.status = status
         AppointmentSlot._appointment_slot_list.append(self)
 
     #convert an appt slot object into text format so that it can be saved into the txt file
@@ -36,7 +34,6 @@ duration:{self.duration}
 clinic_suburb:{self.clinic_suburb}
 reason_for_visit:{self.reason_for_visit}
 availability:{self.availability}
-status:{self.status}
 |"""
 
     # #This method is for deserialisation, which means that we can turn saved data into a 
