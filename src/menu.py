@@ -219,6 +219,7 @@ Please enter the Option Number or LOGOUT
 2. Book an Appointment
 3. View Upcoming Appointments
 4. Previous Appointments
+5. Cancel Appointment
 
 Please enter the Option Number or LOGOUT
             ''')
@@ -233,6 +234,8 @@ Please enter the Option Number or LOGOUT
             return "upcoming_appointments"
         elif user_input == "4":
             return "previous_appointments"
+        elif user_input == "5":
+            return "cancelling_appointment"
         else:
             return self.show_patient_home_page(attempt_number+1)
     
@@ -268,3 +271,39 @@ Please enter the Option Number or LOGOUT
             return "back"
         else:
             return self.show_profile_page(attempt_number+1, user_obj, is_user_admin)
+    
+    def show_upcoming_appointments_page(self, num_appointments):
+
+        print("\n Please select an appointment to cancel (Enter the number):")
+        print("Or type 'back' to go back, or 'logout' to log out.")
+        while True:
+            user_input = input("Enter your choice: ").strip().lower()
+            if user_input == "back" or user_input == "logout":
+                return user_input
+            elif user_input.isdigit() and 1 <= int(user_input) <= num_appointments:
+                return user_input
+            else:
+                print("Invalid input. Please try again.")
+
+    def show_cancellation_confirmation_page(self, appointment):
+
+        print("\n You are about to cancel the following appointment:")
+        print(appointment)
+        print("\nAre you sure you want to cancel this appointment? (confirm/back)")
+        while True:
+            user_input = input("Enter your choice: ").strip().lower()
+            if user_input in ["confirm", "back"]:
+                return user_input
+            else:
+                print("Invalid input. Please enter 'confirm' or 'back'.")
+
+    def show_cancellation_success_page(self, appointment):
+
+        print("\nThe appointment has been successfully canceled:")
+        print(appointment)
+        input("\nPress Enter to continue...")
+
+    def show_cancellation_failure_page(self):
+
+        print("\nUnable to cancel the appointment. Please try again.")
+        input("\nPress Enter to continue...")

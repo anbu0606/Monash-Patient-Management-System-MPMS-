@@ -34,7 +34,7 @@ Patient Details:
                 DOB:            {self.dob}
                 Gender:         {self.gender}
                 Address:        {self.address}
-                Upmcing:        {self.upcoming_appointments}
+                Upcoming Appointments:        {self.upcoming_appointments}
 '''
     
     def append_upcoming_appointments(self, appointment_obj):

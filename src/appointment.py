@@ -1,3 +1,5 @@
+import datetime
+
 class Appointment:
     def __init__(
             self,
@@ -67,3 +69,54 @@ class Appointment:
     def save_appointment(appointment):
         with open(f"src/booked_appointment.txt", "a") as f:
             f.write(appointment.to_file_string() + "\n")
+
+
+    @staticmethod
+    def cancel_appointment(appointment):
+        try:
+            current_time = datetime.datetime.now()
+            appointment_datetime = datetime.datetime.strptime(f"{appointment.date} {appointment.start_time}", "%d/%m/%Y %H:%M")
+            time_difference = appointment_datetime - current_time
+
+            if time_difference.total_seconds() <= 86400:
+                print("\n Cancellation is within 24 hours of the appointment. A penalty may apply.")
+                confirmation = input("Do you still want to proceed with cancellation? (yes/no): ").strip().lower()
+                if confirmation != "yes":
+                    print("\n Cancellation aborted.")
+                    return False
+
+            # --- Step 2: Remove from booked_appointment.txt ---
+            with open("src/booked_appointment.txt", "r") as file:
+                lines = file.readlines()
+            with open("src/booked_appointment.txt", "w") as file:
+                for line in lines:
+                    if not line.startswith(appointment.email) or appointment.to_file_string() not in line:
+                        file.write(line)
+
+            # --- Step 3: Update appointment_slot.txt to "Available" ---
+            updated_lines = []
+            with open("src/appointment_slot.txt", "r") as file:
+                lines = file.readlines()
+                for line in lines:
+                    data = line.strip().split("|")
+                    if (
+                        data[1] == appointment.clinic_name and
+                        data[2] == appointment.gp_name and
+                        data[3] == appointment.date and
+                        data[4] == appointment.start_time
+                    ):
+                        data[-2] = "Available"  # Update status
+                        data[-1] = "True"       # Update availability
+                        updated_lines.append("|".join(data) + "\n")
+                    else:
+                        updated_lines.append(line)
+
+            with open("src/appointment_slot.txt", "w") as file:
+                file.writelines(updated_lines)
+
+            print("\n Appointment cancelled successfully.")
+            return True
+
+        except Exception as e:
+            print(f"\n An error occurred during cancellation: {e}")
+            return False
