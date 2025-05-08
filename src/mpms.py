@@ -82,10 +82,22 @@ class MPMS:
             raise ValueError(f"Invalid user_action:{user_action} argument returned to book_appointment() in MPMS Class.")
     
     def upcoming_appointments(self,patient):
-        upcoming_appointments = patient.get_upcoming_appointments()
-        for appointment in upcoming_appointments:
-            print(appointment)
-            print("-"*50)
+            
+        upcoming_appts = Appointment.load_upcoming_appointments(patient.email)
+        
+        user_action = self.menu.show_upcoming_appointments_page(upcoming_appts)
+        if user_action == "logout":
+            self.logout(patient)
+        elif user_action == "back":
+            self.patient_home(patient)
+           
+        #upcoming_appointments = patient.get_upcoming_appointments()
+
+        #self.menu.show_upcoming_appointments_page(upcoming_appointments)
+        #self.patient_home(patient)
+        #for appointment in upcoming_appointments:
+        #   print(appointment)
+        #   print("-"*50)
         # if not upcoming:
         #     print("OOPS! No appointment found! Error 404! ^._.^")
         # else:
@@ -221,12 +233,30 @@ class MPMS:
         elif user_action == "book_appointment":
             self.book_appointment(patient)
         elif user_action == "previous_appointments":
-            pass
+            self.previous_appointments(patient)
         elif user_action == "upcoming_appointments":
             self.upcoming_appointments(patient)
             
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to patient_home() in MPMS Class.")
+
+    def previous_appointments(self, patient):
+        """
+        Display a list of the patient's previous appointments.
+        
+        Args:
+            patient (Patient): The patient object
+        """
+        previous_appts = Appointment.load_previous_appointments(patient.email)
+        
+        user_action = self.menu.show_previous_appointments_page(previous_appts)
+        
+        if user_action == "logout":
+            self.logout(patient)
+        elif user_action == "back":
+            self.patient_home(patient)
+        
+        #self.patient_home(patient)
 
     def set_is_user_admin(self, value):
         self.is_user_admin = value

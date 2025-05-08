@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 class Appointment:
     def __init__(
@@ -45,7 +45,7 @@ class Appointment:
     def load_book_appointment(email):
         booked_appointments= []
         try:
-            with open("src/booked_appointment.txt", "r") as f:
+            with open("src/appointments.txt", "r") as f:
                 for line in f:
                     fields = line.strip().split("|")
                     if fields[0] == email:
@@ -64,59 +64,99 @@ class Appointment:
             pass
         return booked_appointments
 
+    @staticmethod
+    def load_previous_appointments(email):
+        """
+        Load appointments that have already occurred or been cancelled.
+        
+        Args:
+            email (str): The patient's email to filter appointments
+            
+        Returns:
+            list: List of Appointment objects that are past or cancelled
+        """
+        previous_appointments = []
+        try:
+            current_date = datetime.now().strftime("%d-%m-%Y")
+            
+            with open("src/appointments.txt", "r") as f:
+                for line in f:
+                    fields = line.strip().split("|")
+                    if fields[0] == email:
+                        # Check if appointment has status "Attended" or "Cancelled"
+                        # or if the appointment date has passed
+                        status = fields[8]
+                        date = fields[3]
+                        
+                        # Convert date strings to datetime objects for comparison
+                        appointment_date = datetime.strptime(date, "%d-%m-%Y")
+                        current_datetime = datetime.now()
+                        
+                        is_past_date = appointment_date.date() < current_datetime.date()
+                        is_completed_status = status in ["Attended", "Cancelled by Clinic", "Cancelled by Patient"]
+                        
+                        if is_past_date or is_completed_status:
+                            previous_appointments.append(Appointment(
+                                email=fields[0],
+                                clinic_name=fields[1],
+                                gp_name=fields[2],
+                                date=fields[3],
+                                start_time=fields[4],
+                                duration=fields[5],
+                                clinic_suburb=fields[6],
+                                reason_for_visit=fields[7],
+                                status=fields[8]
+                            ))
+        except FileNotFoundError:
+            pass
+        return previous_appointments
+    
+    @staticmethod
+    def load_upcoming_appointments(email):
+        """
+        Load appointments that are scheduled for the future with status "Booked".
+        
+        Args:
+            email (str): The patient's email to filter appointments
+            
+        Returns:
+            list: List of Appointment objects that are upcoming
+        """
+        upcoming_appointments = []
+        try:
+            with open("src/appointments.txt", "r") as f:
+                for line in f:
+                    fields = line.strip().split("|")
+                    if fields[0] == email:
+                        # Check if appointment has status "Booked"
+                        # and if the appointment date is in the future
+                        status = fields[8]
+                        date = fields[3]
+                        
+                        # Convert date strings to datetime objects for comparison
+                        appointment_date = datetime.strptime(date, "%d-%m-%Y")
+                        current_datetime = datetime.now()
+                        
+                        is_future_date = appointment_date.date() >= current_datetime.date()
+                        is_booked_status = status == "Booked"
+                        
+                        if is_future_date and is_booked_status:
+                            upcoming_appointments.append(Appointment(
+                                email=fields[0],
+                                clinic_name=fields[1],
+                                gp_name=fields[2],
+                                date=fields[3],
+                                start_time=fields[4],
+                                duration=fields[5],
+                                clinic_suburb=fields[6],
+                                reason_for_visit=fields[7],
+                                status=fields[8]
+                            ))
+        except FileNotFoundError:
+            pass
+        return upcoming_appointments
 
     @staticmethod
     def save_appointment(appointment):
-        with open(f"src/booked_appointment.txt", "a") as f:
+        with open(f"src/appointments.txt", "a") as f:
             f.write(appointment.to_file_string() + "\n")
-
-
-    @staticmethod
-    def cancel_appointment(appointment):
-        try:
-            current_time = datetime.datetime.now()
-            appointment_datetime = datetime.datetime.strptime(f"{appointment.date} {appointment.start_time}", "%d/%m/%Y %H:%M")
-            time_difference = appointment_datetime - current_time
-
-            if time_difference.total_seconds() <= 86400:
-                print("\n Cancellation is within 24 hours of the appointment. A penalty may apply.")
-                confirmation = input("Do you still want to proceed with cancellation? (yes/no): ").strip().lower()
-                if confirmation != "yes":
-                    print("\n Cancellation aborted.")
-                    return False
-
-            # --- Step 2: Remove from booked_appointment.txt ---
-            with open("src/booked_appointment.txt", "r") as file:
-                lines = file.readlines()
-            with open("src/booked_appointment.txt", "w") as file:
-                for line in lines:
-                    if not line.startswith(appointment.email) or appointment.to_file_string() not in line:
-                        file.write(line)
-
-            # --- Step 3: Update appointment_slot.txt to "Available" ---
-            updated_lines = []
-            with open("src/appointment_slot.txt", "r") as file:
-                lines = file.readlines()
-                for line in lines:
-                    data = line.strip().split("|")
-                    if (
-                        data[1] == appointment.clinic_name and
-                        data[2] == appointment.gp_name and
-                        data[3] == appointment.date and
-                        data[4] == appointment.start_time
-                    ):
-                        data[-2] = "Available"  # Update status
-                        data[-1] = "True"       # Update availability
-                        updated_lines.append("|".join(data) + "\n")
-                    else:
-                        updated_lines.append(line)
-
-            with open("src/appointment_slot.txt", "w") as file:
-                file.writelines(updated_lines)
-
-            print("\n Appointment cancelled successfully.")
-            return True
-
-        except Exception as e:
-            print(f"\n An error occurred during cancellation: {e}")
-            return False

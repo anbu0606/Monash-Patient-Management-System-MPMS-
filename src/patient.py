@@ -13,14 +13,14 @@ class Patient(User):
             gender = None,
             address = None,
             upcoming_appointments = None,
-            cancelled_appointments = None
+            previous_appointments = None
         ):
         super().__init__(email, fname, lname, password, mobile_num)
         self.dob = dob
         self.gender = gender
         self.address = address
         self.upcoming_appointments = upcoming_appointments
-        self.cancelled_appointments = cancelled_appointments
+        self.previous_appointments = previous_appointments
         Patient._patient_list.append(self)
     
     def __str__(self):
@@ -34,11 +34,11 @@ Patient Details:
                 DOB:            {self.dob}
                 Gender:         {self.gender}
                 Address:        {self.address}
-                Upcoming Appointments:        {self.upcoming_appointments}
 '''
     
     def append_upcoming_appointments(self, appointment_obj):
         self.upcoming_appointments.append(appointment_obj)
+
 
     @classmethod
     def get_patient_object(cls, patient_email):
@@ -90,8 +90,8 @@ Patient Details:
     def get_upcoming_appointments(self):
         return self.upcoming_appointments
 
-    # def get_cancelled_appt(self):
-    #     return self.cancelled_appt
+    def get_previous_apppointments(self):
+        return self.previous_appointments
 
     # def get_dob(self):
     #     return self.dob
@@ -147,3 +147,6 @@ Patient Details:
 
     def set_upcoming_apppointments(self, new_upcoming_appt):
         self.upcoming_appointments = new_upcoming_appt
+
+    def set_previous_apppointments(self, new_previous_appt):
+        self.previous_appointments = new_previous_appt

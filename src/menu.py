@@ -236,6 +236,46 @@ Please enter the Option Number or LOGOUT
         else:
             return self.show_patient_home_page(attempt_number+1)
     
+    def show_previous_appointments_page(self, appointments):
+        """
+        Displays the previous appointments page with a list of past appointments.
+        
+        Args:
+            appointments (list): List of past Appointment objects
+        """
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                                                PREVIOUS APPOINTMENTS
+        """)
+        
+        if not appointments:
+            print("\nYou have no previous appointments to display.\n")
+        else:
+            print("\nYour Previous Appointments:\n")
+            for i, appt in enumerate(appointments, start=1):
+                print(f"Appointment {i}:")
+                print(f"  Clinic: {appt.clinic_name}")
+                print(f"  GP: {appt.gp_name}")
+                print(f"  Date: {appt.date}")
+                print(f"  Time: {appt.start_time}")
+                print(f"  Duration: {appt.duration} minutes")
+                print(f"  Suburb: {appt.clinic_suburb}")
+                print(f"  Reason: {appt.reason_for_visit}")
+                print(f"  Status: {appt.status}")
+                print("-" * 50)
+        
+        
+        self.show_logout_prompt()
+        self.show_back_prompt()
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            print("trying to go back")
+            return "back"
+        
+
     def show_profile_page(self, attempt_number, user_obj, is_user_admin):
         """
         Displays the user profile page with user details.
@@ -268,39 +308,44 @@ Please enter the Option Number or LOGOUT
             return "back"
         else:
             return self.show_profile_page(attempt_number+1, user_obj, is_user_admin)
+        
+
     
-    # def show_upcoming_appointments_page(self, num_appointments):
-
-    #     print("\n Please select an appointment to cancel (Enter the number):")
-    #     print("Or type 'back' to go back, or 'logout' to log out.")
-    #     while True:
-    #         user_input = input("Enter your choice: ").strip().lower()
-    #         if user_input == "back" or user_input == "logout":
-    #             return user_input
-    #         elif user_input.isdigit() and 1 <= int(user_input) <= num_appointments:
-    #             return user_input
-    #         else:
-    #             print("Invalid input. Please try again.")
-
-    def show_cancellation_confirmation_page(self, appointment):
-
-        print("\n You are about to cancel the following appointment:")
-        print(appointment)
-        print("\nAre you sure you want to cancel this appointment? (CONFIRM/BACK)")
-        while True:
-            user_input = input("Enter your choice: ").strip()
-            if user_input in ["CONFIRM", "BACK"]:
-                return user_input
-            else:
-                print("Invalid input. Please enter 'CONFIRM' or 'BACK'.")
-
-    def show_cancellation_success_page(self, appointment):
-
-        print("\nThe appointment has been successfully canceled:")
-        print(appointment)
-        input("\nPress Enter to continue...")
-
-    def show_cancellation_failure_page(self):
-
-        print("\nUnable to cancel the appointment. Please try again.")
-        input("\nPress Enter to continue...")
+    def show_upcoming_appointments_page(self, appointments):
+        """
+        Displays the upcoming appointments page with a list of upcoming appointments.
+        
+        Args:
+            appointments (list): List of past Appointment objects
+        """
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                                                UPCOMING APPOINTMENTS
+        """)
+        
+        if not appointments:
+            print("\nYou have no upcoming appointments to display.\n")
+        else:
+            print("\nYour Upcoming Appointments:\n")
+            for i, appt in enumerate(appointments, start=1):
+                print(f"Appointment {i}:")
+                print(f"  Clinic: {appt.clinic_name}")
+                print(f"  GP: {appt.gp_name}")
+                print(f"  Date: {appt.date}")
+                print(f"  Time: {appt.start_time}")
+                print(f"  Duration: {appt.duration} minutes")
+                print(f"  Suburb: {appt.clinic_suburb}")
+                print(f"  Reason: {appt.reason_for_visit}")
+                print(f"  Status: {appt.status}")
+                print("-" * 50)
+        
+        self.show_logout_prompt()
+        self.show_back_prompt()
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            print("trying to go back")
+            return "back"
+    
