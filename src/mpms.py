@@ -91,8 +91,8 @@ class MPMS:
         # else:
         #     for i in upcoming:
         #         print(i)
-        user_action = input("\n Enter the number of the appointment to cancel or type 'back' to return: ").strip().lower()
-        if user_action == "back":
+        user_action = input("\n Enter the Slot Numbert of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
+        if user_action == "BACK":
             self.patient_home(patient)
             return
         elif user_action.isdigit():
@@ -107,7 +107,7 @@ class MPMS:
                 self.upcoming_appointments(patient)
 
         else:
-            print("\n Invalid input. Please enter a valid number or 'back'.")
+            print("\n Invalid input. Please enter a Slot number or 'Back' to return to the Home Page.")
             self.upcoming_appointments(patient)
 
 
@@ -130,11 +130,11 @@ class MPMS:
         else:
             input1 = self.menu.show_cancellation_confirmation_page(appointment)
         
-        if input1 == "confirm":
+        if input1 == "CONFIRM":
             self.complete_cancellation(patient, appointment)
-        elif input1 == "back":
+        elif input1 == "BACK":
             self.upcoming_appointments(patient)
-        elif input1 == "logout":
+        elif input1 == "LOGOUT":
             self.logout(patient)
         else:
             print("Unrecognized option. Please try again.")
@@ -150,7 +150,7 @@ class MPMS:
                 if not line.startswith(f"{appointment.email}|{appointment.clinic_name}|{appointment.gp_name}|{appointment.date}|{appointment.start_time}"):
                     file.write(line)
 
-        print("Removed the booked app from the book_appointment.txt")
+        # print("Removed the booked app from the book_appointment.txt")
 
         slots = AppointmentSlot.get_appointment_slot_list()
         for slot in slots:
@@ -162,7 +162,7 @@ class MPMS:
                 slot.status = "Available"
 
         AppointmentSlot.save_appointment_slots(slots)
-        print(f" Successfully updated the appointment slot status to 'Available' in 'appointment_slot.txt'")
+        # print(f" Successfully updated the appointment slot status to 'Available' in 'appointment_slot.txt'")
 
         patient.upcoming_appointments = [
             appt for appt in patient.upcoming_appointments
@@ -171,34 +171,12 @@ class MPMS:
                 appt.date == appointment.date and
                 appt.start_time == appointment.start_time)
     ]
-        print("updated the patient's upcoming app list")
+        # print("Successfully Cancelled the Appointment")
         input1 = self.menu.show_cancellation_success_page(appointment)
         if input1 == "back":
             self.patient_home(patient)
         elif input1 == "logout":
             self.logout(patient)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     def get_valid_user_details(self, user_type):
@@ -246,34 +224,7 @@ class MPMS:
             pass
         elif user_action == "upcoming_appointments":
             self.upcoming_appointments(patient)
-        elif user_action == "cancelling_appointment":
-            upcoming_appointments = patient.get_upcoming_appointments()
-            if not upcoming_appointments:
-                print("\n No upcoming appointments found.")
-                self.patient_home(patient)
-                return
-        
-            print("\n Your Upcoming Appointments:")
-            print("-" * 50)
-            for idx, appointment in enumerate(upcoming_appointments, 1):
-                print(f"{idx}. {appointment}")
-                print("-" * 50)
-
-            user_action = input("\n🔹 Enter the number of the appointment to cancel or type 'back' to return: ").strip().lower()
-        
-            if user_action == "back":
-                self.patient_home(patient)
-            elif user_action.isdigit():
-                appointment_index = int(user_action) - 1
-                if 0 <= appointment_index < len(upcoming_appointments):
-                    appointment_to_cancel = upcoming_appointments[appointment_index]
-                    self.cancelling_appointment(patient, appointment_to_cancel)
-                else:
-                    print("\n Invalid selection. Please try again.")
-                    self.patient_home(patient)
-            else:
-                print("\n Invalid input. Please enter a valid number or 'back'.")
-                self.patient_home(patient)
+            
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to patient_home() in MPMS Class.")
 
