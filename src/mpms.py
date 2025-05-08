@@ -4,6 +4,8 @@ from patient import Patient
 from admin import Admin
 from appointment_slot import AppointmentSlot
 from appointment import Appointment
+from datetime import datetime, timedelta
+
 
 class MPMS:
     """
@@ -102,6 +104,100 @@ class MPMS:
         #     for i in upcoming:
         #         print(i)
 
+        elif user_action == "cancel":
+            user_action = input("\n Enter the Slot Numbert of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
+            if user_action == "BACK":
+                self.patient_home(patient)
+                return
+            elif user_action.isdigit():
+                appointment_index = int(user_action) - 1
+
+                if 0 <= appointment_index < len(upcoming_appts):
+                    appointment_to_cancel = upcoming_appts[appointment_index]
+                    self.cancelling_appointment(patient, appointment_to_cancel)
+        
+                else:
+                    print("\n Invalid selection. Please try again.")
+                    self.upcoming_appointments(patient)
+
+            else:
+                print("\n Invalid input. Please enter a Slot number or 'Back' to return to the Home Page.")
+                self.upcoming_appointments(patient)
+
+
+   
+
+    def cancelling_appointment(self, patient, appointment):
+        # app_datetime_str = f"{appointment.date} {appointment.start_time}"
+        if len(appointment.start_time) == 2:
+            app_datetime_str = f"{appointment.date} {appointment.start_time}:00"
+        else:
+            app_datetime_str = f"{appointment.date} {appointment.start_time}"
+
+        appointment_datetime = datetime.strptime(app_datetime_str, "%d-%m-%Y %H:%M")
+
+        current_time = datetime.now()
+        time_diff = appointment_datetime - current_time
+
+        # if time_diff > timedelta(hours=24):
+        #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
+        # else:
+        #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
+
+        if time_diff < timedelta(hours=24):
+            print("\n This cancellation is within 24 hours of the appointment time.")
+            print("   A penalty may be applied for late cancellation.\n")
+            
+        input1 = self.menu.show_cancellation_confirmation_page(appointment)
+        if input1 == "CONFIRM":
+            self.complete_cancellation(patient, appointment)
+        elif input1 == "BACK":
+            self.upcoming_appointments(patient)
+        elif input1 == "LOGOUT":
+            self.logout(patient)
+        else:
+            print("Unrecognized option. Please try again.")
+            self.cancelling_appointment(patient, appointment)    
+
+
+    def complete_cancellation(self, patient, appointment):
+        with open("src/appointments.txt", "r") as file:
+            lines = file.readlines()
+
+        with open("src/appointments.txt", "w") as file:
+            for line in lines:
+                if not line.startswith(f"{appointment.email}|{appointment.clinic_name}|{appointment.gp_name}|{appointment.date}|{appointment.start_time}"):
+                    file.write(line)
+
+        # print("Removed the booked app from the book_appointment.txt")
+
+        slots = AppointmentSlot.get_appointment_slot_list()
+        for slot in slots:
+            if (slot.clinic_name == appointment.clinic_name and
+                slot.gp_name == appointment.gp_name and
+                slot.date == appointment.date and
+                slot.start_time == appointment.start_time):
+                slot.availability = True
+                slot.status = "Available"
+
+        AppointmentSlot.save_appointment_slots(slots)
+        # print(f" Successfully updated the appointment slot status to 'Available' in 'appointment_slot.txt'")
+
+        patient.upcoming_appointments = [
+            appt for appt in patient.upcoming_appointments
+            if not (appt.clinic_name == appointment.clinic_name and
+                appt.gp_name == appointment.gp_name and
+                appt.date == appointment.date and
+                appt.start_time == appointment.start_time)
+    ]
+        # print("Successfully Cancelled the Appointment")
+        input1 = self.menu.show_cancellation_success_page(appointment)
+        if input1 == "back":
+            self.patient_home(patient)
+        elif input1 == "logout":
+            self.logout(patient)
+
+
     def get_valid_user_details(self, user_type):
         valid_details = {}
         if user_type == "admin":
@@ -147,6 +243,7 @@ class MPMS:
             self.previous_appointments(patient)
         elif user_action == "upcoming_appointments":
             self.upcoming_appointments(patient)
+            
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to patient_home() in MPMS Class.")
 
