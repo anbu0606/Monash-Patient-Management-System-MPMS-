@@ -160,3 +160,5 @@ class Appointment:
     def save_appointment(appointment):
         with open(f"src/appointments.txt", "a") as f:
             f.write(appointment.to_file_string() + "\n")
+
+    

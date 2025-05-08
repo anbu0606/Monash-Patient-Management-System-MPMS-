@@ -103,24 +103,26 @@ class MPMS:
         # else:
         #     for i in upcoming:
         #         print(i)
-        user_action = input("\n Enter the Slot Numbert of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
-        if user_action == "BACK":
-            self.patient_home(patient)
-            return
-        elif user_action.isdigit():
-            appointment_index = int(user_action) - 1
 
-            if 0 <= appointment_index < len(upcoming_appointments):
-                appointment_to_cancel = upcoming_appointments[appointment_index]
-                self.cancelling_appointment(patient, appointment_to_cancel)
+        elif user_action == "cancel":
+            user_action = input("\n Enter the Slot Numbert of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
+            if user_action == "BACK":
+                self.patient_home(patient)
+                return
+            elif user_action.isdigit():
+                appointment_index = int(user_action) - 1
+
+                if 0 <= appointment_index < len(upcoming_appts):
+                    appointment_to_cancel = upcoming_appts[appointment_index]
+                    self.cancelling_appointment(patient, appointment_to_cancel)
         
-            else:
-                print("\n Invalid selection. Please try again.")
-                self.upcoming_appointments(patient)
+                else:
+                    print("\n Invalid selection. Please try again.")
+                    self.upcoming_appointments(patient)
 
-        else:
-            print("\n Invalid input. Please enter a Slot number or 'Back' to return to the Home Page.")
-            self.upcoming_appointments(patient)
+            else:
+                print("\n Invalid input. Please enter a Slot number or 'Back' to return to the Home Page.")
+                self.upcoming_appointments(patient)
 
 
    
@@ -137,11 +139,16 @@ class MPMS:
         current_time = datetime.now()
         time_diff = appointment_datetime - current_time
 
-        if time_diff > timedelta(hours=24):
-            input1 = self.menu.show_cancellation_confirmation_page(appointment)
-        else:
-            input1 = self.menu.show_cancellation_confirmation_page(appointment)
-        
+        # if time_diff > timedelta(hours=24):
+        #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
+        # else:
+        #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
+
+        if time_diff < timedelta(hours=24):
+            print("\n This cancellation is within 24 hours of the appointment time.")
+            print("   A penalty may be applied for late cancellation.\n")
+            
+        input1 = self.menu.show_cancellation_confirmation_page(appointment)
         if input1 == "CONFIRM":
             self.complete_cancellation(patient, appointment)
         elif input1 == "BACK":
@@ -154,10 +161,10 @@ class MPMS:
 
 
     def complete_cancellation(self, patient, appointment):
-        with open("src/booked_appointment.txt", "r") as file:
+        with open("src/appointments.txt", "r") as file:
             lines = file.readlines()
 
-        with open("src/booked_appointment.txt", "w") as file:
+        with open("src/appointments.txt", "w") as file:
             for line in lines:
                 if not line.startswith(f"{appointment.email}|{appointment.clinic_name}|{appointment.gp_name}|{appointment.date}|{appointment.start_time}"):
                     file.write(line)
