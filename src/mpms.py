@@ -86,7 +86,7 @@ class MPMS:
                 return self.book_appointment(patient)
 
             if not filtered_slots:
-                print("\nNo matching slots found. Press Enter to try again.")
+                print("\033[91m No matching slots found. Press Enter to try again. \033[0m")
                 input()
                 return self.book_appointment(patient)
 
@@ -194,8 +194,8 @@ class MPMS:
         #     for i in upcoming:
         #         print(i)
 
-        elif user_action == "CANCEL":
-            user_action = input("\n Enter the Slot Numbert of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
+        elif user_action == "cancel":
+            user_action = input("\n Enter the Slot Number of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
             if user_action == "BACK":
                 self.patient_home(patient)
                 return
@@ -207,11 +207,11 @@ class MPMS:
                     self.cancelling_appointment(patient, appointment_to_cancel)
         
                 else:
-                    print("\n Invalid selection. Please try again.")
+                    print("\033[91m!! Invalid selection. Please try again !!\033[0m")
                     self.upcoming_appointments(patient)
 
             else:
-                print("\n Invalid input. Please enter a Slot number or 'Back' to return to the Home Page.")
+                print("\033[91m!! Invalid input. Please enter a Slot number or 'Back' to return to the Home Page !!\033[0m")
                 self.upcoming_appointments(patient)
 
 
@@ -235,8 +235,8 @@ class MPMS:
         #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
 
         if time_diff < timedelta(hours=24):
-            print("\n This cancellation is within 24 hours of the appointment time.")
-            print("   A penalty may be applied for late cancellation.\n")
+            print("\033[91m This cancellation is within 24 hours of the appointment time. \033[0m")
+            print("\033[91m A cancellation fee will be applied if you wish to proceed. \033[0m")
             
         input1 = self.menu.show_cancellation_confirmation_page(appointment)
         if input1 == "CONFIRM":
@@ -246,7 +246,7 @@ class MPMS:
         elif input1 == "LOGOUT":
             self.logout(patient)
         else:
-            print("Unrecognized option. Please try again.")
+            print("\033[91m Unrecognized option. Please try again.\033[0m")
             self.cancelling_appointment(patient, appointment)    
 
 
@@ -281,11 +281,12 @@ class MPMS:
                 appt.start_time == appointment.start_time)
     ]
         # print("Successfully Cancelled the Appointment")
-        input1 = self.menu.show_cancellation_success_page(appointment)
-        if input1 == "back":
-            self.patient_home(patient)
-        elif input1 == "logout":
-            self.logout(patient)
+        self.menu.show_cancellation_success_page(appointment)
+        self.patient_home(patient)
+        # if input1 == "back":
+        #     self.patient_home(patient)
+        # elif input1 == "logout":
+        #     self.logout(patient)
 
 
     def get_valid_user_details(self, user_type):

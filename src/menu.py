@@ -67,8 +67,8 @@ class Menu:
     def show_booking_success_page(self, appointment):
         self.clear_screen()
         print(self.banner)
+        print("\033[92m Your Appointment has been successfully booked! \033[0m")
         print(f"""
-                                                                            APPOINTMENT BOOKED!! HOORAY!!
 Appointment Details:
     Clinic:     {appointment.clinic_name}
     GP:         {appointment.gp_name}
@@ -368,7 +368,7 @@ Please enter the Option Number or LOGOUT
             return user_input
     def show_cancellation_confirmation_page(self, appointment):
 
-        print("\n You are about to cancel the following appointment:")
+        print("\033[91m You are about to cancel the following appointment:\033[0m")
         print(appointment)
         print("\nAre you sure you want to cancel this appointment? (CONFIRM/BACK)")
         while True:
@@ -376,13 +376,15 @@ Please enter the Option Number or LOGOUT
             if user_input in ["CONFIRM", "BACK"]:
                 return user_input
             else:
-                print("Invalid input. Please enter 'CONFIRM' or 'BACK'.")
+                print("\033[91m Invalid input. Please enter 'CONFIRM' or 'BACK'.\033[0m")
 
     def show_cancellation_success_page(self, appointment):
 
-        print("\nThe appointment has been successfully cancelled:")
+        print("\033[92m The appointment has been successfully cancelled! \033[0m")
         print(appointment)
-        input("\nPress Enter to continue...")
+        # input("\nPress Enter to continue...")
+        user_input = input("Press Enter to continue.. ")
+        return user_input
 
     # def show_cancellation_failure_page(self):
 
@@ -395,7 +397,7 @@ Please enter the Option Number or LOGOUT
         #self.clear_screen()
        # print(self.banner)
         print("""
-                                                                            FILTER APPOINTMENT SLOTS
+FILTER APPOINTMENT SLOTS
 
     You can filter by:
     1. Date
