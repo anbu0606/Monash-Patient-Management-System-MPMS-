@@ -5,6 +5,7 @@ from admin import Admin
 from appointment_slot import AppointmentSlot
 from appointment import Appointment
 from datetime import datetime, timedelta
+from validator import Validator
 
 
 class MPMS:
@@ -51,36 +52,125 @@ class MPMS:
     def book_appointment(self, patient):
         slots = AppointmentSlot.get_appointment_slot_list()
         available_slots = [slot for slot in slots if slot.availability]
-        user_action = self.menu.show_appointment_slots_page(slots)
+
+        user_action = self.menu.show_appointment_slots_page(available_slots)
+
         if user_action == "logout":
-            pass #########################################################3
+            self.logout(patient)
         elif user_action == "back":
-            pass #########################################################
+            self.patient_home(patient)
+        elif user_action == "filter":
+            filter_type = self.menu.show_filter_options()
+
+            if Validator.is_input_back(filter_type):
+                return self.book_appointment(patient)
+            elif Validator.is_input_logout(filter_type):
+                return self.logout(patient)
+
+            if filter_type == "1":
+                value = self.menu.get_filter_value("date")
+                if Validator.is_input_back(value): return self.book_appointment(patient)
+                if Validator.is_input_logout(value): return self.logout(patient)
+                filtered_slots = [slot for slot in available_slots if slot.date == value]
+            elif filter_type == "2":
+                value = self.menu.get_filter_value("gp")
+                if Validator.is_input_back(value): return self.book_appointment(patient)
+                if Validator.is_input_logout(value): return self.logout(patient)
+                filtered_slots = [slot for slot in available_slots if slot.gp_name and slot.gp_name.lower() == value.lower()]
+            elif filter_type == "3":
+                value = self.menu.get_filter_value("suburb")
+                if Validator.is_input_back(value): return self.book_appointment(patient)
+                if Validator.is_input_logout(value): return self.logout(patient)
+                filtered_slots = [slot for slot in available_slots if slot.clinic_suburb and slot.clinic_suburb.lower() == value.lower()]
+            else:
+                return self.book_appointment(patient)
+
+            if not filtered_slots:
+                print("\033[91m No matching slots found. Press Enter to try again. \033[0m")
+                input()
+                return self.book_appointment(patient)
+
+            return self._finalise_appointment(filtered_slots, patient)
+
         elif user_action.isdigit():
             slot_index = int(user_action) - 1
-            confirmed_slot = available_slots[slot_index]
-            confirmed_slot.availability = False
-            confirmed_slot.status = "Booked"
-            AppointmentSlot.save_appointment_slots(slots)
-            booked_appointment = Appointment(
-                clinic_name = confirmed_slot.clinic_name,
-                gp_name = confirmed_slot.gp_name,
-                date = confirmed_slot.date,
-                start_time = confirmed_slot.start_time,
-                duration = confirmed_slot.duration,
-                clinic_suburb = confirmed_slot.clinic_suburb,
-                reason_for_visit = confirmed_slot.reason_for_visit,
-                availability = False,
-                status = "Booked",
-                email = patient.email
-                )
-            patient.append_upcoming_appointments(booked_appointment)
-            Appointment.save_appointment(booked_appointment)
-            user_action = self.menu.show_booking_success_page(booked_appointment)
-            self.patient_home(patient)
+            return self._finalise_appointment(available_slots, patient, slot_index)
+
         else:
             raise ValueError(f"Invalid user_action:{user_action} argument returned to book_appointment() in MPMS Class.")
-    
+
+
+    def _finalise_appointment(self, slots, patient, slot_index=None):
+        if slot_index is None:
+            user_action = self.menu.show_appointment_slots_page(slots)
+            if user_action == "logout":
+                return self.logout(patient)
+            elif user_action == "back":
+                return self.book_appointment(patient)
+            elif not user_action.isdigit():
+                return self.book_appointment(patient)
+            slot_index = int(user_action) - 1
+
+        confirmed_slot = slots[slot_index]
+        confirmed_slot.availability = False
+        AppointmentSlot.save_appointment_slots(AppointmentSlot.get_appointment_slot_list())
+
+        booked_appointment = Appointment(
+            clinic_name=confirmed_slot.clinic_name,
+            gp_name=confirmed_slot.gp_name,
+            date=confirmed_slot.date,
+            start_time=confirmed_slot.start_time,
+            duration=confirmed_slot.duration,
+            clinic_suburb=confirmed_slot.clinic_suburb,
+            reason_for_visit=confirmed_slot.reason_for_visit,
+            availability=False,
+            status="Booked",
+            email=patient.email
+        )
+        patient.append_upcoming_appointments(booked_appointment)
+        Appointment.save_appointment(booked_appointment)
+        self.menu.show_booking_success_page(booked_appointment)
+        self.patient_home(patient)
+
+
+
+
+
+
+
+    # def book_appointment(self, patient):
+    #     slots = AppointmentSlot.get_appointment_slot_list()
+    #     available_slots = [slot for slot in slots if slot.availability]
+    #     user_action = self.menu.show_appointment_slots_page(slots)
+    #     if user_action == "logout":
+    #         pass #########################################################3
+    #     elif user_action == "back":
+    #         pass #########################################################
+    #     elif user_action.isdigit():
+    #         slot_index = int(user_action) - 1
+    #         confirmed_slot = available_slots[slot_index]
+    #         confirmed_slot.availability = False
+    #         confirmed_slot.status = "Booked"
+    #         AppointmentSlot.save_appointment_slots(slots)
+    #         booked_appointment = Appointment(
+    #             clinic_name = confirmed_slot.clinic_name,
+    #             gp_name = confirmed_slot.gp_name,
+    #             date = confirmed_slot.date,
+    #             start_time = confirmed_slot.start_time,
+    #             duration = confirmed_slot.duration,
+    #             clinic_suburb = confirmed_slot.clinic_suburb,
+    #             reason_for_visit = confirmed_slot.reason_for_visit,
+    #             availability = False,
+    #             status = "Booked",
+    #             email = patient.email
+    #             )
+    #         patient.append_upcoming_appointments(booked_appointment)
+    #         Appointment.save_appointment(booked_appointment)
+    #         user_action = self.menu.show_booking_success_page(booked_appointment)
+    #         self.patient_home(patient)
+    #     else:
+    #         raise ValueError(f"Invalid user_action:{user_action} argument returned to book_appointment() in MPMS Class.")
+     
     def upcoming_appointments(self,patient):
             
         upcoming_appts = Appointment.load_upcoming_appointments(patient.email)
@@ -105,7 +195,7 @@ class MPMS:
         #         print(i)
 
         elif user_action == "cancel":
-            user_action = input("\n Enter the Slot Numbert of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
+            user_action = input("\n Enter the Slot Number of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
             if user_action == "BACK":
                 self.patient_home(patient)
                 return
@@ -117,11 +207,11 @@ class MPMS:
                     self.cancelling_appointment(patient, appointment_to_cancel)
         
                 else:
-                    print("\n Invalid selection. Please try again.")
+                    print("\033[91m!! Invalid selection. Please try again !!\033[0m")
                     self.upcoming_appointments(patient)
 
             else:
-                print("\n Invalid input. Please enter a Slot number or 'Back' to return to the Home Page.")
+                print("\033[91m!! Invalid input. Please enter a Slot number or 'Back' to return to the Home Page !!\033[0m")
                 self.upcoming_appointments(patient)
 
 
@@ -145,8 +235,8 @@ class MPMS:
         #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
 
         if time_diff < timedelta(hours=24):
-            print("\n This cancellation is within 24 hours of the appointment time.")
-            print("   A penalty may be applied for late cancellation.\n")
+            print("\033[91m This cancellation is within 24 hours of the appointment time. \033[0m")
+            print("\033[91m A cancellation fee will be applied if you wish to proceed. \033[0m")
             
         input1 = self.menu.show_cancellation_confirmation_page(appointment)
         if input1 == "CONFIRM":
@@ -156,7 +246,7 @@ class MPMS:
         elif input1 == "LOGOUT":
             self.logout(patient)
         else:
-            print("Unrecognized option. Please try again.")
+            print("\033[91m Unrecognized option. Please try again.\033[0m")
             self.cancelling_appointment(patient, appointment)    
 
 
@@ -191,11 +281,12 @@ class MPMS:
                 appt.start_time == appointment.start_time)
     ]
         # print("Successfully Cancelled the Appointment")
-        input1 = self.menu.show_cancellation_success_page(appointment)
-        if input1 == "back":
-            self.patient_home(patient)
-        elif input1 == "logout":
-            self.logout(patient)
+        self.menu.show_cancellation_success_page(appointment)
+        self.patient_home(patient)
+        # if input1 == "back":
+        #     self.patient_home(patient)
+        # elif input1 == "logout":
+        #     self.logout(patient)
 
 
     def get_valid_user_details(self, user_type):
