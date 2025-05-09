@@ -51,11 +51,14 @@ class Menu:
             self.show_error_message("standard")
         self.show_logout_prompt()
         self.show_back_prompt()
+        self.show_filter_prompt()
         user_input = input("Your Input: ").strip()
         if Validator.is_input_logout(user_input):
             return "logout"
         elif Validator.is_input_back(user_input):
             return "back"
+        elif Validator.is_input_filter(user_input):
+            return "filter"
         elif user_input.isdigit() and (int(user_input)-1 in range(len(available_slots))): #Check if input is a digit and within range of options displayed.
             return user_input
         else:
@@ -64,8 +67,8 @@ class Menu:
     def show_booking_success_page(self, appointment):
         self.clear_screen()
         print(self.banner)
+        print("\033[92m Your Appointment has been successfully booked! \033[0m")
         print(f"""
-                                                                            APPOINTMENT BOOKED!! HOORAY!!
 Appointment Details:
     Clinic:     {appointment.clinic_name}
     GP:         {appointment.gp_name}
@@ -197,11 +200,17 @@ Please enter the Option Number or LOGOUT
         """
         print('''Enter \033[34m"LOGOUT"\033[0m to go back to Login Page\n''')
 
+    def show_filter_prompt(self):
+        """
+        Displays the standard prompt to inform the user that they can enter "FILTER" as input on this screen.
+        """
+        print('''Enter \033[34m"FILTER"\033[0m to go back to filter appointment slots\n''')
+
     def show_cancel_prompt(self):
         """
         Displays the standard prompt to inform the user that they can enter "cancel" as input on this screen.
         """
-        print('''Enter \033[34m"cancel"\033[0m to cancel the Appointment\n''')
+        print('''Enter \033[34m"CANCEL"\033[0m to cancel the Appointment\n''')
 
     def show_patient_home_page(self, attempt_number=0):
         """
@@ -359,7 +368,7 @@ Please enter the Option Number or LOGOUT
             return user_input
     def show_cancellation_confirmation_page(self, appointment):
 
-        print("\n You are about to cancel the following appointment:")
+        print("\033[91m You are about to cancel the following appointment:\033[0m")
         print(appointment)
         print("\nAre you sure you want to cancel this appointment? (CONFIRM/BACK)")
         while True:
@@ -367,16 +376,42 @@ Please enter the Option Number or LOGOUT
             if user_input in ["CONFIRM", "BACK"]:
                 return user_input
             else:
-                print("Invalid input. Please enter 'CONFIRM' or 'BACK'.")
+                print("\033[91m Invalid input. Please enter 'CONFIRM' or 'BACK'.\033[0m")
 
     def show_cancellation_success_page(self, appointment):
 
-        print("\nThe appointment has been successfully cancelled:")
+        print("\033[92m The appointment has been successfully cancelled! \033[0m")
         print(appointment)
-        input("\nPress Enter to continue...")
+        # input("\nPress Enter to continue...")
+        user_input = input("Press Enter to continue.. ")
+        return user_input
 
     # def show_cancellation_failure_page(self):
 
     #     print("\nUnable to cancel the appointment. Please try again.")
     #     input("\nPress Enter to continue...")
 
+
+     # implementation of filter
+    def show_filter_options(self):
+        #self.clear_screen()
+       # print(self.banner)
+        print("""
+FILTER APPOINTMENT SLOTS
+
+    You can filter by:
+    1. Date
+    2. GP Name
+    3. Clinic Suburb
+
+    Enter the option number or BACK/LOGOUT to return.
+        """)
+        return input("Your Input: ").strip()
+
+    def get_filter_value(self, filter_type):
+        prompts = {
+            "date": "Enter the date (DD-MM-YYYY): ",
+            "gp": "Enter the GP name (e.g., Dr. Smith): ",
+            "suburb": "Enter the clinic suburb (e.g., Clayton): "
+        }
+        return input(prompts[filter_type]).strip()
