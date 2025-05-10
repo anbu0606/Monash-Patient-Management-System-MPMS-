@@ -56,9 +56,10 @@ availability:{self.availability}
             for key_value in appt_slot_raw_data:
                 if ":" not in key_value:
                     continue # Malformed line, skip
-                key_value = key_value.split(":")
-                key = key_value[0]
-                value = key_value[1]
+                key, value = key_value.split(":", 1)
+                # key_value = key_value.split(":")
+                # key = key_value[0]
+                # value = key_value[1]
                 if value in ["True", "False"]:
                     if value == "True":
                         value = True

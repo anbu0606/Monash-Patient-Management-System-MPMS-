@@ -2,7 +2,7 @@
 clinic_name:Clayton Clinic
 gp_name:Dr. Smith
 date:10-05-2025
-start_time:09
+start_time:09:00
 duration:25
 clinic_suburb:Clayton
 reason_for_visit:General Consultation
@@ -11,7 +11,7 @@ availability:True
 clinic_name:Mulgrave Clinic
 gp_name:Dr. Lee
 date:11-05-2025
-start_time:17
+start_time:17:00
 duration:15
 clinic_suburb:Mulgrave
 reason_for_visit:Specialist Referral
@@ -20,9 +20,18 @@ availability:True
 clinic_name:Clayton Clinic
 gp_name:Dr. Anbu
 date:11-05-2025
-start_time:09
+start_time:09:00
 duration:15
 clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:True
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:10-05-2025
+start_time:23:58
+duration:15
+clinic_suburb:Mulgrave
 reason_for_visit:Specialist Referral
 availability:True
 |

@@ -51,9 +51,27 @@ class MPMS:
     
     def book_appointment(self, patient, enable_skip = False):
         slots = AppointmentSlot.get_appointment_slot_list()
-        available_slots = [slot for slot in slots if slot.availability]
 
+        # Filter out slots that are not available or are less than 2 hours away.
+        # The program checks the time difference once again in line 110, just after the user selects a slot
+        # to see if it is < 2 hours away.
+        def is_booking_valid(slot):
+            try:
+                slot_time = datetime.strptime(f"{slot.date} {slot.start_time}", "%d-%m-%Y %H:%M")
+                return slot.availability and slot_time > datetime.now() + timedelta(hours=2)
+            except ValueError as e:
+                print(f"[DEBUG] Invalid slot: {slot.date} {slot.start_time} - {e}")
+                return False
+        # Displays the available slots to the user
+        available_slots = [slot for slot in slots if is_booking_valid(slot)]
+       
+       #If there are no available slots, inform the user and return to the patient home page
         user_action = self.menu.show_appointment_slots_page(available_slots, is_skip_enabled=enable_skip)
+        if not available_slots:
+            print("\n\033[91mNo appointment slots are currently available (must be at least 2 hours ahead).\033[0m")
+            input("Press Enter to return to the patient home page.")
+            return self.patient_home(patient)
+
         if user_action == "logout":
             self.logout(patient)
         elif user_action == "back":
@@ -81,7 +99,23 @@ class MPMS:
             return self._finalise_appointment(filtered_slots, patient)
 
         elif user_action.isdigit():
+            # Check if the user has selected a valid slot
             slot_index = int(user_action) - 1
+            if slot_index < 0 or slot_index >= len(available_slots):
+                print("\n\033[91mInvalid selection. Please try again.\033[0m")
+                return self.book_appointment(patient)
+
+            selected_slot = available_slots[slot_index]
+
+            # Check once again if the selected slot is still valid, if not then it will redirec the user to the home page
+            appt_slot_time = datetime.strptime(f"{selected_slot.date} {selected_slot.start_time}", "%d-%m-%Y %H:%M")
+
+            if appt_slot_time < datetime.now() + timedelta(hours=2):
+                print("\n\033[91mYou cannot proceed with this booking because the appointment time is now less than two hours away.\033[0m")
+                input("Press Enter to return to the patient home page.")
+                return self.patient_home(patient)
+            
+            #If eeverything is valid, then proceed to finalise the appointment
             return self._finalise_appointment(available_slots, patient, slot_index)
 
         else:
@@ -119,7 +153,20 @@ class MPMS:
         Appointment.save_appointment(booked_appointment)
         self.menu.show_booking_success_page(booked_appointment)
         self.patient_home(patient)
+    
+    def check_appointment_booking_validity(self, appointment):
+        """
+        Check if the user is booking the appointment within 2 hours of the appointment time.
+        """
+        app_datetime_str = f"{appointment.date} {appointment.start_time}"
+        appointment_datetime = datetime.strptime(app_datetime_str, "%d-%m-%Y %H:%M")
+        current_time = datetime.now()
+        time_diff = appointment_datetime - current_time
 
+        if time_diff < timedelta(hours=2):
+            print("\033[91m You cannot book an appointment within 2 hours of the appointment time. \033[0m")
+            return False
+        return True
      
     def upcoming_appointments(self,patient):
         upcoming_appts = Appointment.load_upcoming_appointments(patient.email)
