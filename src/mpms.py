@@ -49,44 +49,32 @@ class MPMS:
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to admin_home() in MPMS Class.")
     
-    def book_appointment(self, patient):
+    def book_appointment(self, patient, enable_skip = False):
         slots = AppointmentSlot.get_appointment_slot_list()
         available_slots = [slot for slot in slots if slot.availability]
 
-        user_action = self.menu.show_appointment_slots_page(available_slots)
-
+        user_action = self.menu.show_appointment_slots_page(available_slots, is_skip_enabled=enable_skip)
         if user_action == "logout":
             self.logout(patient)
         elif user_action == "back":
             self.patient_home(patient)
         elif user_action == "filter":
-            filter_type = self.menu.show_filter_options()
 
-            if Validator.is_input_back(filter_type):
+            filter_type = self.menu.show_filter_options(is_skip_enabled = enable_skip)
+            if filter_type == "back":
                 return self.book_appointment(patient)
-            elif Validator.is_input_logout(filter_type):
+            elif filter_type == "logout":
                 return self.logout(patient)
-
-            if filter_type == "1":
-                value = self.menu.get_filter_value("date")
-                if Validator.is_input_back(value): return self.book_appointment(patient)
-                if Validator.is_input_logout(value): return self.logout(patient)
-                filtered_slots = [slot for slot in available_slots if slot.date == value]
-            elif filter_type == "2":
-                value = self.menu.get_filter_value("gp")
-                if Validator.is_input_back(value): return self.book_appointment(patient)
-                if Validator.is_input_logout(value): return self.logout(patient)
-                filtered_slots = [slot for slot in available_slots if slot.gp_name and slot.gp_name.lower() == value.lower()]
-            elif filter_type == "3":
-                value = self.menu.get_filter_value("suburb")
-                if Validator.is_input_back(value): return self.book_appointment(patient)
-                if Validator.is_input_logout(value): return self.logout(patient)
-                filtered_slots = [slot for slot in available_slots if slot.clinic_suburb and slot.clinic_suburb.lower() == value.lower()]
+            elif filter_type == "error":
+                return self.book_appointment(patient, enable_skip = True)
             else:
-                return self.book_appointment(patient)
+                value = self.menu.get_filter_value(filter_type)
+                if Validator.is_input_back(value): return self.book_appointment(patient)
+                if Validator.is_input_logout(value): return self.logout(patient)
+                filtered_slots = [slot for slot in available_slots if getattr(slot, filter_type) and getattr(slot, filter_type).lower() == value.lower()]
 
             if not filtered_slots:
-                print("\033[91m No matching slots found. Press Enter to try again. \033[0m")
+                print("\033[91mNo matching slots found. Press Enter to try again. \033[0m")
                 input()
                 return self.book_appointment(patient)
 
@@ -132,47 +120,8 @@ class MPMS:
         self.menu.show_booking_success_page(booked_appointment)
         self.patient_home(patient)
 
-
-
-
-
-
-
-    # def book_appointment(self, patient):
-    #     slots = AppointmentSlot.get_appointment_slot_list()
-    #     available_slots = [slot for slot in slots if slot.availability]
-    #     user_action = self.menu.show_appointment_slots_page(slots)
-    #     if user_action == "logout":
-    #         pass #########################################################3
-    #     elif user_action == "back":
-    #         pass #########################################################
-    #     elif user_action.isdigit():
-    #         slot_index = int(user_action) - 1
-    #         confirmed_slot = available_slots[slot_index]
-    #         confirmed_slot.availability = False
-    #         confirmed_slot.status = "Booked"
-    #         AppointmentSlot.save_appointment_slots(slots)
-    #         booked_appointment = Appointment(
-    #             clinic_name = confirmed_slot.clinic_name,
-    #             gp_name = confirmed_slot.gp_name,
-    #             date = confirmed_slot.date,
-    #             start_time = confirmed_slot.start_time,
-    #             duration = confirmed_slot.duration,
-    #             clinic_suburb = confirmed_slot.clinic_suburb,
-    #             reason_for_visit = confirmed_slot.reason_for_visit,
-    #             availability = False,
-    #             status = "Booked",
-    #             email = patient.email
-    #             )
-    #         patient.append_upcoming_appointments(booked_appointment)
-    #         Appointment.save_appointment(booked_appointment)
-    #         user_action = self.menu.show_booking_success_page(booked_appointment)
-    #         self.patient_home(patient)
-    #     else:
-    #         raise ValueError(f"Invalid user_action:{user_action} argument returned to book_appointment() in MPMS Class.")
      
     def upcoming_appointments(self,patient):
-            
         upcoming_appts = Appointment.load_upcoming_appointments(patient.email)
         
         user_action = self.menu.show_upcoming_appointments_page(upcoming_appts)
@@ -180,20 +129,6 @@ class MPMS:
             self.logout(patient)
         elif user_action == "back":
             self.patient_home(patient)
-           
-        #upcoming_appointments = patient.get_upcoming_appointments()
-
-        #self.menu.show_upcoming_appointments_page(upcoming_appointments)
-        #self.patient_home(patient)
-        #for appointment in upcoming_appointments:
-        #   print(appointment)
-        #   print("-"*50)
-        # if not upcoming:
-        #     print("OOPS! No appointment found! Error 404! ^._.^")
-        # else:
-        #     for i in upcoming:
-        #         print(i)
-
         elif user_action == "cancel":
             user_action = input("\n Enter the Slot Number of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
             if user_action == "BACK":
