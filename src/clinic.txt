@@ -1,8 +1,8 @@
 
-clinic_name:AAD
-suburb:FFDDD
-available_services:ASDDDDDSS
-operating_hours:ASDDD
+clinic_name:Anbu Apollo 
+suburb:Chennai
+available_services:General
+operating_hours:Mon-Fri 6AM-7AM
 |
 clinic_name:Mulgrave Clinic
 suburb:Mulgrave

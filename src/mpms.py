@@ -8,8 +8,7 @@ from datetime import datetime, timedelta
 from validator import Validator
 from fileio import FileIO
 from report import Report
-
-
+from clinic import Clinic
 class MPMS:
     """
     This class contains the core logic of the Monash Patient Management System. 
