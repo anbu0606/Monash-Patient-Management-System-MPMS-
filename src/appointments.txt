@@ -1,3 +1,5 @@
 patient2@student.monash.edu|Clayton Clinic|Dr. Anbu|11-05-2025|9|15|Clayton|Specialist Referral|Booked
 patient2@student.monash.edu|Clayton Clinic|Dr. Anbu|04-05-2025|11|20|Clayton|Vaccination|Attended
 patient2@student.monash.edu|Clayton Clinic|Dr. Smith|05-05-2025|16|40|Clayton|General Consultation|Cancelled by Clinic
+
+patient1@student.monash.edu|Mulgrave Clinic|Dr. Dan|11-05-2025|23:34|15|Mulgrave|Specialist Referral|Booked

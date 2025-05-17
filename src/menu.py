@@ -27,59 +27,7 @@ class Menu:
                                                                                              |___/                                      |___/                       
 ====================================================================================================================================================================='''
 
-    def show_appointment_slots_page(self, slots, attempt_number=0):
-        self.clear_screen()
-        print(self.banner)
-        available_slots = [slot for slot in slots if slot.availability]
-        print("""
-                                                                                APPOINTMENT BOOKING PAGE
-""")
-        print("Available Appointment Slots:\n")
-        for i, slot in enumerate(available_slots, start=1):
-            print(f"Slot {i}:")
-            print(f"  Clinic: {slot.clinic_name}")
-            print(f"  GP: {slot.gp_name}")
-            print(f"  Date: {slot.date}")
-            print(f"  Time: {slot.start_time}")
-            print(f"  Duration: {slot.duration}")
-            print(f"  Suburb: {slot.clinic_suburb}")
-            print(f"  Reason: {slot.reason_for_visit}")
-            # print(f"  Status: {slot.status}")
-            print("-" * 50)
-        print("Enter the slot number to book the appointment.")
-        if attempt_number > 0:
-            self.show_error_message("standard")
-        self.show_logout_prompt()
-        self.show_back_prompt()
-        user_input = input("Your Input: ").strip()
-        if Validator.is_input_logout(user_input):
-            return "logout"
-        elif Validator.is_input_back(user_input):
-            return "back"
-        elif user_input.isdigit() and (int(user_input)-1 in range(len(available_slots))): #Check if input is a digit and within range of options displayed.
-            return user_input
-        else:
-            return self.show_appointment_slots_page(slots, attempt_number+1)
     
-    def show_booking_success_page(self, appointment):
-        self.clear_screen()
-        print(self.banner)
-        print(f"""
-                                                                            APPOINTMENT BOOKED!! HOORAY!!
-Appointment Details:
-    Clinic:     {appointment.clinic_name}
-    GP:         {appointment.gp_name}
-    Date:       {appointment.date}
-    Time:       {appointment.start_time}
-    Duration:   {appointment.duration}
-    Suburb:     {appointment.clinic_suburb}
-    Reason:     {appointment.reason_for_visit}
-    Status:     {appointment.status}
-
-Press Enter to go to home page.
-""")
-        user_input = input("Press Enter to continue.. ")
-        return user_input
 
     def clear_screen(self):
         """
@@ -104,7 +52,7 @@ Press Enter to go to home page.
         # Display error message is not first attempt
         if attempt_number > 0:
             self.show_error_message("standard")
-        self.show_logout_prompt()
+        self.show_prompt(type = "logout")
         print('''
 1. View Profile
 2. GP Report Generation
@@ -135,12 +83,52 @@ Please enter the Option Number or LOGOUT
             return "manage_patient_appointments"
         else:
             return self.show_admin_home_page(attempt_number+1)
+        
+    def show_appointment_slots_page(self, slots, attempt_number=0, is_skip_enabled = False):
+        self.clear_screen()
+        print(self.banner)
+        available_slots = [slot for slot in slots if slot.availability]
+        print("""
+                                                                    APPOINTMENT BOOKING PAGE
+""")
+        print("Available Appointment Slots:\n")
+        for i, slot in enumerate(available_slots, start=1):
+            print(f"Slot {i}:")
+            print(f"  Clinic: {slot.clinic_name}")
+            print(f"  GP: {slot.gp_name}")
+            print(f"  Date: {slot.date}")
+            print(f"  Time: {slot.start_time}")
+            print(f"  Duration: {slot.duration}")
+            print(f"  Suburb: {slot.clinic_suburb}")
+            print(f"  Reason: {slot.reason_for_visit}")
+            print("-" * 50)
+        if is_skip_enabled:
+            return "filter"
+        print("Enter the slot number to book the appointment.")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        self.show_prompt(type = "filter")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif Validator.is_input_filter(user_input):
+            return "filter"
+        elif user_input.isdigit() and (int(user_input)-1 in range(len(available_slots))): #Check if input is a digit and within range of options displayed.
+            return user_input
+        else:
+            return self.show_appointment_slots_page(slots, attempt_number=attempt_number+1)
     
-    def show_back_prompt(self):
-        """
-        Displays the standard prompt to inform the user that they can enter "BACK" as input on this screen.
-        """
-        print('''Enter \033[34m"BACK"\033[0m to go back to previous page\n''')
+    def show_booking_success_page(self, appointment):
+        self.clear_screen()
+        print(self.banner)
+        print("\033[92m Your Appointment has been successfully booked! \033[0m")
+        print(appointment)
+        user_input = input("Press Enter to continue.. ")
+        return user_input
 
     def show_error_message(self, type):
         """
@@ -191,11 +179,14 @@ Please enter the Option Number or LOGOUT
             else: # Invalid details
                 return self.show_login_page(mpms_obj, attempt_number+1)
     
-    def show_logout_prompt(self):
+    def show_prompt(self, type):
         """
-        Displays the standard prompt to inform the user that they can enter "LOGOUT" as input on this screen.
+        Displays the standard prompt to inform the user that they can/cannot enter a certain Prompt as input on this screen.
         """
-        print('''Enter \033[34m"LOGOUT"\033[0m to go back to Login Page\n''')
+        if type == "back" : print('''Enter \033[34m"BACK"\033[0m to go back to previous page\n''')
+        elif type == "logout" : print('''Enter \033[33m"LOGOUT"\033[0m to go back to Login Page\n''')
+        elif type == "filter" : print('''Enter \033[96m"FILTER"\033[0m to go back to filter appointment slots\n''')
+        elif type == "cancel" : print('''Enter \033[96m"CANCEL"\033[0m to cancel the Appointment\n''')
 
     def show_cancel_prompt(self):
         """
@@ -219,7 +210,7 @@ Please enter the Option Number or LOGOUT
         # Display error message if not first attempt
         if attempt_number > 0:
             self.show_error_message("standard")
-        self.show_logout_prompt()
+        self.show_prompt(type = "logout")
         print('''
 1. My Profile
 2. Book an Appointment
@@ -254,7 +245,6 @@ Please enter the Option Number or LOGOUT
         print("""
                                                                                 PREVIOUS APPOINTMENTS
         """)
-        
         if not appointments:
             print("\nYou have no previous appointments to display.\n")
         else:
@@ -270,17 +260,14 @@ Please enter the Option Number or LOGOUT
                 print(f"  Reason: {appt.reason_for_visit}")
                 print(f"  Status: {appt.status}")
                 print("-" * 50)
-        
-        
-        self.show_logout_prompt()
-        self.show_back_prompt()
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
         user_input = input("Your Input: ").strip()
         if Validator.is_input_logout(user_input):
             return "logout"
         elif Validator.is_input_back(user_input):
             print("trying to go back")
             return "back"
-        
 
     def show_profile_page(self, attempt_number, user_obj, is_user_admin):
         """
@@ -304,8 +291,8 @@ Please enter the Option Number or LOGOUT
         # Display error message is not first attempt
         if attempt_number > 0:
             self.show_error_message("standard")
-        self.show_logout_prompt()
-        self.show_back_prompt()
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
         user_input = input("Your Input: ").strip()
         if Validator.is_input_logout(user_input):
             return "logout"
@@ -315,9 +302,7 @@ Please enter the Option Number or LOGOUT
         else:
             return self.show_profile_page(attempt_number+1, user_obj, is_user_admin)
         
-
-    
-    def show_upcoming_appointments_page(self, appointments):
+    def show_upcoming_appointments_page(self, appointments, attempt_number = 0):
         """
         Displays the upcoming appointments page with a list of upcoming appointments.
         
@@ -327,39 +312,40 @@ Please enter the Option Number or LOGOUT
         self.clear_screen()
         print(self.banner)
         print("""
-                                                                                UPCOMING APPOINTMENTS
+                                                                            UPCOMING APPOINTMENTS
         """)
-        
         if not appointments:
-            print("\nYou have no upcoming appointments to display.\n")
+            print("\n\033[92mYou have no upcoming appointments to display.\033[0m\n")
         else:
             print("\nYour Upcoming Appointments:\n")
             for i, appt in enumerate(appointments, start=1):
                 print(f"Appointment {i}:")
-                print(f"  Clinic: {appt.clinic_name}")
-                print(f"  GP: {appt.gp_name}")
-                print(f"  Date: {appt.date}")
-                print(f"  Time: {appt.start_time}")
-                print(f"  Duration: {appt.duration} minutes")
-                print(f"  Suburb: {appt.clinic_suburb}")
-                print(f"  Reason: {appt.reason_for_visit}")
-                print(f"  Status: {appt.status}")
-                print("-" * 50)
-        
-        self.show_logout_prompt()
-        self.show_back_prompt()
-        self.show_cancel_prompt()
+                print(appt)
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        self.show_prompt(type = "cancel")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        elif attempt_number == -1:
+            print("\033[90m!!You have no appointments to cancel!!\033[0m")
         user_input = input("Your Input: ").strip()
         if Validator.is_input_logout(user_input):
             return "logout"
         elif Validator.is_input_back(user_input):
             print("trying to go back")
             return "back"
-        elif user_input == "cancel":
-            return user_input
+        elif user_input == "CANCEL":
+            if appointments:
+                return "cancel"
+            else:
+                # No Appointments to cancel
+                attempt_number = -1
+                return self.show_upcoming_appointments_page(appointments, attempt_number)
+        else:
+            return self.show_upcoming_appointments_page(appointments, attempt_number=1)
+        
     def show_cancellation_confirmation_page(self, appointment):
-
-        print("\n You are about to cancel the following appointment:")
+        print("\033[91m You are about to cancel the following appointment:\033[0m")
         print(appointment)
         print("\nAre you sure you want to cancel this appointment? (CONFIRM/BACK)")
         while True:
@@ -367,16 +353,53 @@ Please enter the Option Number or LOGOUT
             if user_input in ["CONFIRM", "BACK"]:
                 return user_input
             else:
-                print("Invalid input. Please enter 'CONFIRM' or 'BACK'.")
+                print("\033[91m Invalid input. Please enter 'CONFIRM' or 'BACK'.\033[0m")
 
     def show_cancellation_success_page(self, appointment):
-
-        print("\nThe appointment has been successfully cancelled:")
+        print("\033[92m The appointment has been successfully cancelled! \033[0m")
         print(appointment)
-        input("\nPress Enter to continue...")
+        # input("\nPress Enter to continue...")
+        user_input = input("Press Enter to continue.. ")
+        return user_input
 
     # def show_cancellation_failure_page(self):
 
     #     print("\nUnable to cancel the appointment. Please try again.")
     #     input("\nPress Enter to continue...")
 
+
+     # implementation of filter
+    def show_filter_options(self, is_skip_enabled = False):
+        print("""
+FILTER APPOINTMENT SLOTS
+
+    You can filter by:
+    1. Date
+    2. GP Name
+    3. Clinic Suburb
+
+    Enter the option number or \033[34m"BACK"\033[0m/\033[33m"LOGOUT"\033[0m to return.
+        """)
+        if is_skip_enabled:
+            self.show_error_message("standard")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_back(user_input):
+            return "back"
+        elif Validator.is_input_logout(user_input):
+            return "logout"
+        elif user_input == "1":
+            return "date"
+        elif user_input == "2":
+            return "gp_name"
+        elif user_input == "3":
+            return "clinic_suburb"
+        else:
+            return "error"
+
+    def get_filter_value(self, filter_type):
+        prompts = {
+            "date": "Enter the date (DD-MM-YYYY): ",
+            "gp_name": "Enter the GP name (e.g., Dr. Smith): ",
+            "clinic_suburb": "Enter the clinic suburb (e.g., Clayton): "
+        }
+        return input(prompts[filter_type]).strip()

@@ -26,17 +26,18 @@ class Appointment:
         self.email = email     
     
     def __str__(self):
-        return f"""{{
-        email:{self.email}
-        clinic_name:{self.clinic_name}
-        gp_name:{self.gp_name}
-        date:{self.date}
-        start_time:{self.start_time}
-        duration:{self.duration}
-        clinic_suburb:{self.clinic_suburb}
-        reason_for_visit:{self.reason_for_visit}
-        status:{self.status}
-    }}"""
+        return f"""
+Appointment Details:
+    Clinic:     {self.clinic_name}
+    GP:         {self.gp_name}
+    Date:       {self.date}
+    Time:       {self.start_time}
+    Duration:   {self.duration} minutes
+    Suburb:     {self.clinic_suburb}
+    Reason:     {self.reason_for_visit}
+    Status:     {self.status}
+{"-" * 50}
+"""
     
     def to_file_string(self):
         return f"{self.email}|{self.clinic_name}|{self.gp_name}|{self.date}|{self.start_time}|{self.duration}|{self.clinic_suburb}|{self.reason_for_visit}|{self.status}"

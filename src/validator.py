@@ -19,6 +19,12 @@ class Validator:
         if user_input == "LOGOUT":
             return True
         return False
+    
+    @staticmethod
+    def is_input_filter(user_input):
+        if user_input == "FILTER":
+            return True
+        return False
 
     @staticmethod
     def is_valid_admin_login(valid_admin_details, input_email, input_password):
