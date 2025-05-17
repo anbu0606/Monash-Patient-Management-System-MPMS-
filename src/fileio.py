@@ -115,6 +115,12 @@ class FileIO:
         with open(f"src/appointments.txt", "a") as f:
             f.write(appointment.to_file_string() + "\n")
     
+    @staticmethod
+    def save_appointments(appointments):
+        with open(f"src/appointments.txt", "w") as f:
+            for appointment in appointments:
+                f.write(appointment.to_file_string() + "\n")
+    
     #After the admin makes any changes or adds in extra slots, 
     #call this to make sure that it is saved into the txt file
     @staticmethod

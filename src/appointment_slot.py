@@ -62,6 +62,3 @@ availability:{self.availability}
     # Setters
     def set_availability(self, value):
         self.availability = value
-    
-    def set_status(self, value):
-          self.status = value
