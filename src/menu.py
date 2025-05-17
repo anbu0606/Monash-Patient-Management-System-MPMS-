@@ -56,7 +56,7 @@ class Menu:
         print('''
 1. View Profile
 2. GP Report Generation
-3. Clinic Report Generation
+3. Appointment Reason Report Generation
 4. Manage Clinic
 5. Manage GP
 6. Manage Appointment Slots
@@ -72,7 +72,7 @@ Please enter the Option Number or LOGOUT
         elif user_input == "2":
             return "gp_report"
         elif user_input == "3":
-            return "clinic_report"
+            return "reason_report"
         elif user_input == "4":
             return "manage_clinic"
         elif user_input == "5":
@@ -304,6 +304,39 @@ Please enter the Option Number or LOGOUT
             return "back"
         else:
             return self.show_profile_page(attempt_number+1, user_obj, is_user_admin)
+    
+    def show_report_export_page(self, report_data, attempt_number = 0):
+        self.clear_screen()
+        print(self.banner)
+        print(f'''
+                                                                     EXPORT REPORT PAGE
+
+Your generated report:
+{report_data}
+
+--------------------------------
+Please Choose the Export Format
+1. Export as Text File \033[96m(.txt)\033[0m
+2. Export as Comma Seperated Values File \033[96m(.csv)\033[0m
+
+''')
+
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        print("Enter the Option Number to export in desired format\n")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif user_input == "1":
+            return "txt"
+        elif user_input == "2":
+            return "csv"
+        else:
+            return self.show_report_export_page(report_data, attempt_number+1)
         
     def show_upcoming_appointments_page(self, appointments, attempt_number = 0):
         """
@@ -323,7 +356,14 @@ Please enter the Option Number or LOGOUT
             print("\nYour Upcoming Appointments:\n")
             for i, appt in enumerate(appointments, start=1):
                 print(f"Appointment {i}:")
-                print(appt)
+                print(f"  GP: {appt.slot.gp_name}")
+                print(f"  Date: {appt.slot.date}")
+                print(f"  Time: {appt.slot.start_time}")
+                print(f"  Suburb: {appt.slot.clinic_suburb}")
+                print("-" * 50)
+                #print(appt)
+        
+        print("Enter appointment number to see full details")
         self.show_prompt(type = "logout")
         self.show_prompt(type = "back")
         self.show_prompt(type = "cancel")
@@ -344,8 +384,47 @@ Please enter the Option Number or LOGOUT
                 # No Appointments to cancel
                 attempt_number = -1
                 return self.show_upcoming_appointments_page(appointments, attempt_number)
+        
+        elif user_input.isdigit():
+            appointment_num = int(user_input) - 1
+            selected_appointment = appointment_num
+            if selected_appointment is not None and 0 <= selected_appointment < len(appointments):
+                self.clear_screen()
+                print(self.banner)
+                print("""
+                                                                            APPOINTMENT DETAILS
+                """)
+                appt = appointments[selected_appointment]
+                print(f"\nAppointment {selected_appointment + 1} Details:")
+                print(appt)
+                input("Press Enter to return to appointment list")
+                return self.show_upcoming_appointments_page(appointments, attempt_number=0)
+            else:
+                return self.show_upcoming_appointments_page(appointments, attempt_number=1)
         else:
             return self.show_upcoming_appointments_page(appointments, attempt_number=1)
+    
+    def show_view_report_page(self, report_data, attempt_number = 0):
+        self.clear_screen()
+        print(self.banner)
+        print(f'''
+                                                                     VIEW REPORT PAGE''')
+        print(report_data)
+
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        print('''Enter \033[96m"EXPORT"\033[0m to export the generated report\n''')
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif Validator.is_input_export(user_input):
+            return "export"
+        else:
+            return self.show_view_report_page(report_data, attempt_number+1)
         
     def show_cancellation_confirmation_page(self, appointment):
         print("\033[91m You are about to cancel the following appointment:\033[0m")
@@ -363,6 +442,15 @@ Please enter the Option Number or LOGOUT
         print(appointment)
         # input("\nPress Enter to continue...")
         user_input = input("Press Enter to continue.. ")
+        return None
+    
+    def show_export_success_page(self, report_data):
+        self.clear_screen()
+        print(self.banner)
+        print("\n\033[92m The report has been successfully exported! \033[0m")
+        print(report_data)
+        # input("\nPress Enter to continue...")
+        user_input = input("Press Enter to go to Report Generation Page.. ")
         return None
 
     def show_filter_options(self, is_skip_enabled = False):
