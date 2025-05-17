@@ -6,6 +6,7 @@ from appointment_slot import AppointmentSlot
 from appointment import Appointment
 from datetime import datetime, timedelta
 from validator import Validator
+from fileio import FileIO
 
 
 class MPMS:
@@ -17,8 +18,11 @@ class MPMS:
         """
         Initialises MPMS Class instance.
         """
+        self.admins = []
+        self.appointment_slots = []
+        self.appointments = []
         self.menu = Menu()
-        self.patient_list = [] 
+        self.patients = []
         self.is_user_admin = False
         # Other Attributes
     
@@ -50,17 +54,19 @@ class MPMS:
             raise ValueError(f"Invalid user_action:{user_action} returned to admin_home() in MPMS Class.")
     
     def book_appointment(self, patient, enable_skip = False):
-        slots = AppointmentSlot.get_appointment_slot_list()
-
+        slots = self.appointment_slots
+        for i in slots:
+            print(i)
         # Filter out slots that are not available or are less than 2 hours away.
         # The program checks the time difference once again in line 110, just after the user selects a slot
         # to see if it is < 2 hours away.
         def is_booking_valid(slot):
+            print(slot)
             try:
-                slot_time = datetime.strptime(f"{slot.date} {slot.start_time}", "%d-%m-%Y %H:%M")
-                return slot.availability and slot_time > datetime.now() + timedelta(hours=2)
+                slot_time = datetime.strptime(f"{slot.get_date()} {slot.get_start_time()}", "%d-%m-%Y %H:%M")
+                return slot.get_availability() and slot_time > datetime.now() + timedelta(hours=2)
             except ValueError as e:
-                print(f"[DEBUG] Invalid slot: {slot.date} {slot.start_time} - {e}")
+                print(f"[DEBUG] Invalid slot: {slot.get_date()} {slot.get_start_time()} - {e}")
                 return False
         # Displays the available slots to the user
         available_slots = [slot for slot in slots if is_booking_valid(slot)]
@@ -134,23 +140,16 @@ class MPMS:
             slot_index = int(user_action) - 1
 
         confirmed_slot = slots[slot_index]
-        confirmed_slot.availability = False
-        AppointmentSlot.save_appointment_slots(AppointmentSlot.get_appointment_slot_list())
+        confirmed_slot.set_availability(False)
+        FileIO.save_appointment_slots(self.appointment_slots)
 
         booked_appointment = Appointment(
-            clinic_name=confirmed_slot.clinic_name,
-            gp_name=confirmed_slot.gp_name,
-            date=confirmed_slot.date,
-            start_time=confirmed_slot.start_time,
-            duration=confirmed_slot.duration,
-            clinic_suburb=confirmed_slot.clinic_suburb,
-            reason_for_visit=confirmed_slot.reason_for_visit,
-            availability=False,
+            slot=confirmed_slot,
             status="Booked",
-            email=patient.email
+            email=patient.get_email()
         )
-        patient.append_upcoming_appointments(booked_appointment)
-        Appointment.save_appointment(booked_appointment)
+        self.appointments.append(booked_appointment)
+        FileIO.save_appointment(booked_appointment)
         self.menu.show_booking_success_page(booked_appointment)
         self.patient_home(patient)
     
@@ -169,7 +168,7 @@ class MPMS:
         return True
      
     def upcoming_appointments(self,patient):
-        upcoming_appts = Appointment.load_upcoming_appointments(patient.email)
+        upcoming_appts = self.get_patient_appointments(email=patient.get_email(), type="Booked")
         
         user_action = self.menu.show_upcoming_appointments_page(upcoming_appts)
         if user_action == "logout":
@@ -186,7 +185,7 @@ class MPMS:
 
                 if 0 <= appointment_index < len(upcoming_appts):
                     appointment_to_cancel = upcoming_appts[appointment_index]
-                    self.cancelling_appointment(patient, appointment_to_cancel)
+                    self.cancel_appointment(patient, appointment_to_cancel)
         
                 else:
                     print("\033[91m!! Invalid selection. Please try again !!\033[0m")
@@ -197,11 +196,9 @@ class MPMS:
                 self.upcoming_appointments(patient)
 
 
-   
-
-    def cancelling_appointment(self, patient, appointment):
+    def cancel_appointment(self, patient, appointment):
         # app_datetime_str = f"{appointment.date} {appointment.start_time}"
-        if len(appointment.start_time) == 2:
+        if len(appointment.get_start_time()) == 2:
             app_datetime_str = f"{appointment.date} {appointment.start_time}:00"
         else:
             app_datetime_str = f"{appointment.date} {appointment.start_time}"
@@ -229,65 +226,88 @@ class MPMS:
             self.logout(patient)
         else:
             print("\033[91m Unrecognized option. Please try again.\033[0m")
-            self.cancelling_appointment(patient, appointment)    
+            self.cancel_appointment(patient, appointment)    
 
-
+    # Remove the booked appoointment from appointments.txt
     def complete_cancellation(self, patient, appointment):
         with open("src/appointments.txt", "r") as file:
             lines = file.readlines()
 
         with open("src/appointments.txt", "w") as file:
             for line in lines:
-                if not line.startswith(f"{appointment.email}|{appointment.clinic_name}|{appointment.gp_name}|{appointment.date}|{appointment.start_time}"):
+                if not line.startswith(f"{appointment.get_email()}|{appointment.get_slot().get_clinic_name()}|{appointment.get_slot().get_gp_name()}|{appointment.get_slot().get_date()}|{appointment.get_slot().get_start_time()}"):
                     file.write(line)
 
-        # print("Removed the booked app from the book_appointment.txt")
-
-        slots = AppointmentSlot.get_appointment_slot_list()
+        slots = self.appointment_slots
         for slot in slots:
-            if (slot.clinic_name == appointment.clinic_name and
-                slot.gp_name == appointment.gp_name and
-                slot.date == appointment.date and
-                slot.start_time == appointment.start_time):
-                slot.availability = True
-                slot.status = "Available"
+            if (slot.get_clinic_name() == appointment.get_clinic_name() and
+                slot.get_gp_name() == appointment.get_gp_name() and
+                slot.get_date() == appointment.get_date() and
+                slot.get_start_time() == appointment.get_start_time()):
+                slot.set_availability(True)
+                slot.set_status("Available")
 
-        AppointmentSlot.save_appointment_slots(slots)
-        # print(f" Successfully updated the appointment slot status to 'Available' in 'appointment_slot.txt'")
+        FileIO.save_appointment_slots(slots)
+        self.appointment_slots = slots
 
-        patient.upcoming_appointments = [
-            appt for appt in patient.upcoming_appointments
-            if not (appt.clinic_name == appointment.clinic_name and
-                appt.gp_name == appointment.gp_name and
-                appt.date == appointment.date and
-                appt.start_time == appointment.start_time)
-    ]
-        # print("Successfully Cancelled the Appointment")
         self.menu.show_cancellation_success_page(appointment)
         self.patient_home(patient)
-        # if input1 == "back":
-        #     self.patient_home(patient)
-        # elif input1 == "logout":
-        #     self.logout(patient)
 
+    def get_patient_appointments(self, email, type):
+        '''
+        Returns a list of appointments that are associated with the given user email.
+        The returned list depends on the type requested.
+
+        Args:
+            email (str): email of the user whose appointments are to be returned
+            type (str):  type of appointments that are to be returned
+                        Values: "Booked", "Previous", "All"
+
+        Returns:
+            list<Appointment>: A list of appointment instances of given type associated to given email
+        '''
+        booked_appointments = []
+        previous_appointments = []
+        for appointment in self.appointments:
+            if email == appointment.get_email():
+                if appointment.get_status() == "Booked":
+                    booked_appointments.append(appointment)
+                else:
+                    previous_appointments.append(appointment)
+        if type == "Booked":
+            return booked_appointments
+        elif type == "Previous":
+            return previous_appointments
+        else:
+            return booked_appointments + previous_appointments
+    
+    def get_user_object(self, email, user_type):
+        if user_type == "patient":
+            user_list = self.patients
+        elif user_type == "admin":
+            for admin in self.admins:
+                user_list = self.admins
+        else:
+            raise ValueError(f"Invalid user_type:{user_type} passed to get_user_object() in MPMS Class.")
+        for user in user_list:
+            if user.get_email() == email:
+                return user
 
     def get_valid_user_details(self, user_type):
         valid_details = {}
         if user_type == "admin":
-            user_list = Admin.get_admin_list()
+            user_list = self.admins
         else:
-            user_list = Patient.get_patient_list()
+            user_list = self.patients
         for user in user_list:
-            valid_details[user.email] = user.password
+            valid_details[user.get_email()] = user.get_password()
         return valid_details
 
     def load_system_state(self):
-        AppointmentSlot.load_appointment_slots()
-        Patient.load_patients()
-        self.patient_list = Patient.get_patient_list()
-        for patient in self.patient_list:
-            patient.set_upcoming_apppointments(Appointment.load_book_appointment(patient.email))
-        Admin.load_admins()
+        self.appointment_slots = FileIO.load_appointment_slots(appointment_slot_class=AppointmentSlot)
+        self.patients = FileIO.load_patients(patient_class=Patient)
+        self.appointments = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
+        self.admins = FileIO.load_admins(admin_class=Admin)
     
     def logout(self, user):
         if isinstance(user, Patient):
@@ -327,8 +347,7 @@ class MPMS:
         Args:
             patient (Patient): The patient object
         """
-        previous_appts = Appointment.load_previous_appointments(patient.email)
-        
+        previous_appts = self.get_patient_appointments(email=patient.get_email(), type="Previous")
         user_action = self.menu.show_previous_appointments_page(previous_appts)
         
         if user_action == "logout":
@@ -352,15 +371,18 @@ class MPMS:
         """
         This function contains the logic for MPMS Login Page to display UI, take input and route user for the  
         """
-        user_action, email = self.menu.show_login_page(mpms_obj=self)
+        patient_details = self.get_valid_user_details(user_type="patient")
+        admin_details = self.get_valid_user_details(user_type="admin")
+        
+        user_action, email = self.menu.show_login_page(valid_patient_details=patient_details, valid_admin_details=admin_details)
         if user_action == "exit":
             exit(0)
         elif  user_action == "patient_home_page":
-            patient = Patient.get_patient_object(email)
+            patient = self.get_user_object(user_type="patient", email=email)
             self.patient_home(patient)
         elif user_action == "admin_home_page":
             self.is_user_admin = True
-            admin = Admin.get_admin_object(email)
+            admin = self.get_user_object(user_type="admin", email=email)
             self.admin_home(admin)
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_login() in MPMS Class.")
