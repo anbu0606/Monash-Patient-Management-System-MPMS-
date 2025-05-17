@@ -7,6 +7,7 @@ from appointment import Appointment
 from datetime import datetime, timedelta
 from validator import Validator
 from fileio import FileIO
+from report import Report
 
 
 class MPMS:
@@ -40,8 +41,8 @@ class MPMS:
             self.user_profile_page(admin)
         elif user_action == "gp_report":
             pass
-        elif user_action == "clinic_report":
-            pass
+        elif user_action == "reason_report":
+            self.generate_report(admin, "reason")
         elif user_action == "manage_appointment_slots":
             pass
         elif user_action == "manage_clinic":
@@ -258,6 +259,40 @@ class MPMS:
 
         self.menu.show_cancellation_success_page(appointment)
         self.patient_home(patient)
+
+    def export_report(self, admin, report_data, type):
+        user_action = self.menu.show_report_export_page(report_data[0])
+        if user_action == "back":
+            self.generate_report(admin, type)
+        elif user_action == "logout":
+            self.is_user_admin = False # Set to False as admin is logging out
+            self.user_login()
+        elif user_action == "txt":
+            FileIO.export_report(format=".txt", report_data=report_data[0])
+            self.menu.show_export_success_page(report_data[0])
+            self.generate_report(admin, type)
+        elif user_action == "csv":
+            FileIO.export_report(format=".csv", report_data=report_data[1])
+            self.menu.show_export_success_page(report_data[1])
+            self.generate_report(admin, type)
+        else:
+            raise ValueError(f"Invalid value returned from show_report_export_page: {user_action} to export_report() in MPMS")
+    
+    def generate_report(self, admin, type):
+        if type == "reason":
+            report_data = Report.generate_appt_reason_report(self.appointments)
+        elif type == "TDB":
+            pass
+        user_action = self.menu.show_view_report_page(report_data[0])
+        if user_action == "back":
+            self.admin_home(admin)
+        elif user_action == "logout":
+            self.is_user_admin = False # Set to False as admin is logging out
+            self.user_login()
+        elif user_action == "export":
+            self.export_report(admin, report_data, type)
+        else:
+            raise ValueError(f"Invalid user_action:{user_action} returned to user_profile_page() in MPMS Class.")
 
     def get_patient_appointments(self, email, type):
         '''

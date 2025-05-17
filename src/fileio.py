@@ -2,7 +2,18 @@ class FileIO:
 
     def __init__(self):
         pass
-
+    
+    @staticmethod
+    def export_report(format, report_data):
+        if format == ".txt":
+            with open("appoint_reason_report.txt", "w") as file:
+                file.write(report_data)
+        elif format == ".csv":
+            with open("appoint_reason_report.csv", "w") as file:
+                file.writelines(report_data)
+        else:
+            raise ValueError(f"Invalid export format:{format} was passed to export_report() in report.py")
+    
     @staticmethod
     def load_admins(admin_class, filename="admin.txt"):
         """
