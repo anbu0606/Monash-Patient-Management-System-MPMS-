@@ -1,7 +1,7 @@
 
 clinic_name:Clayton Clinic
 gp_name:Dr. Smith
-date:19-05-2025
+date:10-06-2025
 start_time:09:00
 duration:25
 clinic_suburb:Clayton
@@ -10,7 +10,7 @@ availability:True
 |
 clinic_name:Mulgrave Clinic
 gp_name:Dr. Lee
-date:20-05-2025
+date:11-06-2025
 start_time:17:00
 duration:15
 clinic_suburb:Mulgrave
@@ -19,7 +19,7 @@ availability:True
 |
 clinic_name:Clayton Clinic
 gp_name:Dr. Anbu
-date:21-05-2025
+date:11-06-2025
 start_time:09:00
 duration:15
 clinic_suburb:Clayton
@@ -28,7 +28,7 @@ availability:True
 |
 clinic_name:Mulgrave Clinic
 gp_name:Dr. Dan
-date:22-05-2025
+date:11-06-2025
 start_time:15:15
 duration:15
 clinic_suburb:Mulgrave
