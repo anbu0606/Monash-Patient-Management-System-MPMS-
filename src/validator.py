@@ -15,6 +15,12 @@ class Validator:
         return False
     
     @staticmethod
+    def is_input_export(user_input):
+        if user_input == "EXPORT":
+            return True
+        return False
+    
+    @staticmethod
     def is_input_logout(user_input):
         if user_input == "LOGOUT":
             return True
