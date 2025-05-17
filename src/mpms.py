@@ -7,6 +7,8 @@ from appointment import Appointment
 from datetime import datetime, timedelta
 from validator import Validator
 from fileio import FileIO
+from clinic import Clinic
+
 
 
 class MPMS:
@@ -45,7 +47,7 @@ class MPMS:
         elif user_action == "manage_appointment_slots":
             pass
         elif user_action == "manage_clinic":
-            pass
+            self.manage_clinic()
         elif user_action == "manage_gp":
             pass
         elif user_action == "manage_patient_appointments":
@@ -293,98 +295,6 @@ class MPMS:
             if user.get_email() == email:
                 return user
 
-        if user_action == "cancel":
-            user_action = input("\n Enter the Slot Numbert of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
-            if user_action == "BACK":
-                self.patient_home(patient)
-                return
-            elif user_action.isdigit():
-                appointment_index = int(user_action) - 1
-
-                if 0 <= appointment_index < len(upcoming_appts):
-                    appointment_to_cancel = upcoming_appts[appointment_index]
-                    self.cancelling_appointment(patient, appointment_to_cancel)
-        
-                else:
-                    print("\n Invalid selection. Please try again.")
-                    self.upcoming_appointments(patient)
-
-            else:
-                print("\n Invalid input. Please enter a Slot number or 'Back' to return to the Home Page.")
-                self.upcoming_appointments(patient)
-
-
-   
-
-    def cancelling_appointment(self, patient, appointment):
-        # app_datetime_str = f"{appointment.date} {appointment.start_time}"
-        if len(appointment.start_time) == 2:
-            app_datetime_str = f"{appointment.date} {appointment.start_time}:00"
-        else:
-            app_datetime_str = f"{appointment.date} {appointment.start_time}"
-
-        appointment_datetime = datetime.strptime(app_datetime_str, "%d-%m-%Y %H:%M")
-
-        current_time = datetime.now()
-        time_diff = appointment_datetime - current_time
-
-        # if time_diff > timedelta(hours=24):
-        #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
-        # else:
-        #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
-
-        if time_diff < timedelta(hours=24):
-            print("\n This cancellation is within 24 hours of the appointment time.")
-            print("   A penalty may be applied for late cancellation.\n")
-            
-        input1 = self.menu.show_cancellation_confirmation_page(appointment)
-        if input1 == "CONFIRM":
-            self.complete_cancellation(patient, appointment)
-        elif input1 == "BACK":
-            self.upcoming_appointments(patient)
-        elif input1 == "LOGOUT":
-            self.logout(patient)
-        else:
-            print("Unrecognized option. Please try again.")
-            self.cancelling_appointment(patient, appointment)    
-
-
-    def complete_cancellation(self, patient, appointment):
-        with open("src/appointments.txt", "r") as file:
-            lines = file.readlines()
-
-        with open("src/appointments.txt", "w") as file:
-            for line in lines:
-                if not line.startswith(f"{appointment.email}|{appointment.clinic_name}|{appointment.gp_name}|{appointment.date}|{appointment.start_time}"):
-                    file.write(line)
-
-        # print("Removed the booked app from the book_appointment.txt")
-
-        slots = AppointmentSlot.get_appointment_slot_list()
-        for slot in slots:
-            if (slot.clinic_name == appointment.clinic_name and
-                slot.gp_name == appointment.gp_name and
-                slot.date == appointment.date and
-                slot.start_time == appointment.start_time):
-                slot.availability = True
-                slot.status = "Available"
-
-        AppointmentSlot.save_appointment_slots(slots)
-        # print(f" Successfully updated the appointment slot status to 'Available' in 'appointment_slot.txt'")
-
-        patient.upcoming_appointments = [
-            appt for appt in patient.upcoming_appointments
-            if not (appt.clinic_name == appointment.clinic_name and
-                appt.gp_name == appointment.gp_name and
-                appt.date == appointment.date and
-                appt.start_time == appointment.start_time)
-    ]
-        # print("Successfully Cancelled the Appointment")
-        input1 = self.menu.show_cancellation_success_page(appointment)
-        if input1 == "back":
-            self.patient_home(patient)
-        elif input1 == "logout":
-            self.logout(patient)
 
 
     def get_valid_user_details(self, user_type):
@@ -402,6 +312,7 @@ class MPMS:
         self.patients = FileIO.load_patients(patient_class=Patient)
         self.appointments = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
         self.admins = FileIO.load_admins(admin_class=Admin)
+        self.clinic = Clinic.load_clinics()
     
     def logout(self, user):
         if isinstance(user, Patient):
@@ -480,6 +391,26 @@ class MPMS:
             self.admin_home(admin)
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_login() in MPMS Class.")
+
+    def manage_clinic(self):
+        """
+        Displays all the clinics in the system.
+        """
+        print("\n--- List of All Clinics ---")
+        clinics = Clinic.get_clinic_list()
+        if clinics:
+            for idx, clinic in enumerate(clinics, start=1):
+                print(f"\n--- Clinic {idx} ---")
+                print(f"clinic_name: {clinic.clinic_name}")
+                print(f"Suburb: {clinic.suburb}")
+                print(f"available_services: {', '.join(clinic.available_services)}")
+                print(f"Operating Hours: {clinic.operating_hours}")
+        else:
+            print("No clinics found.")
+
+
+
+
 
     def user_profile_page(self, user):
         user_action = self.menu.show_profile_page(user_obj=user, attempt_number=0, is_user_admin=self.is_user_admin)
