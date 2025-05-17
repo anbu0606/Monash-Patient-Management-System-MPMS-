@@ -56,8 +56,8 @@ class MPMS:
     
     def book_appointment(self, patient, enable_skip = False):
         slots = self.appointment_slots
-        for i in slots:
-            print(i)
+        # for i in slots:
+        #     print(i)
         # Filter out slots that are not available or are less than 2 hours away.
         # The program checks the time difference once again in line 110, just after the user selects a slot
         # to see if it is < 2 hours away.
@@ -85,25 +85,63 @@ class MPMS:
             self.patient_home(patient)
         elif user_action == "filter":
 
-            filter_type = self.menu.show_filter_options(is_skip_enabled = enable_skip)
-            if filter_type == "back":
-                return self.book_appointment(patient)
-            elif filter_type == "logout":
-                return self.logout(patient)
-            elif filter_type == "error":
-                return self.book_appointment(patient, enable_skip = True)
-            else:
+            while True:
+                filter_type = self.menu.show_filter_options(is_skip_enabled=enable_skip)
+
+                if filter_type == "back":
+                    return self.book_appointment(patient)
+                elif filter_type == "logout":
+                    return self.logout(patient)
+                elif filter_type not in ["date", "gp_name", "clinic_suburb"]:
+                    print("\033[91mInvalid filter option. Please try again.\033[0m")
+                    continue  # Re-prompt
+
                 value = self.menu.get_filter_value(filter_type)
-                if Validator.is_input_back(value): return self.book_appointment(patient)
-                if Validator.is_input_logout(value): return self.logout(patient)
+
+                if Validator.is_input_back(value):
+                    return self.book_appointment(patient)
+                if Validator.is_input_logout(value):
+                    return self.logout(patient)
+
+                if filter_type == "date" and not Validator.is_valid_date_format(value):
+                    print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
+                    input("Press Enter to try again...")
+                    continue
+
                 filtered_slots = [slot for slot in available_slots if getattr(slot, filter_type) and getattr(slot, filter_type).lower() == value.lower()]
 
-            if not filtered_slots:
-                print("\033[91mNo matching slots found. Press Enter to try again. \033[0m")
-                input()
-                return self.book_appointment(patient)
+                if not filtered_slots:
+                    print("\033[91mNo matching slots found. Press Enter to try again.\033[0m")
+                    input()
+                    continue  # Go back to filter option selection
 
-            return self._finalise_appointment(filtered_slots, patient)
+                # Show results
+                print("\n\033[94mFiltered Appointment Slots:\033[0m")
+                for i, slot in enumerate(filtered_slots, 1):
+                    print(f"\nSlot {i}:")
+                    print(f"  Clinic: {slot.clinic_name}")
+                    print(f"  GP: {slot.gp_name}")
+                    print(f"  Date: {slot.date}")
+                    print(f"  Time: {slot.start_time}")
+                    print(f"  Duration: {slot.duration}")
+                    print(f"  Suburb: {slot.clinic_suburb}")
+                    print(f"  Reason: {slot.reason_for_visit}")
+                    print("  ------------------------------------------------------------")
+
+                # Prompt for preferred GP filter if applicable
+                if filter_type in ["date", "clinic_suburb"]:
+                    further_filter = input("\nWould you like to filter these results by a preferred GP? (yes/no): ").strip().lower()
+                    if further_filter == "yes":
+                        gp_name = input("Enter preferred GP name: ").strip()
+                        filtered_slots = [slot for slot in filtered_slots if slot.gp_name and slot.gp_name.lower() == gp_name.lower()]
+                        if not filtered_slots:
+                            print("\033[91mNo matching GP found in these results. Press Enter to try again.\033[0m")
+                            input()
+                            continue  # Re-prompt from filter selection
+
+                return self._finalise_appointment(filtered_slots, patient)
+
+
 
         elif user_action.isdigit():
             # Check if the user has selected a valid slot
