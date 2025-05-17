@@ -349,7 +349,14 @@ Please Choose the Export Format
             print("\nYour Upcoming Appointments:\n")
             for i, appt in enumerate(appointments, start=1):
                 print(f"Appointment {i}:")
-                print(appt)
+                print(f"  GP: {appt.slot.gp_name}")
+                print(f"  Date: {appt.slot.date}")
+                print(f"  Time: {appt.slot.start_time}")
+                print(f"  Suburb: {appt.slot.clinic_suburb}")
+                print("-" * 50)
+                #print(appt)
+        
+        print("Enter appointment number to see full details")
         self.show_prompt(type = "logout")
         self.show_prompt(type = "back")
         self.show_prompt(type = "cancel")
@@ -370,6 +377,23 @@ Please Choose the Export Format
                 # No Appointments to cancel
                 attempt_number = -1
                 return self.show_upcoming_appointments_page(appointments, attempt_number)
+        
+        elif user_input.isdigit():
+            appointment_num = int(user_input) - 1
+            selected_appointment = appointment_num
+            if selected_appointment is not None and 0 <= selected_appointment < len(appointments):
+                self.clear_screen()
+                print(self.banner)
+                print("""
+                                                                            APPOINTMENT DETAILS
+                """)
+                appt = appointments[selected_appointment]
+                print(f"\nAppointment {selected_appointment + 1} Details:")
+                print(appt)
+                input("Press Enter to return to appointment list")
+                return self.show_upcoming_appointments_page(appointments, attempt_number=0)
+            else:
+                return self.show_upcoming_appointments_page(appointments, attempt_number=1)
         else:
             return self.show_upcoming_appointments_page(appointments, attempt_number=1)
     
