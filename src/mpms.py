@@ -8,8 +8,7 @@ from datetime import datetime, timedelta
 from validator import Validator
 from fileio import FileIO
 from report import Report
-
-
+from clinic import Clinic
 class MPMS:
     """
     This class contains the core logic of the Monash Patient Management System. 
@@ -46,7 +45,7 @@ class MPMS:
         elif user_action == "manage_appointment_slots":
             pass
         elif user_action == "manage_clinic":
-            pass
+            self.manage_clinic(admin)
         elif user_action == "manage_gp":
             pass
         elif user_action == "manage_patient_appointments":
@@ -372,6 +371,8 @@ class MPMS:
             if user.get_email() == email:
                 return user
 
+
+
     def get_valid_user_details(self, user_type):
         valid_details = {}
         if user_type == "admin":
@@ -387,6 +388,7 @@ class MPMS:
         self.patients = FileIO.load_patients(patient_class=Patient)
         self.appointments = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
         self.admins = FileIO.load_admins(admin_class=Admin)
+        self.clinic = Clinic.load_clinics()
     
     def logout(self, user):
         if isinstance(user, Patient):
@@ -465,6 +467,58 @@ class MPMS:
             self.admin_home(admin)
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_login() in MPMS Class.")
+
+    def manage_clinic(self,admin):
+        """
+        Displays all the clinics in the system.
+        """
+        clinics = Clinic.get_clinic_list()
+        user_action = self.menu.show_clinic_list(clinics)
+        if user_action == "logout":
+            self.logout(admin)
+        elif user_action == "back":
+            self.admin_home(admin)
+        elif user_action == "update":
+            user_action = input("\n Enter the Slot Number of the Clinic to Update or type 'BACK' to return to the Home Page: ").strip().lower()
+            if user_action == "BACK":
+                self.admin_home(admin)
+                return
+            elif user_action.isdigit():
+                clinic_index = int(user_action) - 1
+
+                if 0 <= clinic_index < len(clinics):
+                    clinic_to_update = clinics[clinic_index]
+                    self.update_clinic(admin, clinic_to_update)
+        
+                else:
+                    print("\033[91m!! Invalid selection. Please try again !!\033[0m")
+                    self.manage_clinic(admin)
+
+            else:
+                print("\033[91m!! Invalid input. Please enter a Slot number or 'Back' to return to the Home Page !!\033[0m")
+                self.manage_clinic(admin)
+    
+    def update_clinic(self,admin,clinic_to_update):
+        print("\n--- Update Clinic Details ---")
+        print("\nLeave the field empty if you don't want to change it:")
+
+        new_name = input(f"New Name ({clinic_to_update.clinic_name}): ") or clinic_to_update.clinic_name
+        new_suburb = input(f"New Suburb ({clinic_to_update.suburb}): ") or clinic_to_update.suburb
+        new_services = input(f"New Services (comma-separated) ({','.join(clinic_to_update.available_services)}): ")
+        new_services = new_services.split(',') if new_services else clinic_to_update.available_services
+        new_hours = input(f"New Operating Hours ({clinic_to_update.operating_hours}): ") or clinic_to_update.operating_hours
+        
+        clinic_to_update.clinic_name = new_name
+        clinic_to_update.suburb = new_suburb
+        clinic_to_update.available_services = new_services
+        clinic_to_update.operating_hours = new_hours
+
+        Clinic.save_clinics(Clinic.get_clinic_list())
+
+        print(f"\033[92mClinic '{new_name}' updated successfully.\033[0m")
+        self.manage_clinic(admin)
+
+
 
     def user_profile_page(self, user):
         user_action = self.menu.show_profile_page(user_obj=user, attempt_number=0, is_user_admin=self.is_user_admin)
