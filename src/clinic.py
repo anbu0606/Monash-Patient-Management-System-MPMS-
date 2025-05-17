@@ -42,13 +42,25 @@ operating_hours:{self.operating_hours}
                 setattr(clinic, key, value)
 
     
+    # @classmethod
+    # def save_clinics(cls, filename="clinic.txt"):
+    #     """
+    #     Save all clinic objects in the text file.
+    #     """
+    #     with open(f"src\\{filename}", "w") as f:
+    #         for clinic in cls.clinic_list:
+    #             f.write(str(clinic))
+
     @classmethod
-    def save_clinics(cls, filename="clinic.txt"):
+    def save_clinics(cls, clinics=None, filename="clinic.txt"):
         """
         Save all clinic objects in the text file.
         """
+        if clinics is None:
+            clinics = cls.clinic_list
+    
         with open(f"src\\{filename}", "w") as f:
-            for clinic in cls.clinic_list:
+            for clinic in clinics:
                 f.write(str(clinic))
     
     @classmethod
@@ -67,7 +79,7 @@ operating_hours:{self.operating_hours}
         for idx, clinic in enumerate(cls.clinic_list):
             if clinic.clinic_name == clinic_name:
                 cls.clinic_list[idx] = updated_clinic
-                cls.save_clinics()
+                cls.save_clinics(cls.clinic_list)
                 break
     
     @classmethod

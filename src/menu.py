@@ -189,6 +189,7 @@ Please enter the Option Number or LOGOUT
         elif type == "logout" : print('''Enter \033[33m"LOGOUT"\033[0m to go back to Login Page\n''')
         elif type == "filter" : print('''Enter \033[96m"FILTER"\033[0m to go back to filter appointment slots\n''')
         elif type == "cancel" : print('''Enter \033[96m"CANCEL"\033[0m to cancel the Appointment\n''')
+        elif type == "update" : print('''Enter \033[96m"UPDATE"\033[0m to update the Clinic details\n''')
 
     def show_cancel_prompt(self):
         """
@@ -398,3 +399,53 @@ FILTER APPOINTMENT SLOTS
             "clinic_suburb": "Enter the clinic suburb (e.g., Clayton): "
         }
         return input(prompts[filter_type]).strip()
+    
+
+
+
+
+
+#####
+    def show_clinic_list(self, clinics, attempt_number = 0):
+        
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                                                CLINIC DETAILS!
+        """)
+        if not clinics:
+            print("\nYou have no clinic details to display.\n")
+        else:
+            print("\n--- List of All Clinics ---")
+            for idx, clinic in enumerate(clinics, start=1):
+                print(f"\n--- Clinic {idx} ---")
+                print(f"clinic_name: {clinic.clinic_name}")
+                print(f"Suburb: {clinic.suburb}")
+                print(f"available_services: {', '.join(clinic.available_services)}")
+                print(f"Operating Hours: {clinic.operating_hours}")
+                print("-" * 50)
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        self.show_prompt(type= "update")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        elif attempt_number == -1:
+            print("\033[90m!!You have no clinics to update!!\033[0m")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            print("trying to go back")
+            return "back"
+        elif user_input == "UPDATE":
+            if clinics:
+                return "update"
+            else:
+                # No clinics to update
+                attempt_number = -1
+                return self.show_clinic_list(clinics, attempt_number)
+        else:
+            return self.show_clinic_list(clinics, attempt_number=1)
+        
+
+    
