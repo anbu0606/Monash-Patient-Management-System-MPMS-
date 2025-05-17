@@ -200,10 +200,11 @@ class MPMS:
 
     def cancel_appointment(self, patient, appointment):
         # app_datetime_str = f"{appointment.date} {appointment.start_time}"
-        if len(appointment.get_start_time()) == 2:
-            app_datetime_str = f"{appointment.date} {appointment.start_time}:00"
+        appt_slot_details = appointment.get_slot() #Get slot instance as all details are stored there
+        if len(appt_slot_details.get_start_time()) == 2:
+            app_datetime_str = f"{appt_slot_details.get_date()} {appt_slot_details.get_start_time()}:00"
         else:
-            app_datetime_str = f"{appointment.date} {appointment.start_time}"
+            app_datetime_str = f"{appt_slot_details.get_date()} {appt_slot_details.get_start_time()}"
 
         appointment_datetime = datetime.strptime(app_datetime_str, "%d-%m-%Y %H:%M")
 
@@ -242,12 +243,17 @@ class MPMS:
 
         slots = self.appointment_slots
         for slot in slots:
-            if (slot.get_clinic_name() == appointment.get_clinic_name() and
-                slot.get_gp_name() == appointment.get_gp_name() and
-                slot.get_date() == appointment.get_date() and
-                slot.get_start_time() == appointment.get_start_time()):
+            if (
+                slot.get_clinic_name() == appointment.get_slot().get_clinic_name() and
+                slot.get_gp_name() == appointment.get_slot().get_gp_name() and
+                slot.get_date() == appointment.get_slot().get_date() and
+                slot.get_start_time() == appointment.get_slot().get_start_time()
+                ):
                 slot.set_availability(True)
                 slot.set_status("Available")
+
+        appointment.set_status("Cancelled by Patient")
+        FileIO.save_appointments(self.appointments)
 
         FileIO.save_appointment_slots(slots)
         self.appointment_slots = slots
