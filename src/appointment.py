@@ -25,7 +25,8 @@ Appointment Details:
     Status:     {self.status}
 {"-" * 50}
 """
-    
+
+    # Getters
     def get_email(self):
         return self.email
     
@@ -34,8 +35,10 @@ Appointment Details:
     
     def get_status(self):
         return self.status
+    
+    # Setters
+    def set_status(self, new_status):
+        self.status = new_status
 
     def to_file_string(self):
-        return f"{self.email}|{self.slot.get_clinic_name()}|{self.slot.get_gp_name()}|{self.slot.get_date()}|{self.slot.get_start_time}|{self.slot.get_duration}|{self.slot.get_clinic_suburb}|{self.slot.get_reason_for_visit}|{self.status}"
-
-    
+        return f"{self.email}|{self.slot.get_clinic_name()}|{self.slot.get_gp_name()}|{self.slot.get_date()}|{self.slot.get_start_time()}|{self.slot.get_duration()}|{self.slot.get_clinic_suburb()}|{self.slot.get_reason_for_visit()}|{self.status}"
