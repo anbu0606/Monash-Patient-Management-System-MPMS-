@@ -1,27 +1,25 @@
 class AppointmentSlot:
-    _appointment_slot_list = []
-
     #constructor
     def __init__(
             self,
-            clinic_name = None,
-            gp_name = None,
-            date = None,
-            start_time = None,
-            duration = None, 
-            clinic_suburb = None,
-            reason_for_visit = None,
-            availability = True,
-            ):
-        self.clinic_name = clinic_name
-        self.gp_name = gp_name
-        self.date = date
-        self.start_time = start_time
-        self.duration = duration
-        self.clinic_suburb = clinic_suburb
-        self.reason_for_visit = reason_for_visit
+            availability=True,
+            clinic_name=None,
+            clinic_suburb=None,
+            date=None,
+            duration=None,
+            gp_name=None,
+            reason_for_visit=None,
+            start_time=None,
+        ):
         self.availability = availability
-        AppointmentSlot._appointment_slot_list.append(self)
+        self.clinic_name = clinic_name
+        self.clinic_suburb = clinic_suburb
+        self.date = date
+        self.duration = duration
+        self.gp_name = gp_name
+        self.reason_for_visit = reason_for_visit
+        self.start_time = start_time
+
 
     #convert an appt slot object into text format so that it can be saved into the txt file
     def __str__(self):
@@ -35,43 +33,35 @@ clinic_suburb:{self.clinic_suburb}
 reason_for_visit:{self.reason_for_visit}
 availability:{self.availability}
 |"""
+    
+    # Getters
+    def get_availability(self):
+        return self.availability
 
-    @classmethod
-    def get_appointment_slot_list(cls):
-        return cls._appointment_slot_list
+    def get_clinic_name(self):
+            return self.clinic_name
 
-    @classmethod
-    def load_appointment_slots(cls, filename="appointment_slot.txt"):
-        """
-        This function creates AppointmentSlot objects and restores their instance state using a text file storing object state.
-        It then stores the objects in a class variable.
+    def get_clinic_suburb(self):
+            return self.clinic_suburb
 
-        Args:
-            filename(str):  A string storing the name of the text file from which data will be extracted. 
-        """
-        with open(f"src\\{filename}", "r") as file:  
-            appt_slots_raw_data = [y.rstrip().split("\n") for y in file.read().split("|\n")] # Store each appt_slot's raw data in a list
-        for appt_slot_raw_data in appt_slots_raw_data:
-            appt_slot = AppointmentSlot()
-            for key_value in appt_slot_raw_data:
-                if ":" not in key_value:
-                    continue # Malformed line, skip
-                key, value = key_value.split(":", 1)
-                # key_value = key_value.split(":")
-                # key = key_value[0]
-                # value = key_value[1]
-                if value in ["True", "False"]:
-                    if value == "True":
-                        value = True
-                    else:
-                        value = False
-                setattr(appt_slot, key, value)
+    def get_date(self):
+            return self.date
 
-    #After the admin makes any changes or adds in extra slots, 
-    #call this to make sure that it is saved into the txt file
-    @classmethod
-    def save_appointment_slots(cls, slots, filename="appointment_slot.txt"):
-        # Save all slots, each enclosed in curly braces
-        with open(f"src\\{filename}", "w") as f:
-            for slot in slots:
-                f.write(str(slot))
+    def get_duration(self):
+            return self.duration
+
+    def get_gp_name(self):
+            return self.gp_name
+
+    def get_reason_for_visit(self):
+            return self.reason_for_visit
+
+    def get_start_time(self):
+            return self.start_time
+    
+    # Setters
+    def set_availability(self, value):
+        self.availability = value
+    
+    def set_status(self, value):
+          self.status = value
