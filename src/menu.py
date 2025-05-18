@@ -1,7 +1,7 @@
 import sys #imports module that can perform system functions
 import subprocess #imports module that can run commands on local system
 from validator import Validator
-
+import re
 class Menu:
     """
     Menu class handles the display of user interface for the MPMS Application.
@@ -200,6 +200,58 @@ Please enter the Option Number or LOGOUT
             return "delete"
         else:
             return self.show_clinic_management_page(clinics, attempt_number=1)
+        
+
+    def show_gp_management_page(self, gps, attempt_number = 0):
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                                            GP DETAILS
+        """)
+        if len(gps) == 0:
+            print("\nYou have no gp details to display.\n")
+        else:
+            print("\n--- List of All GPs ---")
+            print("------------------------------")
+            for idx, gp in enumerate(gps, start=1):
+                print(f"--- GP {idx} ---")
+                print(f"gp_name:        {gp.get_gp_name()}")
+                print(f"email:             {gp.get_email()}")
+                print(f"assigned_clinics: {', '.join(gp.get_assigned_clinics())}")
+                print(f"specialisation: {', '.join(gp.get_specialisation())}")
+                print(f"availability:    {gp.get_availability()}")
+                print("-" * 50 + "\n")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        self.show_prompt(type = "update")
+        self.show_prompt(type = "create")
+        self.show_prompt(type = "delete")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        elif attempt_number == -1:
+            print("\033[90m!!You have no gps to update!!\033[0m")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif user_input == "UPDATE":
+            if gps:
+                return "update"
+            else:
+                # No gps to update
+                attempt_number = -1
+                return self.show_gp_management_page(gps, attempt_number)
+        elif user_input == "CREATE":
+            return "create"
+        elif user_input == "DELETE":
+            return "delete"
+        else:
+            return self.show_gp_management_page(gps, attempt_number=1)
+
+
+
+
     
     def show_create_clinic_page(self, attempt_number = 0):
         self.clear_screen()
@@ -253,6 +305,94 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         new_clinic_details["available_services"] = new_services
         new_clinic_details["operating_hours"] = new_hours
         return new_clinic_details
+    
+
+
+
+    def show_create_gp_page(self,clinic_list, attempt_number = 0):
+        self.clear_screen()
+        print(self.banner)
+        print(f"""
+                                                                    GP CREATIION PAGE
+Sample GP Details:
+gp_name: Dr.David
+email: anbuchandran06@gmail.com
+assigned_clinics: kerala hospital,melb hospital,syd hospital
+specialisation: Vaccinations
+availability: Mon-Fri 6AM-7AM
+              
+              
+Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0m or \033[33m"LOGOUT"\033[0m to leave.
+        """)
+
+
+        print("Available Clinics: ", clinic_list)
+
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_back(user_input):
+            return "back"
+        elif Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_continue(user_input):
+            is_input_valid = True
+            while True:
+                if not is_input_valid:
+                    print("\033[91m!! Input cannot be Blank !!\033[0m")
+                new_name = input(f"New GP Name (Dr.David): ").strip()
+                if new_name == "":
+                    is_input_valid = False
+                    continue
+
+                while True:
+
+                    new_email = input(f"New email-id (david1@monash.gp.in): ").strip()
+                    if new_email == "":
+                        is_input_valid = False
+                        continue
+
+                    if re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', new_email):
+                        break
+                    else:
+                        print("\033[91m!! Invalid Email id Format. Please enter a valid id. !!\033[0m") 
+                        continue
+
+                new_assigned_clinics = input(f"New Clinics (comma-separated) (Clayton Hospital,Glen Waverley Hospital): ").strip()
+                if new_assigned_clinics == "":
+                    is_input_valid = False
+                    continue
+                new_assigned_clinics = [clinic.strip() for clinic in new_assigned_clinics.split(',')]
+
+                is_valid, valid_clinics, invalid_clinics = Validator.is_valid_clinic_list(
+                    new_assigned_clinics, clinic_list
+                )
+
+                if not is_valid:
+                    print(f"\033[91m!! These clinics are not valid: {', '.join(invalid_clinics)} !!\033[0m")
+                    continue
+                    
+            
+                new_specialisation = input(f"New specialisation (comma-separated) (Vaccinations,General Consultation): ").strip()
+                if new_specialisation == "":
+                    is_input_valid = False
+                    continue
+                new_specialisation = new_specialisation.split(',')
+                new_availability = input(f"New availability of the GP (Tue-Fri 8AM-10PM): ").strip()
+                if new_availability == "":
+                    is_input_valid = False
+                    continue
+                break
+        else:
+            return self.show_create_gp_page(attempt_number+1)
+
+        new_gp_details = {}
+        new_gp_details["gp_name"] = new_name
+        new_gp_details["email"] = new_email
+        new_gp_details["assigned_clinics"] = valid_clinics
+        new_gp_details["specialisation"] = new_specialisation
+        new_gp_details["availability"] = new_availability
+        return new_gp_details
 
     def show_creation_success_page(self, type, instance_variable):
         self.clear_screen()
@@ -320,6 +460,70 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
                 return self.show_clinic_management_page(clinics, attempt_number)
         else:
             return self.show_clinic_management_page(clinics, attempt_number=1)
+        
+
+    def show_delete_gp_page(self, gps, attempt_number=0):
+        self.clear_screen()
+        print(self.banner)
+        print(f"""
+                                                                            GP DELETTION PAGE
+        """)
+        if len(gps) == 0:
+            print("\nYou have no GP details to display.\n")
+        else:
+            print("\n--- List of All GPs ---")
+            print("------------------------------")
+            for idx, gp in enumerate(gps, start=1):
+                print(f"--- GP {idx} ---")
+                print(f"gp_name:        {gp.get_gp_name()}")
+                print(f"email:             {gp.get_email()}")
+                print(f"assigned_clinics: {', '.join(gp.get_assigned_clinics())}")
+                print(f"specialisation: {', '.join(gp.get_specialisation())}")
+                print(f"availability:    {gp.get_availability()}")
+                print("-" * 50 + "\n")
+        print("Please enter the number to choose the gp for deletion.")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        elif attempt_number == -1:
+            print("\033[90m!!You have no GPs to delete!!\033[0m")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif user_input.isdigit():
+            if gps:
+                gp_index = int(user_input) - 1
+                if 0 <= gp_index < len(gps):
+                    user_input = input("Are You Sure? This Action Is Permanent (yes/no):  ")
+                    if user_input == "yes":
+                        return gp_index
+                    elif user_input == "no":
+                        print("\033[91m!!Deletion of GP Aborted!!\033[0m")
+                        input("Press Enter to continue.. ")
+                        self.show_delete_gp_page(gps)
+                    else:
+                        print("\033[91m!! Invalid input. GP Deletion Aborted!!\033[0m")
+                        input("Press Enter to continue.. ")
+                        self.show_delete_gp_page(gps)
+                else:
+                    print("\033[91m!! Invalid selection. Please try again!!\033[0m")
+                    input("Press Enter to continue.. ")
+                    self.show_delete_gp_page(gps)
+            else:
+                # No gps to update
+                attempt_number = -1
+                return self.show_gp_management_page(gps, attempt_number)
+        else:
+            return self.show_gp_management_page(gps, attempt_number=1)
+
+
+
+
+
+
     
     def show_deletion_confirmation_page(self, type, instance_variable):
         self.clear_screen()
@@ -581,7 +785,16 @@ Please Choose the Export Format
         if type == "clinic":
             print(f"\n\033[92mClinic updated successfully.\033[0m\n")
             print(str(instance_variable)[:-2]) # [:-2] to perform some formatting of the output
-        input("\nPress  Enter to continue.. ")
+            input("\nPress  Enter to continue.. ")
+
+        elif type == "gp":
+            print(f"\n\033[92mGP updated successfully.\033[0m\n")
+            print(str(instance_variable)[:-2]) # [:-2] to perform some formatting of the output
+            input("\nPress  Enter to continue.. ")
+
+        
+
+        
         return None
         
     def show_upcoming_appointments_page(self, appointments, attempt_number = 0):

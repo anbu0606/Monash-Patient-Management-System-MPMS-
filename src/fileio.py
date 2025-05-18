@@ -112,6 +112,30 @@ class FileIO:
                 setattr(clinic, key, value)
             clinic_list.append(clinic)
         return clinic_list
+    
+    @staticmethod
+    def load_gp(gp_class, filename="gp.txt"):
+        """
+        This function creates gp objects and restores their state from a text file.
+        It then stores the objects in a class variable.
+        """
+        gp_list = []
+        with open(f"src\\{filename}", "r") as file:
+            gps_raw_data = [y.rstrip().split("\n") for y in file.read().split("|\n")]
+        for gp_raw_data in gps_raw_data:
+            gp = gp_class()
+            for key_value in gp_raw_data:
+                if ":" not in key_value:
+                    continue
+                key, value = key_value.split(":", 1)
+                if key == "assigned_clinics":
+                    value = value.split(",")
+                elif key == "specialisation":
+                    value = value.split(",")
+            
+                setattr(gp, key, value)
+            gp_list.append(gp)
+        return gp_list
 
     @staticmethod
     def load_patients(patient_class, filename="patient.txt"):
@@ -170,3 +194,12 @@ class FileIO:
         with open(f"src\\{filename}", "w") as f:
             for clinic in clinics:
                 f.write(str(clinic))
+
+    @staticmethod
+    def save_gps(gps=[], filename="gp.txt"):
+        """
+        Save all gp objects in the text file.
+        """    
+        with open(f"src\\{filename}", "w") as f:
+            for gp in gps:
+                f.write(str(gp))

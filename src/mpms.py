@@ -9,6 +9,8 @@ from validator import Validator
 from fileio import FileIO
 from report import Report
 from clinic import Clinic
+from gp import Gp
+import re
 
 class MPMS:
     """
@@ -23,6 +25,7 @@ class MPMS:
         self.appointment_slots = []
         self.appointments = []
         self.clinics = []
+        self.gps =[]
         self.menu = Menu()
         self.patients = []
         self.is_user_admin = False
@@ -40,7 +43,7 @@ class MPMS:
         elif user_action == "profile_page":
             self.user_profile_page(admin)
         elif user_action == "gp_report":
-            pass
+            self.manage_gps(admin)
         elif user_action == "reason_report":
             self.generate_report(admin, "reason")
         elif user_action == "manage_appointment_slots":
@@ -48,7 +51,7 @@ class MPMS:
         elif user_action == "manage_clinics":
             self.manage_clinics(admin)
         elif user_action == "manage_gp":
-            pass
+            self.manage_gps(admin)
         elif user_action == "manage_patient_appointments":
             pass
         else:
@@ -286,6 +289,37 @@ class MPMS:
             self.logout(admin)
         else:
             raise ValueError(f"Invalid value for user_action returned:{user_action} to create_clinic() in MPMS")
+        
+
+    def create_gp(self, admin):
+        Clinic_list = [clinic.get_clinic_name() for clinic in self.clinics]  
+        user_action = self.menu.show_create_gp_page(Clinic_list)
+        if isinstance(user_action, dict):
+            new_gp = Gp(
+                gp_name=user_action["gp_name"],
+                email=user_action["email"],
+                assigned_clinics=user_action["assigned_clinics"],
+                specialisation=user_action["specialisation"],
+                availability=user_action["availability"]
+            )
+            self.gps.append(new_gp)
+            FileIO.save_gps(self.gps)
+            self.menu.show_creation_success_page(type="Gp", instance_variable=new_gp)
+            self.manage_gps(admin)
+
+        elif user_action == "back":
+            self.admin_home(admin)
+        elif user_action == "logout":
+            self.logout(admin)
+        else:
+            raise ValueError(f"Invalid value for user_action returned:{user_action} to create_gp() in MPMS")
+
+
+
+
+
+
+
 
     def delete_clinic(self, admin):
         user_action = self.menu.show_delete_clinic_page(self.clinics)
@@ -300,6 +334,26 @@ class MPMS:
             self.logout(admin)
         else:
             raise ValueError(f"Invalid value for user_action:{user_action} received in delete_clinic() in MPMS")
+        
+
+    def delete_gp(self, admin):
+        user_action = self.menu.show_delete_gp_page(self.gps)
+        if isinstance(user_action, int): #index of gp instance returned.
+            deleted_gp = self.gps.pop(user_action)
+            FileIO.save_gps(self.gps)
+            self.menu.show_deletion_confirmation_page(type = "gp", instance_variable = deleted_gp )
+            self.manage_gps(admin)
+        elif user_action == "back":
+            self.manage_gps(admin)
+        elif user_action == "logout":
+            self.logout(admin)
+        else:
+            raise ValueError(f"Invalid value for user_action:{user_action} received in delete_gp() in MPMS")
+
+
+
+
+
 
     def export_report(self, admin, report_data, type):
         user_action = self.menu.show_report_export_page(report_data[0])
@@ -391,6 +445,7 @@ class MPMS:
         self.appointments = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
         self.admins = FileIO.load_admins(admin_class=Admin)
         self.clinics = FileIO.load_clinics(clinic_class=Clinic)
+        self.gps = FileIO.load_gp(gp_class=Gp)
     
     def logout(self, user):
         if isinstance(user, Patient):
@@ -419,6 +474,30 @@ class MPMS:
             self.delete_clinic(admin)
         else:
             raise ValueError(f"Invalid user_action received:{user_action} from show_clinic_management_page in manage_clinics() in MPMS class")
+        
+
+    def manage_gps(self,admin):
+        """
+        Displays all the gps in the system.
+        """
+        gps = self.gps
+        user_action = self.menu.show_gp_management_page(gps)
+        if user_action == "logout":
+            self.logout(admin)
+        elif user_action == "back":
+            self.admin_home(admin)
+        elif user_action == "update":
+            self.update_gp(admin)
+        elif user_action == "create":
+            self.create_gp(admin)
+        elif user_action == "delete":
+            self.delete_gp(admin)
+        else:
+            raise ValueError(f"Invalid user_action received:{user_action} from show_gp_management_page in manage_gps() in MPMS class")
+
+
+
+
     
     def patient_home(self, patient):
         """
@@ -533,6 +612,79 @@ class MPMS:
 
         self.menu.show_update_success_page(type="clinic", instance_variable=clinic_to_update)
         self.manage_clinics(admin)
+
+
+    def update_gp(self, admin):
+        Clinic_list = [clinic.get_clinic_name() for clinic in self.clinics]
+        gps = self.gps
+        user_action = input("\n Enter the Slot Number of the GP to Update or type 'BACK' to return to the Home Page: ").strip()
+        if user_action == "BACK":
+            self.admin_home(admin)
+        elif user_action.isdigit():
+            gp_index = int(user_action) - 1
+            if 0 <= gp_index < len(gps):
+                gp_to_update = gps[gp_index]
+            else:
+                print("\033[91m!! Invalid selection. Please try again!!\033[0m")
+                input("Press Enter to continue.. ")
+                self.manage_gps(admin)
+        else:
+            print("\033[91m!! Invalid input. Please try again!!\033[0m")
+            input("Press Enter to continue.. ")
+            self.manage_gps(admin)
+
+        print("\n--- Update GP Details ---")
+        print("\nLeave the field empty if you don't want to change it:")
+        new_name = input(f"New Name ({gp_to_update.get_gp_name()}): ") or gp_to_update.get_gp_name()
+        while True:
+            new_email = input(f"New Email ({gp_to_update.get_email()}): ") or gp_to_update.get_email()
+            if new_email == "":
+                is_input_valid = False
+                continue
+
+            if re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', new_email):
+                break
+            else:
+                print("\033[91m!! Invalid Email id Format. Please enter a valid id. !!\033[0m") 
+                
+        while True:
+
+            new_clinics = input(f"New Clinics (comma-separated) ({','.join(gp_to_update.get_assigned_clinics())}): ")
+            
+            if not new_clinics:
+                new_clinics = gp_to_update.get_assigned_clinics()
+                break
+            new_clinics = [clinic.strip() for clinic in new_clinics.split(',')]
+
+            is_valid, valid_clinics, invalid_clinics = Validator.is_valid_clinic_list(
+            new_clinics, Clinic_list
+        )
+
+            if is_valid:
+                new_clinics = valid_clinics
+                break
+            else:
+                print(f"\033[91m!! These clinics are not valid: {', '.join(invalid_clinics)} !!\033[0m")
+                print("Please re-enter the clinic names correctly.")
+
+        new_specialisation = input(f"New specialisation (comma-separated) ({','.join(gp_to_update.get_specialisation())}): ")
+        new_specialisation = new_specialisation.split(',') if new_specialisation else gp_to_update.get_specialisation()
+
+        new_availability = input(f"New Operating Hours ({gp_to_update.get_availability()}): ") or gp_to_update.get_availability()
+        
+        gp_to_update.set_gp_name(new_name)
+        gp_to_update.set_email(new_email)
+        gp_to_update.set_assigned_clinics(new_clinics)
+        gp_to_update.set_specialisation(new_specialisation)
+        gp_to_update.set_availability(new_availability)
+
+        FileIO.save_gps(self.gps)
+
+        self.menu.show_update_success_page(type="gp", instance_variable=gp_to_update)
+        self.manage_gps(admin)
+
+
+
     
     def user_login(self):
         """

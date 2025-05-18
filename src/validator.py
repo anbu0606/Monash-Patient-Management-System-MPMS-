@@ -60,3 +60,11 @@ class Validator:
             if input_password == valid_patient_details[input_email]:
                 return True
         return False
+    
+
+    @staticmethod
+    def is_valid_clinic_list(assigned_clinics, available_clinics):
+
+        valid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() in available_clinics]
+        invalid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() not in available_clinics]
+        return len(invalid_clinics) == 0, valid_clinics, invalid_clinics
