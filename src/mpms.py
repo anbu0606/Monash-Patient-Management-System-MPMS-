@@ -134,7 +134,7 @@ class MPMS:
         elif user_action == "profile_page":
             self.user_profile_page(admin)
         elif user_action == "gp_report":
-            self.manage_gps(admin)
+            self.generate_report(admin, "gp")
         elif user_action == "reason_report":
             self.generate_report(admin, "reason")
         elif user_action == "manage_appointment_slots":
@@ -465,10 +465,26 @@ class MPMS:
             raise ValueError(f"Invalid value returned from show_report_export_page: {user_action} to export_report() in MPMS")
     
     def generate_report(self, admin, type):
+        
+        date_range_result = self.menu.get_report_date_range()
+    
+        # Check if the result is a string
+        if isinstance(date_range_result, str):
+            if date_range_result == "back":
+                return self.admin_home(admin)
+            elif date_range_result == "logout":
+                return self.logout(admin)
+            else:
+                raise ValueError(f"Unexpected result from get_report_date_range: {date_range_result}")
+        
+        # Otherwise, it's a tuple of (start_date, end_date)
+        start_date, end_date = date_range_result
+
         if type == "reason":
-            report_data = Report.generate_appt_reason_report(self.appointments)
-        elif type == "TDB":
-            pass
+            report_data = Report.generate_appt_reason_report(self.appointments, start_date, end_date)
+        elif type == "gp":
+            report_data = Report.generate_gp_report(self.appointments, start_date, end_date)
+        
         user_action = self.menu.show_view_report_page(report_data[0])
         if user_action == "back":
             self.admin_home(admin)
