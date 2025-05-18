@@ -1,0 +1,61 @@
+
+gp_name:ASSS
+email:QQQ@SSS.CMM
+assigned_clinics:Glen waverley hospital
+specialisation:SSS
+availability:S
+|
+gp_name:Anbu Apollo2 
+email:anbuchandran06@gmail.com
+assigned_clinics:kerala,melb,syd hospital
+specialisation:Vaccinations
+availability:Mon-Fri 6AM-7AM
+|
+gp_name:Anbu Apollo3
+email:anbuchandran06@gmail.com
+assigned_clinics:kerala,melb,syd hospital
+specialisation:Vaccinations
+availability:Mon-Fri 6AM-7AM
+|
+gp_name:Anbu Apollo
+email:Anbu Apollo
+assigned_clinics:Hari's Totally Real Clinic
+specialisation:Hari's Totally Real Clinic
+availability:s
+|
+gp_name:s
+email:s
+assigned_clinics:Mulgrave Clinic
+specialisation:D
+availability:SS
+|
+gp_name:aas
+email:dss
+assigned_clinics:Hari's Totally Real Clinic
+specialisation:xd
+availability:ss
+|
+gp_name:ass
+email:ddd
+assigned_clinics:sss
+specialisation:xxx
+availability:xx
+|
+gp_name:LOGOUT
+email:Anbu@student.in
+assigned_clinics:Mulgrave Clinic
+specialisation:ss
+availability:dds
+|
+gp_name:DD
+email:DD@GM.COM
+assigned_clinics:Mulgrave Clinic
+specialisation:DSS
+availability:SSS
+|
+gp_name:SSS
+email:FDD@GN.COM
+assigned_clinics:Glen waverley hospital
+specialisation:ASS
+availability:DS
+|

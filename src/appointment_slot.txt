@@ -33,5 +33,5 @@ start_time:15:15
 duration:15
 clinic_suburb:Mulgrave
 reason_for_visit:Specialist Referral
-availability:False
+availability:True
 |
