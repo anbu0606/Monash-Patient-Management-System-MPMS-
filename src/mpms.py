@@ -27,6 +27,97 @@ class MPMS:
         self.patients = []
         self.is_user_admin = False
     
+    
+    def admin_cancel_patient_appointment(self, admin):
+        """
+    This function contains the logic for the Admin Cancel Patient Appointment Page to display UI, take input and route user.
+    Args:
+        admin (Admin):  Stores the admin object.
+    """
+        print("\n--- Admin: Cancel a Patient's Appointment ---")
+
+        # Filter booked appointments only
+        booked_appointments = [appt for appt in self.appointments if appt.get_status() == "Booked"]
+
+        if not booked_appointments:
+            print("\033[91mNo booked appointments available to cancel.\033[0m")
+            input("Press Enter to return to admin home.")
+            return self.admin_home(admin)
+
+        # Display booked appointments with index
+        for i, appt in enumerate(booked_appointments, 1):
+            print(f"\nAppointment {i}:")
+            print(f"  Patient Email: {appt.get_email()}")
+            print(appt)
+
+        # Ask admin to select an appointment
+        while True:
+            choice = input("\nEnter the number of the appointment to cancel, or type BACK/LOGOUT: ").strip()
+
+            if Validator.is_input_back(choice):
+                return self.admin_home(admin)
+            if Validator.is_input_logout(choice):
+                return self.logout(admin)
+
+            if choice.isdigit() and 1 <= int(choice) <= len(booked_appointments):
+                selected_appt = booked_appointments[int(choice) - 1]
+                break
+            else:
+                print("\033[91mInvalid selection. Please enter a valid number, BACK, or LOGOUT.\033[0m")
+
+        # Confirm cancellation
+        input1 = self.menu.show_cancellation_confirmation_page(selected_appt)
+        if input1 == "BACK":
+            return self.admin_home(admin)
+        elif input1 != "CONFIRM":
+            print("\033[91mCancellation not confirmed.\033[0m")
+            return self.admin_home(admin)
+
+        # Ask whether to make the slot available again
+        availability_choice = input("Make this slot available for other patients? (yes/no): ").strip().lower()
+        make_slot_available = availability_choice == "yes"
+
+        # Set appointment status
+        selected_appt.set_status("Cancelled by Clinic")
+
+        # Remove appointment from appointments.txt
+        with open("src/appointments.txt", "r") as file:
+            lines = file.readlines()
+
+        with open("src/appointments.txt", "w") as file:
+            for line in lines:
+                if not line.startswith(f"{selected_appt.get_email()}|{selected_appt.get_slot().get_clinic_name()}|{selected_appt.get_slot().get_gp_name()}|{selected_appt.get_slot().get_date()}|{selected_appt.get_slot().get_start_time()}"):
+                    file.write(line)
+
+        #  Only update the slots availability if admin said YES
+        if make_slot_available:
+            for slot in self.appointment_slots:
+                if (slot.get_clinic_name() == selected_appt.get_slot().get_clinic_name() and
+                    slot.get_gp_name() == selected_appt.get_slot().get_gp_name() and
+                    slot.get_date() == selected_appt.get_slot().get_date() and
+                    slot.get_start_time() == selected_appt.get_slot().get_start_time()):
+                    slot.set_availability(True)
+                    break
+        else:
+            # If the admin chooses not to make the slot available again, set its availability to False
+            for slot in self.appointment_slots:
+                if (slot.get_clinic_name() == selected_appt.get_slot().get_clinic_name() and
+                    slot.get_gp_name() == selected_appt.get_slot().get_gp_name() and
+                    slot.get_date() == selected_appt.get_slot().get_date() and
+                    slot.get_start_time() == selected_appt.get_slot().get_start_time()):
+                    slot.set_availability(False)
+                    break
+
+        # Save updated appointments and slots
+        FileIO.save_appointments(self.appointments)
+        FileIO.save_appointment_slots(self.appointment_slots)
+
+        # Show success message and return to admin home
+        self.menu.show_cancellation_success_page(selected_appt)
+        return self.admin_home(admin)
+
+
+
     def admin_home(self, admin):
         """
         This function contains the logic for the Admin Home Page to display UI, take input and route user.
@@ -50,7 +141,7 @@ class MPMS:
         elif user_action == "manage_gp":
             pass
         elif user_action == "manage_patient_appointments":
-            pass
+            self.admin_cancel_patient_appointment(admin)
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to admin_home() in MPMS Class.")
     
