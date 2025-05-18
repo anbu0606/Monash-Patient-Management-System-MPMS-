@@ -2,6 +2,8 @@ import sys #imports module that can perform system functions
 import subprocess #imports module that can run commands on local system
 from validator import Validator
 import re
+from datetime import datetime, timedelta
+
 class Menu:
     """
     Menu class handles the display of user interface for the MPMS Application.
@@ -746,6 +748,68 @@ Please enter the Option Number or LOGOUT
         elif type == "create" : print('''Enter \033[96m"CREATE"\033[0m to create a new entry\n''')
         elif type == "delete" : print('''Enter \033[90m"DELETE"\033[0m to delete an entry\n''')
     
+    def get_report_date_range(self, attempt_number = 0):
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                        SELECT REPORT DATE RANGE
+        """)
+        print("""
+        1. Daily (Today)
+        2. Weekly (Last 7 days)
+        3. Monthly (Last 30 days)
+        4. Custom range
+        5. All time
+        """)
+        
+        today = datetime.now()
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif user_input == "1":
+            # Daily - just today
+            start_date = today.strftime("%d-%m-%Y")
+            end_date = start_date
+            return start_date, end_date
+        elif user_input == "2":
+            # Weekly - last 7 days
+            start_date = (today - timedelta(days=6)).strftime("%d-%m-%Y")
+            end_date = today.strftime("%d-%m-%Y")
+            return start_date, end_date
+        elif user_input == "3":
+            # Monthly - last 30 days
+            start_date = (today - timedelta(days=29)).strftime("%d-%m-%Y")
+            end_date = today.strftime("%d-%m-%Y")
+            return start_date, end_date
+        elif user_input == "4":
+            # Custom range
+            print("\nEnter date in DD-MM-YYYY format")
+            while True:
+                start_date = input("Start date: ").strip()
+                if Validator.is_valid_date_format(start_date):
+                    break
+                print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
+            
+            while True:
+                end_date = input("End date: ").strip()
+                if Validator.is_valid_date_format(end_date):
+                    break
+                print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
+            
+            return start_date, end_date
+        elif user_input == "5":
+            # All time
+            return None, None
+        else:
+            return self.get_report_date_range(attempt_number = 1)
+
+
     def show_report_export_page(self, report_data, attempt_number = 0):
         self.clear_screen()
         print(self.banner)
