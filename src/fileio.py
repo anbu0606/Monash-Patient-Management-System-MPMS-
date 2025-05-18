@@ -93,6 +93,27 @@ class FileIO:
         return appointments
 
     @staticmethod
+    def load_clinics(clinic_class, filename="clinic.txt"):
+        """
+        This function creates Clinic objects and restores their state from a text file.
+        It then stores the objects in a class variable.
+        """
+        clinic_list = []
+        with open(f"src\\{filename}", "r") as file:
+            clinics_raw_data = [y.rstrip().split("\n") for y in file.read().split("|\n")]
+        for clinic_raw_data in clinics_raw_data:
+            clinic = clinic_class()
+            for key_value in clinic_raw_data:
+                if ":" not in key_value:
+                    continue
+                key, value = key_value.split(":", 1)
+                if key == "available_services":
+                    value = value.split(",")
+                setattr(clinic, key, value)
+            clinic_list.append(clinic)
+        return clinic_list
+
+    @staticmethod
     def load_patients(patient_class, filename="patient.txt"):
         """
         This function creates patient objects and restores their instance state using a text file storing object state.
@@ -140,3 +161,12 @@ class FileIO:
         with open(f"src\\{filename}", "w") as f:
             for slot in slots:
                 f.write(str(slot))
+
+    @staticmethod
+    def save_clinics(clinics=[], filename="clinic.txt"):
+        """
+        Save all clinic objects in the text file.
+        """    
+        with open(f"src\\{filename}", "w") as f:
+            for clinic in clinics:
+                f.write(str(clinic))

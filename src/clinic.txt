@@ -1,11 +1,16 @@
 
-clinic_name:Anbu Apollo 
-suburb:Chennai
-available_services:General
-operating_hours:Mon-Fri 6AM-7AM
+clinic_name:        Anbu Apollo 
+suburb:             Chennai
+available_services: General Consultation,Specialist Referral,Vaccinations
+operating_hours:    Mon-Fri 6AM-7AM
 |
-clinic_name:Mulgrave Clinic
-suburb:Mulgrave
-available_services:General Consultation,Specialist Referral
-operating_hours:Mon-Fri 8AM-5PM
+clinic_name:        Mulgrave Clinic
+suburb:             Mulgrave
+available_services: General Consultation,Specialist Referral
+operating_hours:    Tue-Fri 8AM-10PM
+|
+clinic_name:Hari's Totally Real Clinic
+suburb:Real Suburb
+available_services:General Consultation,Vaccincation
+operating_hours:Mon-Sat 11PM-5AM
 |
