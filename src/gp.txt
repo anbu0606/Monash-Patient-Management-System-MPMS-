@@ -1,61 +1,49 @@
 
-gp_name:ASSS
-email:QQQ@SSS.CMM
-assigned_clinics:Glen waverley hospital
-specialisation:SSS
-availability:S
+gp_name:Dr. Sarah Tan
+email:stan@monashclinic.com
+assigned_clinics:Clayton Clinic
+specialisation:General Consultation
+availability:Sunday
 |
-gp_name:Anbu Apollo2 
-email:anbuchandran06@gmail.com
-assigned_clinics:kerala,melb,syd hospital
-specialisation:Vaccinations
-availability:Mon-Fri 6AM-7AM
+gp_name:Dr. James Wong
+email:jwong@monashclinic.com
+assigned_clinics:Oakleigh Health Centre,Mount Waverley Medical
+specialisation:Mental Health Consultation
+availability:Monday,Tuesday
 |
-gp_name:Anbu Apollo3
-email:anbuchandran06@gmail.com
-assigned_clinics:kerala,melb,syd hospital
-specialisation:Vaccinations
-availability:Mon-Fri 6AM-7AM
-|
-gp_name:Anbu Apollo
-email:Anbu Apollo
-assigned_clinics:Hari's Totally Real Clinic
-specialisation:Hari's Totally Real Clinic
-availability:s
-|
-gp_name:s
-email:s
+gp_name:Dr. Emily Red
+email:ered@monashclinic.com
 assigned_clinics:Mulgrave Clinic
-specialisation:D
-availability:SS
+specialisation:Chronic Condition Management
+availability:Wednesday,Friday
 |
-gp_name:aas
-email:dss
-assigned_clinics:Hari's Totally Real Clinic
-specialisation:xd
-availability:ss
+gp_name:Dr. Nina Mehra
+email:nmehra@monashclinic.com
+assigned_clinics:Clayton Clinic,Oakleigh Clinic
+specialisation:Specialist Referral
+availability:Saturday
 |
-gp_name:ass
-email:ddd
-assigned_clinics:sss
-specialisation:xxx
-availability:xx
+gp_name:Dr. Amina Patel
+email:apatel@monashclinic.com
+assigned_clinics:Oakleigh Clinic
+specialisation:Vaccination
+availability:Monday
 |
-gp_name:LOGOUT
-email:Anbu@student.in
+gp_name:Dr. Thomas Lee
+email:tlee@monashclinic.com
+assigned_clinics:Mount Waverley Medical,Clayton Clinic
+specialisation:General Consultation
+availability:Friday,Saturday
+|
+gp_name:Dr. Helena Zhou
+email:hzhou@monashclinic.com
 assigned_clinics:Mulgrave Clinic
-specialisation:ss
-availability:dds
+specialisation:Mental Health Consultation
+availability:Sunday
 |
-gp_name:DD
-email:DD@GM.COM
-assigned_clinics:Mulgrave Clinic
-specialisation:DSS
-availability:SSS
-|
-gp_name:SSS
-email:FDD@GN.COM
-assigned_clinics:Glen waverley hospital
-specialisation:ASS
-availability:DS
+gp_name:Dr. Ryan Cook
+email:rcook@monashclinic.com
+assigned_clinics:Oakleigh Health Centre
+specialisation:Skin Specialist
+availability:Tuesday,Thursday
 |
