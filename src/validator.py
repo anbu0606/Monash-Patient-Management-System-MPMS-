@@ -10,6 +10,12 @@ class Validator:
         return False
     
     @staticmethod
+    def is_input_continue(user_input):
+        if user_input == "CONTINUE":
+            return True
+        return False
+    
+    @staticmethod
     def is_input_exit(user_input):
         if user_input == "EXIT":
             return True

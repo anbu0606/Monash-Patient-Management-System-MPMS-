@@ -6,13 +6,13 @@ from appointment import Appointment
 from appointment_slot import AppointmentSlot
 from fileio import FileIO
 from report import Report
+from clinic import Clinic
 
 menu = Menu()
 mpms = MPMS()
 menu.clear_screen()
 
-appointments = FileIO.load_appointments(Appointment, AppointmentSlot)
+clinics = FileIO.load_clinics(Clinic)
 
-report_data = Report.generate_appt_reason_report(appointments)
-Report.export_report(".txt", report_data[0])
-Report.export_report(".csv", report_data[1])
+for clinic in clinics:
+    print(str(clinic)[:-2])

@@ -9,6 +9,7 @@ from validator import Validator
 from fileio import FileIO
 from report import Report
 from clinic import Clinic
+
 class MPMS:
     """
     This class contains the core logic of the Monash Patient Management System. 
@@ -21,10 +22,10 @@ class MPMS:
         self.admins = []
         self.appointment_slots = []
         self.appointments = []
+        self.clinics = []
         self.menu = Menu()
         self.patients = []
         self.is_user_admin = False
-        # Other Attributes
     
     def admin_home(self, admin):
         """
@@ -44,8 +45,8 @@ class MPMS:
             self.generate_report(admin, "reason")
         elif user_action == "manage_appointment_slots":
             pass
-        elif user_action == "manage_clinic":
-            self.manage_clinic(admin)
+        elif user_action == "manage_clinics":
+            self.manage_clinics(admin)
         elif user_action == "manage_gp":
             pass
         elif user_action == "manage_patient_appointments":
@@ -165,7 +166,6 @@ class MPMS:
         else:
             raise ValueError(f"Invalid user_action:{user_action} argument returned to book_appointment() in MPMS Class.")
 
-
     def _finalise_appointment(self, slots, patient, slot_index=None):
         if slot_index is None:
             user_action = self.menu.show_appointment_slots_page(slots)
@@ -190,49 +190,6 @@ class MPMS:
         FileIO.save_appointment(booked_appointment)
         self.menu.show_booking_success_page(booked_appointment)
         self.patient_home(patient)
-    
-    def check_appointment_booking_validity(self, appointment):
-        """
-        Check if the user is booking the appointment within 2 hours of the appointment time.
-        """
-        app_datetime_str = f"{appointment.date} {appointment.start_time}"
-        appointment_datetime = datetime.strptime(app_datetime_str, "%d-%m-%Y %H:%M")
-        current_time = datetime.now()
-        time_diff = appointment_datetime - current_time
-
-        if time_diff < timedelta(hours=2):
-            print("\033[91m You cannot book an appointment within 2 hours of the appointment time. \033[0m")
-            return False
-        return True
-     
-    def upcoming_appointments(self,patient):
-        upcoming_appts = self.get_patient_appointments(email=patient.get_email(), type="Booked")
-        
-        user_action = self.menu.show_upcoming_appointments_page(upcoming_appts)
-        if user_action == "logout":
-            self.logout(patient)
-        elif user_action == "back":
-            self.patient_home(patient)
-        elif user_action == "cancel":
-            user_action = input("\n Enter the Slot Number of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip().lower()
-            if user_action == "BACK":
-                self.patient_home(patient)
-                return
-            elif user_action.isdigit():
-                appointment_index = int(user_action) - 1
-
-                if 0 <= appointment_index < len(upcoming_appts):
-                    appointment_to_cancel = upcoming_appts[appointment_index]
-                    self.cancel_appointment(patient, appointment_to_cancel)
-        
-                else:
-                    print("\033[91m!! Invalid selection. Please try again !!\033[0m")
-                    self.upcoming_appointments(patient)
-
-            else:
-                print("\033[91m!! Invalid input. Please enter a Slot number or 'Back' to return to the Home Page !!\033[0m")
-                self.upcoming_appointments(patient)
-
 
     def cancel_appointment(self, patient, appointment):
         # app_datetime_str = f"{appointment.date} {appointment.start_time}"
@@ -265,8 +222,22 @@ class MPMS:
             self.logout(patient)
         else:
             print("\033[91m Unrecognized option. Please try again.\033[0m")
-            self.cancel_appointment(patient, appointment)    
+            self.cancel_appointment(patient, appointment)
+    
+    def check_appointment_booking_validity(self, appointment):
+        """
+        Check if the user is booking the appointment within 2 hours of the appointment time.
+        """
+        app_datetime_str = f"{appointment.date} {appointment.start_time}"
+        appointment_datetime = datetime.strptime(app_datetime_str, "%d-%m-%Y %H:%M")
+        current_time = datetime.now()
+        time_diff = appointment_datetime - current_time
 
+        if time_diff < timedelta(hours=2):
+            print("\033[91m You cannot book an appointment within 2 hours of the appointment time. \033[0m")
+            return False
+        return True
+     
     # Remove the booked appoointment from appointments.txt
     def complete_cancellation(self, patient, appointment):
         with open("src/appointments.txt", "r") as file:
@@ -286,7 +257,6 @@ class MPMS:
                 slot.get_start_time() == appointment.get_slot().get_start_time()
                 ):
                 slot.set_availability(True)
-                slot.set_status("Available")
 
         appointment.set_status("Cancelled by Patient")
         FileIO.save_appointments(self.appointments)
@@ -296,6 +266,40 @@ class MPMS:
 
         self.menu.show_cancellation_success_page(appointment)
         self.patient_home(patient)
+
+    def create_clinic(self, admin):
+        user_action = self.menu.show_create_clinic_page()
+        if isinstance(user_action, dict):
+            new_clinic = Clinic(
+                clinic_name=user_action["clinic_name"],
+                suburb=user_action["suburb"],
+                available_services=user_action["available_services"],
+                operating_hours=user_action["operating_hours"]
+            )
+            self.clinics.append(new_clinic)
+            FileIO.save_clinics(self.clinics)
+            self.menu.show_creation_success_page(type="Clinic", instance_variable=new_clinic)
+            self.manage_clinics(admin)
+        elif user_action == "back":
+            self.admin_home(admin)
+        elif user_action == "logout":
+            self.logout(admin)
+        else:
+            raise ValueError(f"Invalid value for user_action returned:{user_action} to create_clinic() in MPMS")
+
+    def delete_clinic(self, admin):
+        user_action = self.menu.show_delete_clinic_page(self.clinics)
+        if isinstance(user_action, int): #index of clinic instance returned.
+            deleted_clinic = self.clinics.pop(user_action)
+            FileIO.save_clinics(self.clinics)
+            self.menu.show_deletion_confirmation_page(type = "clinic", instance_variable = deleted_clinic )
+            self.manage_clinics(admin)
+        elif user_action == "back":
+            self.manage_clinics(admin)
+        elif user_action == "logout":
+            self.logout(admin)
+        else:
+            raise ValueError(f"Invalid value for user_action:{user_action} received in delete_clinic() in MPMS")
 
     def export_report(self, admin, report_data, type):
         user_action = self.menu.show_report_export_page(report_data[0])
@@ -371,8 +375,6 @@ class MPMS:
             if user.get_email() == email:
                 return user
 
-
-
     def get_valid_user_details(self, user_type):
         valid_details = {}
         if user_type == "admin":
@@ -388,7 +390,7 @@ class MPMS:
         self.patients = FileIO.load_patients(patient_class=Patient)
         self.appointments = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
         self.admins = FileIO.load_admins(admin_class=Admin)
-        self.clinic = Clinic.load_clinics()
+        self.clinics = FileIO.load_clinics(clinic_class=Clinic)
     
     def logout(self, user):
         if isinstance(user, Patient):
@@ -398,6 +400,25 @@ class MPMS:
             self.user_login()
         else:
             raise ValueError(f"Invalid user object argument:{user} passed to logout() in MPMS Class.")
+
+    def manage_clinics(self,admin):
+        """
+        Displays all the clinics in the system.
+        """
+        clinics = self.clinics
+        user_action = self.menu.show_clinic_management_page(clinics)
+        if user_action == "logout":
+            self.logout(admin)
+        elif user_action == "back":
+            self.admin_home(admin)
+        elif user_action == "update":
+            self.update_clinic(admin)
+        elif user_action == "create":
+            self.create_clinic(admin)
+        elif user_action == "delete":
+            self.delete_clinic(admin)
+        else:
+            raise ValueError(f"Invalid user_action received:{user_action} from show_clinic_management_page in manage_clinics() in MPMS class")
     
     def patient_home(self, patient):
         """
@@ -448,6 +469,71 @@ class MPMS:
         self.load_system_state()
         self.user_login()  # Calls user login functionality.
     
+    def upcoming_appointments(self,patient):
+        upcoming_appts = self.get_patient_appointments(email=patient.get_email(), type="Booked")
+        
+        user_action = self.menu.show_upcoming_appointments_page(upcoming_appts)
+        if user_action == "logout":
+            self.logout(patient)
+        elif user_action == "back":
+            self.patient_home(patient)
+        elif user_action == "cancel":
+            user_action = input("\n Enter the Slot Number of the Appointment to Cancel or type 'BACK' to return to the Home Page: ").strip()
+            if user_action == "BACK":
+                self.patient_home(patient)
+            elif user_action.isdigit():
+                appointment_index = int(user_action) - 1
+
+                if 0 <= appointment_index < len(upcoming_appts):
+                    appointment_to_cancel = upcoming_appts[appointment_index]
+                    self.cancel_appointment(patient, appointment_to_cancel)
+        
+                else:
+                    print("\033[91m!! Invalid selection. Please try again. Going back to Upcoming Appointments Page!!\033[0m")
+                    input("Press Enter to continue.. ")
+                    self.upcoming_appointments(patient)
+
+            else:
+                print("\033[91m!! Invalid input. Going back to Upcoming Appointments Page!!\033[0m")
+                input("Press Enter to continue.. ")
+                self.upcoming_appointments(patient)
+
+    def update_clinic(self, admin):
+        clinics = self.clinics
+        user_action = input("\n Enter the Slot Number of the Clinic to Update or type 'BACK' to return to the Home Page: ").strip()
+        if user_action == "BACK":
+            self.admin_home(admin)
+        elif user_action.isdigit():
+            clinic_index = int(user_action) - 1
+            if 0 <= clinic_index < len(clinics):
+                clinic_to_update = clinics[clinic_index]
+            else:
+                print("\033[91m!! Invalid selection. Please try again!!\033[0m")
+                input("Press Enter to continue.. ")
+                self.manage_clinics(admin)
+        else:
+            print("\033[91m!! Invalid input. Please try again!!\033[0m")
+            input("Press Enter to continue.. ")
+            self.manage_clinics(admin)
+
+        print("\n--- Update Clinic Details ---")
+        print("\nLeave the field empty if you don't want to change it:")
+        new_name = input(f"New Name ({clinic_to_update.get_clinic_name()}): ") or clinic_to_update.get_clinic_name()
+        new_suburb = input(f"New Suburb ({clinic_to_update.get_suburb()}): ") or clinic_to_update.get_suburb()
+        new_services = input(f"New Services (comma-separated) ({','.join(clinic_to_update.get_available_services())}): ")
+        new_services = new_services.split(',') if new_services else clinic_to_update.get_available_services()
+        new_hours = input(f"New Operating Hours ({clinic_to_update.get_operating_hours()}): ") or clinic_to_update.get_operating_hours()
+        
+        clinic_to_update.set_clinic_name(new_name)
+        clinic_to_update.set_suburb(new_suburb)
+        clinic_to_update.set_available_services(new_services)
+        clinic_to_update.set_operating_hours(new_hours)
+
+        FileIO.save_clinics(self.clinics)
+
+        self.menu.show_update_success_page(type="clinic", instance_variable=clinic_to_update)
+        self.manage_clinics(admin)
+    
     def user_login(self):
         """
         This function contains the logic for MPMS Login Page to display UI, take input and route user for the  
@@ -467,59 +553,7 @@ class MPMS:
             self.admin_home(admin)
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_login() in MPMS Class.")
-
-    def manage_clinic(self,admin):
-        """
-        Displays all the clinics in the system.
-        """
-        clinics = Clinic.get_clinic_list()
-        user_action = self.menu.show_clinic_list(clinics)
-        if user_action == "logout":
-            self.logout(admin)
-        elif user_action == "back":
-            self.admin_home(admin)
-        elif user_action == "update":
-            user_action = input("\n Enter the Slot Number of the Clinic to Update or type 'BACK' to return to the Home Page: ").strip().lower()
-            if user_action == "BACK":
-                self.admin_home(admin)
-                return
-            elif user_action.isdigit():
-                clinic_index = int(user_action) - 1
-
-                if 0 <= clinic_index < len(clinics):
-                    clinic_to_update = clinics[clinic_index]
-                    self.update_clinic(admin, clinic_to_update)
-        
-                else:
-                    print("\033[91m!! Invalid selection. Please try again !!\033[0m")
-                    self.manage_clinic(admin)
-
-            else:
-                print("\033[91m!! Invalid input. Please enter a Slot number or 'Back' to return to the Home Page !!\033[0m")
-                self.manage_clinic(admin)
-    
-    def update_clinic(self,admin,clinic_to_update):
-        print("\n--- Update Clinic Details ---")
-        print("\nLeave the field empty if you don't want to change it:")
-
-        new_name = input(f"New Name ({clinic_to_update.clinic_name}): ") or clinic_to_update.clinic_name
-        new_suburb = input(f"New Suburb ({clinic_to_update.suburb}): ") or clinic_to_update.suburb
-        new_services = input(f"New Services (comma-separated) ({','.join(clinic_to_update.available_services)}): ")
-        new_services = new_services.split(',') if new_services else clinic_to_update.available_services
-        new_hours = input(f"New Operating Hours ({clinic_to_update.operating_hours}): ") or clinic_to_update.operating_hours
-        
-        clinic_to_update.clinic_name = new_name
-        clinic_to_update.suburb = new_suburb
-        clinic_to_update.available_services = new_services
-        clinic_to_update.operating_hours = new_hours
-
-        Clinic.save_clinics(Clinic.get_clinic_list())
-
-        print(f"\033[92mClinic '{new_name}' updated successfully.\033[0m")
-        self.manage_clinic(admin)
-
-
-
+   
     def user_profile_page(self, user):
         user_action = self.menu.show_profile_page(user_obj=user, attempt_number=0, is_user_admin=self.is_user_admin)
         if user_action == "back":
