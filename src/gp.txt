@@ -1,9 +1,9 @@
 
-gp_name:SSD
-email:Anbu@gmail.com
-assigned_clinics:Mulgrave Clinic
-specialisation:dd
-availability:ddd
+gp_name:ASSS
+email:QQQ@SSS.CMM
+assigned_clinics:Glen waverley hospital
+specialisation:SSS
+availability:S
 |
 gp_name:Anbu Apollo2 
 email:anbuchandran06@gmail.com
@@ -46,4 +46,16 @@ email:Anbu@student.in
 assigned_clinics:Mulgrave Clinic
 specialisation:ss
 availability:dds
+|
+gp_name:DD
+email:DD@GM.COM
+assigned_clinics:Mulgrave Clinic
+specialisation:DSS
+availability:SSS
+|
+gp_name:SSS
+email:FDD@GN.COM
+assigned_clinics:Glen waverley hospital
+specialisation:ASS
+availability:DS
 |

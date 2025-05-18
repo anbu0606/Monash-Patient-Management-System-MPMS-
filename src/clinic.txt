@@ -19,3 +19,8 @@ suburb:Glen Waverley
 available_services:Specialist Referral
 operating_hours:Tue-Fri 8AM-10PM
 |
+clinic_name:SDD
+suburb:VVD
+available_services:SS
+operating_hours:D
+|
