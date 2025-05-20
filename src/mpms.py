@@ -496,6 +496,16 @@ class MPMS:
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_profile_page() in MPMS Class.")
 
+    def get_non_duplicate_slots(self, associated_upcoming_slots):
+        slots_raw_data = []
+        non_duplicate_slots = []
+        for slot in self.appointment_slots:
+            slots_raw_data.append(str(slot))
+        for booked_slot in associated_upcoming_slots:
+            if str(booked_slot) not in slots_raw_data:
+                non_duplicate_slots.append(booked_slot)
+        return non_duplicate_slots
+
     def get_patient_appointments(self, email, type):
         '''
         Returns a list of appointments that are associated with the given user email.
@@ -548,8 +558,12 @@ class MPMS:
 
     def load_system_state(self):
         self.appointment_slots = FileIO.load_appointment_slots(appointment_slot_class=AppointmentSlot)
+        for i in self.appointment_slots:
+            print(i)
         self.patients = FileIO.load_patients(patient_class=Patient)
-        self.appointments = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
+        self.appointments, associated_upcoming_slots = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
+        self.appointment_slots += self.get_non_duplicate_slots(associated_upcoming_slots)
+        FileIO.save_appointment_slots(self.appointment_slots)
         self.admins = FileIO.load_admins(admin_class=Admin)
         self.clinics = FileIO.load_clinics(clinic_class=Clinic)
         self.gps = FileIO.load_gp(gp_class=Gp)

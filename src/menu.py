@@ -810,6 +810,7 @@ Please enter the Option Number or LOGOUT
             return self.get_report_date_range(attempt_number = 1)
 
 
+<<<<<<< HEAD
     def paginate_items(self, items, page_size=10, current_page=1):
     
         total_items = len(items)
@@ -837,6 +838,8 @@ Please enter the Option Number or LOGOUT
         }
 
 
+=======
+>>>>>>> origin/main
     def show_report_export_page(self, report_data, attempt_number = 0):
         self.clear_screen()
         print(self.banner)
