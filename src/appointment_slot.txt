@@ -44,3 +44,129 @@ clinic_suburb:South Yarra
 reason_for_visit:General Consultation
 availability:True
 |
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:15-06-2025
+start_time:9
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:12-06-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:14-06-2025
+start_time:9
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:16-06-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:10-07-2025
+start_time:9
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:17-06-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:11-09-2025
+start_time:9
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:11-09-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:15-07-2025
+start_time:9
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:29-06-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:14-07-2025
+start_time:9
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:22-06-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:10-08-2025
+start_time:9
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:17-07-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
