@@ -134,7 +134,7 @@ class MPMS:
         elif user_action == "profile_page":
             self.user_profile_page(admin)
         elif user_action == "gp_report":
-            self.manage_gps(admin)
+            self.generate_report(admin, "gp")
         elif user_action == "reason_report":
             self.generate_report(admin, "reason")
         elif user_action == "manage_appointment_slots":
@@ -465,10 +465,26 @@ class MPMS:
             raise ValueError(f"Invalid value returned from show_report_export_page: {user_action} to export_report() in MPMS")
     
     def generate_report(self, admin, type):
+        
+        date_range_result = self.menu.get_report_date_range()
+    
+        # Check if the result is a string
+        if isinstance(date_range_result, str):
+            if date_range_result == "back":
+                return self.admin_home(admin)
+            elif date_range_result == "logout":
+                return self.logout(admin)
+            else:
+                raise ValueError(f"Unexpected result from get_report_date_range: {date_range_result}")
+        
+        # Otherwise, it's a tuple of (start_date, end_date)
+        start_date, end_date = date_range_result
+
         if type == "reason":
-            report_data = Report.generate_appt_reason_report(self.appointments)
-        elif type == "TDB":
-            pass
+            report_data = Report.generate_appt_reason_report(self.appointments, start_date, end_date)
+        elif type == "gp":
+            report_data = Report.generate_gp_report(self.appointments, start_date, end_date)
+        
         user_action = self.menu.show_view_report_page(report_data[0])
         if user_action == "back":
             self.admin_home(admin)
@@ -479,6 +495,16 @@ class MPMS:
             self.export_report(admin, report_data, type)
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_profile_page() in MPMS Class.")
+
+    def get_non_duplicate_slots(self, associated_upcoming_slots):
+        slots_raw_data = []
+        non_duplicate_slots = []
+        for slot in self.appointment_slots:
+            slots_raw_data.append(str(slot))
+        for booked_slot in associated_upcoming_slots:
+            if str(booked_slot) not in slots_raw_data:
+                non_duplicate_slots.append(booked_slot)
+        return non_duplicate_slots
 
     def get_patient_appointments(self, email, type):
         '''
@@ -532,8 +558,12 @@ class MPMS:
 
     def load_system_state(self):
         self.appointment_slots = FileIO.load_appointment_slots(appointment_slot_class=AppointmentSlot)
+        for i in self.appointment_slots:
+            print(i)
         self.patients = FileIO.load_patients(patient_class=Patient)
-        self.appointments = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
+        self.appointments, associated_upcoming_slots = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
+        self.appointment_slots += self.get_non_duplicate_slots(associated_upcoming_slots)
+        FileIO.save_appointment_slots(self.appointment_slots)
         self.admins = FileIO.load_admins(admin_class=Admin)
         self.clinics = FileIO.load_clinics(clinic_class=Clinic)
         self.gps = FileIO.load_gp(gp_class=Gp)

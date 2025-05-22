@@ -62,12 +62,16 @@ class FileIO:
                     else:
                         value = False
                 setattr(appt_slot, key, value)
-            appointment_slots.append(appt_slot)
+            if appt_slot.get_clinic_name() == None:
+                del appt_slot
+            else:
+                appointment_slots.append(appt_slot)
         return appointment_slots
     
     @staticmethod
     def load_appointments(appointment_class, appointment_slot_class):
         appointments= []
+        associated_upcoming_slots = []
         try:
             with open("src/appointments.txt", "r") as f:
                 for line in f:
@@ -88,9 +92,11 @@ class FileIO:
                             slot=slot_obj,
                             status=fields[8]
                         ))
+                        if fields[8] == "Booked":
+                            associated_upcoming_slots.append(slot_obj)
         except FileNotFoundError:
             pass
-        return appointments
+        return appointments, associated_upcoming_slots
 
     @staticmethod
     def load_clinics(clinic_class, filename="clinic.txt"):
