@@ -1,8 +1,21 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 class Validator:
     def __init__(self):
         pass
 
+    @staticmethod
+    # Filter out slots that are not available or are less than 2 hours away.
+    # The program checks the time difference once again in line 110, just after the user selects a slot
+    # to see if it is < 2 hours away.
+    def is_booking_valid(slot):
+        print(slot)
+        try:
+            slot_time = datetime.strptime(f"{slot.get_date()} {slot.get_start_time()}", "%d-%m-%Y %H:%M")
+            return slot.get_availability() and slot_time > datetime.now() + timedelta(hours=2)
+        except ValueError as e:
+            print(f"[DEBUG] Invalid slot: {slot.get_date()} {slot.get_start_time()} - {e}")
+            return False
+        
     @staticmethod
     def is_input_back(user_input):
         if user_input == "BACK":

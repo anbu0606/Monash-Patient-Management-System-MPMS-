@@ -42,7 +42,7 @@ start_time:11:45
 duration:60
 clinic_suburb:South Yarra
 reason_for_visit:General Consultation
-availability:True
+availability:False
 |
 clinic_name:Clayton Clinic
 gp_name:Dr. Anbu

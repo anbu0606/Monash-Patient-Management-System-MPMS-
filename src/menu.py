@@ -397,6 +397,10 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         return new_gp_details
 
     def show_creation_success_page(self, type, instance_variable):
+        """
+        Args:
+            type(str): Can be either "Clinic" or "Gp"
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -521,13 +525,12 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         else:
             return self.show_gp_management_page(gps, attempt_number=1)
 
-
-
-
-
-
     
     def show_deletion_confirmation_page(self, type, instance_variable):
+        '''
+        Args:
+            type(str): Can be either "Clinic" or "Gp"
+        '''
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -967,7 +970,7 @@ Please Choose the Export Format
                 appt = appointments[selected_appointment]
                 print(f"\nAppointment {selected_appointment + 1} Details:")
                 print(appt)
-                input("Press Enter to return to appointment list")
+                input("Press Enter to return to appointment list.. ")
                 return self.show_upcoming_appointments_page(appointments,page, page_size, attempt_number=0)
             else:
                 return self.show_upcoming_appointments_page(appointments, page, page_size, attempt_number=1)
