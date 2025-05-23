@@ -50,7 +50,7 @@ class Menu:
         """
         prompts = {
             "date": "Enter the date (DD-MM-YYYY): ",
-            "gp_name": "Enter the GP name (e.g., Dr. Smith): ",
+            "gp_name": "Enter the GP name (e.g., Dr. Emily Red): ",
             "clinic_suburb": "Enter the clinic suburb (e.g., Clayton): "
         }
         return input(prompts[filter_type]).strip()
