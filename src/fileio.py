@@ -1,10 +1,16 @@
 class FileIO:
-
+    
     def __init__(self):
         pass
     
     @staticmethod
     def export_report(format, report_data):
+        """
+        This function exports the report data to a file in the specified format.
+        Args:
+            format(str): The format in which the report data should be exported.
+            report_data(str): The report data to be exported.
+        """
         if format == ".txt":
             with open("appoint_reason_report.txt", "w") as file:
                 file.write(report_data)
@@ -70,6 +76,12 @@ class FileIO:
     
     @staticmethod
     def load_appointments(appointment_class, appointment_slot_class):
+        """
+        This function creates Appointment objects and restores their instance state using a text file storing object state.
+        It then stores the appointment objects in a class variable.
+        Args:
+            filename(str):  A string storing the name of the text file from which data will be extracted. 
+        """
         appointments= []
         associated_upcoming_slots = []
         try:
@@ -174,11 +186,21 @@ class FileIO:
     
     @staticmethod
     def save_appointment(appointment):
+        """
+        Save a single appointment object to the appointments.txt file.
+        Args:
+            appointment (Appointment): The appointment object to save.
+        """
         with open(f"src/appointments.txt", "a") as f:
             f.write(appointment.to_file_string() + "\n")
     
     @staticmethod
     def save_appointments(appointments):
+        """
+        Save a list of appointment objects to the appointments.txt file.
+        Args:
+            appointments (list): A list of appointment objects to save.
+        """
         with open(f"src/appointments.txt", "w") as f:
             for appointment in appointments:
                 f.write(appointment.to_file_string() + "\n")
@@ -187,6 +209,12 @@ class FileIO:
     #call this to make sure that it is saved into the txt file
     @staticmethod
     def save_appointment_slots(slots, filename="appointment_slot.txt"):
+        """
+        Save all appointment slots in the text file.
+        Args:
+            slots (list): A list of appointment slot objects to save.
+            filename (str): The name of the file to save the appointment slots to.
+        """
         # Save all slots, each enclosed in curly braces
         with open(f"src\\{filename}", "w") as f:
             for slot in slots:
@@ -196,7 +224,10 @@ class FileIO:
     def save_clinics(clinics=[], filename="clinic.txt"):
         """
         Save all clinic objects in the text file.
-        """    
+        Args:
+            clinics (list): A list of clinic objects to save.
+            filename (str): The name of the file to save the clinics to.
+        """   
         with open(f"src\\{filename}", "w") as f:
             for clinic in clinics:
                 f.write(str(clinic))
@@ -205,7 +236,10 @@ class FileIO:
     def save_gps(gps=[], filename="gp.txt"):
         """
         Save all gp objects in the text file.
-        """    
+        Args:
+            gps (list): A list of gp objects to save.
+            filename (str): The name of the file to save the gps to.
+        """  
         with open(f"src\\{filename}", "w") as f:
             for gp in gps:
                 f.write(str(gp))

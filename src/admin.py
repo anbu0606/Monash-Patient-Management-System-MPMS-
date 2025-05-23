@@ -29,8 +29,6 @@ Admin Details:
     def append_clinic_data(self, clinic_obj):
         self.clinic_data.append(clinic_obj)
 
-    
-
     def get_clinic_data(self):
         return self.clinic_data
     
