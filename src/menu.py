@@ -41,6 +41,13 @@ class Menu:
             subprocess.run('clear', shell=True)
 
     def get_filter_value(self, filter_type):
+        """
+        Prompts the user for a filter value based on the filter type.
+        Args:
+            filter_type (str): The type of filter to apply (date, gp_name, clinic_suburb).
+        Returns:
+            str: The filter value entered by the user.
+        """
         prompts = {
             "date": "Enter the date (DD-MM-YYYY): ",
             "gp_name": "Enter the GP name (e.g., Dr. Smith): ",
@@ -51,6 +58,9 @@ class Menu:
     def show_admin_home_page(self, attempt_number):
         """
         Displays the Admin home page on the terminal
+        Args:
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        
         """
         self.clear_screen()
         print(self.banner)
@@ -94,6 +104,13 @@ Please enter the Option Number or LOGOUT
             return self.show_admin_home_page(attempt_number+1)
         
     def show_appointment_slots_page(self, slots, attempt_number=0, is_skip_enabled = False):
+        """
+        Displays the appointment slots page with available slots for booking.
+        Args:
+            slots (list): List of available appointment slots.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+            is_skip_enabled (bool): Flag to enable or disable the skip option.
+        """
         self.clear_screen()
         print(self.banner)
         available_slots = [slot for slot in slots if slot.availability]
@@ -132,6 +149,11 @@ Please enter the Option Number or LOGOUT
             return self.show_appointment_slots_page(slots, attempt_number=attempt_number+1)
     
     def show_booking_success_page(self, appointment):
+        """
+        Displays the booking success page with the appointment details.
+        Args:
+            appointment (object): The appointment object that was booked.
+        """
         self.clear_screen()
         print(self.banner)
         print("\033[92m Your Appointment has been successfully booked! \033[0m")
@@ -140,17 +162,27 @@ Please enter the Option Number or LOGOUT
         return user_input
 
     def show_cancellation_confirmation_page(self, appointment):
+        """
+        Displays the cancellation confirmation page with the appointment details.
+        Args:
+            appointment (object): The appointment object that was cancelled.
+        """
         print("\033[91m You are about to cancel the following appointment:\033[0m")
         print(appointment)
-        print("\nAre you sure you want to cancel this appointment? (CONFIRM/BACK)")
+        print("\nAre you sure you want to cancel this appointment? (CONFIRM/BACK/LOGOUT)")
         while True:
             user_input = input("Enter your choice: ").strip()
-            if user_input in ["CONFIRM", "BACK"]:
+            if user_input in ["CONFIRM", "BACK","LOGOUT"]:
                 return user_input
             else:
-                print("\033[91m Invalid input. Please enter 'CONFIRM' or 'BACK'.\033[0m")
+                print("\033[91m Invalid input. Please enter 'CONFIRM' or 'BACK' or 'LOGOUT'.\033[0m")
 
     def show_cancellation_success_page(self, appointment):
+        """
+        Displays the cancellation success page with the appointment details.
+        Args:
+            appointment (object): The appointment object that was cancelled.
+        """
         print("\033[92m The appointment has been successfully cancelled! \033[0m")
         print(appointment)
         # input("\nPress Enter to continue...")
@@ -158,6 +190,12 @@ Please enter the Option Number or LOGOUT
         return None
 
     def show_clinic_management_page(self, clinics, attempt_number = 0):
+        """
+        Displays the clinic management page with a list of clinics and options to create, update, or delete clinics.
+        Args:
+            clinics (list): List of clinic objects.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print("""
@@ -205,6 +243,12 @@ Please enter the Option Number or LOGOUT
         
 
     def show_gp_management_page(self, gps, attempt_number = 0):
+        """
+        Displays the GP management page with a list of GPs and options to create, update, or delete GPs.
+        Args:
+            gps (list): List of GP objects.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print("""
@@ -256,6 +300,11 @@ Please enter the Option Number or LOGOUT
 
     
     def show_create_clinic_page(self, attempt_number = 0):
+        """
+        Displays the clinic creation page with sample clinic details and prompts for user input.
+        Args:
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -312,6 +361,12 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
 
 
     def show_create_gp_page(self,clinic_list, attempt_number = 0):
+        """
+        Displays the GP creation page with sample GP details and prompts for user input.
+        Args:
+            clinic_list (list): List of available clinics.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -398,8 +453,10 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
 
     def show_creation_success_page(self, type, instance_variable):
         """
+        Displays the creation success page with the details of the created instance.
         Args:
-            type(str): Can be either "Clinic" or "Gp"
+            type (str): The type of instance created (Clinic or GP).
+            instance_variable (object): The instance object that was created.
         """
         self.clear_screen()
         print(self.banner)
@@ -412,6 +469,12 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         return None
     
     def show_delete_clinic_page(self, clinics, attempt_number=0):
+        """
+        Displays the clinic deletion page with a list of clinics and prompts for user input to delete a clinic.
+        Args:
+            clinics (list): List of clinic objects.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -469,6 +532,12 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         
 
     def show_delete_gp_page(self, gps, attempt_number=0):
+        """
+        Displays the GP deletion page with a list of GPs and prompts for user input to delete a GP.
+        Args:
+            gps (list): List of GP objects.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -554,6 +623,11 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
             print("\033[91m!! Invalid input. Please try again !!\033[0m")
 
     def show_export_success_page(self, report_data):
+        """
+        Displays the export success page with the report data.
+        Args:
+            report_data (str): The report data that was exported.
+        """
         self.clear_screen()
         print(self.banner)
         print("\n\033[92m The report has been successfully exported! \033[0m")
@@ -563,6 +637,11 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         return None
 
     def show_filter_options(self, is_skip_enabled = False):
+        """
+        Displays the filter options for appointment slots.
+        Args:
+            is_skip_enabled (bool): Flag to enable or disable the skip option.
+        """
         print("""
 FILTER APPOINTMENT SLOTS
 
@@ -742,6 +821,8 @@ Please enter the Option Number or LOGOUT
     def show_prompt(self, type):
         """
         Displays the standard prompt to inform the user that they can/cannot enter a certain Prompt as input on this screen.
+        Args:
+            type (str): The type of prompt to display.
         """
         if type == "back" : print('''Enter \033[34m"BACK"\033[0m to go back to previous page\n''')
         elif type == "logout" : print('''Enter \033[33m"LOGOUT"\033[0m to go back to Login Page\n''')
@@ -752,6 +833,11 @@ Please enter the Option Number or LOGOUT
         elif type == "delete" : print('''Enter \033[90m"DELETE"\033[0m to delete an entry\n''')
     
     def get_report_date_range(self, attempt_number = 0):
+        """
+        Displays the report date range selection page and returns the selected date range.
+        Args:
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print("""
@@ -814,6 +900,15 @@ Please enter the Option Number or LOGOUT
 
 
     def paginate_items(self, items, page_size=10, current_page=1):
+        """
+        Paginate a list of items.
+        Args:
+            items (list): List of items to paginate.
+            page_size (int): Number of items per page.
+            current_page (int): Current page number.
+        Returns:
+            dict: A dictionary containing paginated items and pagination information.
+        """
     
         total_items = len(items)
         total_pages = max(1, (total_items + page_size - 1) // page_size)  # Ceiling division
@@ -841,6 +936,12 @@ Please enter the Option Number or LOGOUT
 
 
     def show_report_export_page(self, report_data, attempt_number = 0):
+        """
+        Displays the report export page with options to export the report in different formats.
+        Args:
+            report_data (str): The report data to be exported.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f'''
@@ -875,6 +976,12 @@ Please Choose the Export Format
 
 
     def show_update_success_page(self, type , instance_variable):
+        """
+        Displays the update success page with the details of the updated instance.
+        Args:
+            type (str): The type of instance updated (Clinic or GP).
+            instance_variable (object): The instance object that was updated.
+        """
         self.clear_screen()
         print(self.banner)
         if type == "clinic":
@@ -898,6 +1005,9 @@ Please Choose the Export Format
         
         Args:
             appointments (list): List of past Appointment objects
+            page (int): The current page number for pagination.
+            page_size (int): The number of items to display per page.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
         """
         self.clear_screen()
         print(self.banner)
@@ -978,6 +1088,12 @@ Please Choose the Export Format
             return self.show_upcoming_appointments_page(appointments, page, page_size, attempt_number=1)
     
     def show_view_report_page(self, report_data, attempt_number = 0):
+        """
+        Displays the view report page with the generated report data.
+        Args:
+            report_data (str): The generated report data to be displayed.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f'''

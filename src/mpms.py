@@ -32,15 +32,18 @@ class MPMS:
     
     def admin_cancel_patient_appointment(self, admin):
         """
-    This function contains the logic for the Admin Cancel Patient Appointment Page to display UI, take input and route user.
+    This function contains the logic for the Admin Cancel Patient Appointment. 
+    It displays appointments booked by pateints and allows the admin to cancel a patient's appointment.
+    It then provides the option to make the slot available again for other patients or not.
     Args:
         admin (Admin):  Stores the admin object.
+    
     """
         print("\n--- Admin: Cancel a Patient's Appointment ---")
 
         # Filter booked appointments only
         booked_appointments = [appt for appt in self.appointments if appt.get_status() == "Booked"]
-
+        # If no booked appointments, inform the admin
         if not booked_appointments:
             print("\033[91mNo booked appointments available to cancel.\033[0m")
             input("Press Enter to return to admin home.")
@@ -60,24 +63,41 @@ class MPMS:
                 return self.admin_home(admin)
             if Validator.is_input_logout(choice):
                 return self.logout(admin)
-
+            # Check if the choice is a valid number
             if choice.isdigit() and 1 <= int(choice) <= len(booked_appointments):
                 selected_appt = booked_appointments[int(choice) - 1]
                 break
             else:
                 print("\033[91mInvalid selection. Please enter a valid number, BACK, or LOGOUT.\033[0m")
 
-        # Confirm cancellation
-        input1 = self.menu.show_cancellation_confirmation_page(selected_appt)
+        # Confirm cancellation only if the admin types "CONFIRM"
+        input1 = self.menu.show_cancellation_confirmation_page(selected_appt).strip().upper()
+
         if input1 == "BACK":
             return self.admin_home(admin)
+        elif input1 == "LOGOUT":
+            return self.logout(admin)
         elif input1 != "CONFIRM":
-            print("\033[91mCancellation not confirmed.\033[0m")
-            return self.admin_home(admin)
+            print("\033[91mInvalid input. Please enter 'CONFIRM', 'BACK', or 'LOGOUT'.\033[0m")
 
-        # Ask whether to make the slot available again
-        availability_choice = input("Make this slot available for other patients? (yes/no): ").strip().lower()
-        make_slot_available = availability_choice == "yes"
+
+        # Ask whether to make the slot available to other patients again
+        while True:
+            availability_choice = input("Make this slot available for other patients? (yes/no/BACK/LOGOUT): ").strip().lower()
+            
+            if availability_choice == "logout":
+                return self.logout(admin)
+            elif availability_choice == "back":
+                return self.admin_home(admin)
+            elif availability_choice == "yes":
+                make_slot_available = True
+                break
+            elif availability_choice == "no":
+                make_slot_available = False
+                break
+            else:
+                print("\033[91mInvalid input. Please enter 'yes', 'no', 'BACK', or 'LOGOUT'.\033[0m")
+
 
         # Set appointment status
         selected_appt.set_status("Cancelled by Clinic")
@@ -127,6 +147,7 @@ class MPMS:
         Args:
             admin (Admin):  Stores the admin object.
         """
+        # Displays the admin home page with all the options
         user_action = self.menu.show_admin_home_page(attempt_number=0)
         if user_action == "logout":
             self.logout(admin)
@@ -148,22 +169,38 @@ class MPMS:
             raise ValueError(f"Invalid user_action:{user_action} returned to admin_home() in MPMS Class.")
     
     def book_appointment(self, patient, enable_skip = False):
+        """
+        This function contains the logic for the Book Appointment feature.
+        It enables the user to filter the appointment slots based on date, GP name, and suburb.
+        If the patient chooses to filter by date or GP name, they can also choose to book using their preferred GP.
+        Args:
+            patient (Patient):  The object of current user of the system.
+            enable_skip (bool):  If True, allows the user to skip the filter step.
+        """
         slots = self.appointment_slots        
         # Displays the available slots to the user
         available_slots = [slot for slot in slots if Validator.is_booking_valid(slot)]
        
        #If there are no available slots, inform the user and return to the patient home page
-        user_action = self.menu.show_appointment_slots_page(available_slots, is_skip_enabled=enable_skip)
         if not available_slots:
             print("\n\033[91mNo appointment slots are currently available (must be at least 2 hours ahead).\033[0m")
-            input("Press Enter to return to the patient home page.")
-            return self.patient_home(patient)
+            while True:
+                user_input = input("Type 'LOGOUT' to return to Login Page or 'BACK' to return to the Home Page: ").strip().upper()
+                if user_input == "LOGOUT":
+                    return self.logout(patient)
+                elif user_input == "BACK":
+                    return self.patient_home(patient)
+                else:
+                    print("\033[91mInvalid input. Please type 'LOGOUT' or 'BACK'.\033[0m")
+
+        # Display the available slots to the user
+        user_action = self.menu.show_appointment_slots_page(available_slots, is_skip_enabled=enable_skip)
 
         if user_action == "logout":
             self.logout(patient)
         elif user_action == "back":
             self.patient_home(patient)
-        elif user_action == "filter":
+        elif user_action == "filter": #If the user wants to filter the slots they can filter by date, GP name or suburb
 
             while True:
                 filter_type = self.menu.show_filter_options(is_skip_enabled=enable_skip)
@@ -176,24 +213,29 @@ class MPMS:
                     print("\033[91mInvalid filter option. Please try again.\033[0m")
                     continue  # Re-prompt
 
+                # Get the filter value from the user
                 value = self.menu.get_filter_value(filter_type)
 
                 if Validator.is_input_back(value):
                     return self.book_appointment(patient)
                 if Validator.is_input_logout(value):
                     return self.logout(patient)
-
+                
+                #if they are filtering by date then check if the date is in the correct format
                 if filter_type == "date" and not Validator.is_valid_date_format(value):
                     print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
                     input("Press Enter to try again...")
                     continue
 
+                # Filter the available slots based on the selected filter type and value
                 filtered_slots = [slot for slot in available_slots if getattr(slot, filter_type) and getattr(slot, filter_type).lower() == value.lower()]
-
+                
+                # If no slots match the filter, inform the user and re-prompt
                 if not filtered_slots:
                     print("\033[91mNo matching slots found. Press Enter to try again.\033[0m")
                     input()
                     continue  # Go back to filter option selection
+
                 # Show results
                 print("\n\033[94mFiltered Appointment Slots:\033[0m")
                 for i, slot in enumerate(filtered_slots, 1):
@@ -206,6 +248,7 @@ class MPMS:
                     print(f"  Suburb: {slot.clinic_suburb}")
                     print(f"  Reason: {slot.reason_for_visit}")
                     print("  ------------------------------------------------------------")
+               
                 # Prompt for preferred GP filter if applicable
                 if filter_type in ["date", "clinic_suburb"]:
                     further_filter = input("\nWould you like to filter these results by a preferred GP? (yes/no): ").strip().lower()
@@ -216,7 +259,7 @@ class MPMS:
                             print("\033[91mNo matching GP found in these results. Press Enter to try again.\033[0m")
                             input()
                             continue  # Re-prompt from filter selection
-                return self.finalise_appointment(filtered_slots, patient)
+                return self.finalise_appointment(filtered_slots, patient) #otherwise return the filtered slots to finalise the appointment
 
         elif user_action.isdigit():
             # Check if the user has selected a valid slot
@@ -237,20 +280,6 @@ class MPMS:
         else:
             raise ValueError(f"Invalid user_action:{user_action} argument returned to book_appointment() in MPMS Class.")
 
-    def finalise_appointment(self, slots, patient, slot_index):
-        confirmed_slot = slots[slot_index]
-        confirmed_slot.set_availability(False)
-        FileIO.save_appointment_slots(self.appointment_slots)
-
-        booked_appointment = Appointment(
-            slot=confirmed_slot,
-            status="Booked",
-            email=patient.get_email()
-        )
-        self.appointments.append(booked_appointment)
-        FileIO.save_appointment(booked_appointment)
-        self.menu.show_booking_success_page(booked_appointment)
-        self.patient_home(patient)
 
     def cancel_appointment(self, patient, appointment):
         # app_datetime_str = f"{appointment.date} {appointment.start_time}"
@@ -284,14 +313,22 @@ class MPMS:
         else:
             print("\033[91m Unrecognized option. Please try again.\033[0m")
             self.cancel_appointment(patient, appointment)
+
     
     def check_appointment_booking_validity(self, appointment):
         """
         Check if the user is booking the appointment within 2 hours of the appointment time.
+        Args:
+            appointment (Appointment):  The appointment object to check.
+        Returns:
+            bool:  True if the booking is valid, False otherwise.
         """
+        # Joins the date and start time of the appointment to create a datetime string
         app_datetime_str = f"{appointment.date} {appointment.start_time}"
+        #Parse the datetime string to a datetime object
         appointment_datetime = datetime.strptime(app_datetime_str, "%d-%m-%Y %H:%M")
         current_time = datetime.now()
+        # Calculate the time difference between the appointment time and the current time
         time_diff = appointment_datetime - current_time
 
         if time_diff < timedelta(hours=2):
@@ -430,6 +467,43 @@ class MPMS:
             self.generate_report(admin, type)
         else:
             raise ValueError(f"Invalid value returned from show_report_export_page: {user_action} to export_report() in MPMS")
+        
+    def finalise_appointment(self, slots, patient, slot_index=None):
+        """
+        This function finalises the appointment booking process.
+        It sets the selected slot as unavailable and creates a new appointment object.
+        Args:
+            slots (list<AppointmentSlot>):  List of available appointment slots.
+            patient (Patient):  The object of current user of the system.
+            slot_index (int):  Index of the selected appointment slot.
+        """
+        #If no specified slot index, then show the appointment slots page to the user
+        if slot_index is None:
+            user_action = self.menu.show_appointment_slots_page(slots) #show available slots to the user
+            if user_action == "logout":
+                return self.logout(patient)
+            elif user_action == "back":
+                return self.book_appointment(patient)
+            elif not user_action.isdigit():
+                return self.book_appointment(patient)
+            slot_index = int(user_action) - 1 #convert the user input to an integer
+        #retrieve the selected slot and mark it as unavailable
+        confirmed_slot = slots[slot_index]
+        confirmed_slot.set_availability(False)
+        # Save the updated appointment slots to the file
+        FileIO.save_appointment_slots(self.appointment_slots)
+        # Create a new appointment object
+        booked_appointment = Appointment(
+            slot=confirmed_slot,
+            status="Booked",
+            email=patient.get_email()
+        )
+        #Add the booked appointment to the list of appointments and save it
+        self.appointments.append(booked_appointment)
+        FileIO.save_appointment(booked_appointment)
+        #Show the confirmation page to the user
+        self.menu.show_booking_success_page(booked_appointment)
+        self.patient_home(patient)
     
     def generate_report(self, admin, type):
         
