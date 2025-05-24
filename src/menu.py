@@ -1141,12 +1141,16 @@ Please enter the Option Number or LOGOUT
         else:
             return self.show_patient_home_page(attempt_number+1)
     
-    def show_previous_appointments_page(self, appointments, attempt_number = 0):
+    def show_previous_appointments_page(self, appointments, page=1, page_size=10, attempt_number = 0):
         """
         Displays the previous appointments page with a list of past appointments.
         
         Args:
             appointments (list): List of past Appointment objects
+            page (int): Current page number
+            page_size (int): Number of appointments per page
+            attempt_number (int): Number of invalid attempts
+        
         """
         self.clear_screen()
         print(self.banner)
@@ -1155,30 +1159,63 @@ Please enter the Option Number or LOGOUT
         """)
         if not appointments:
             print("\nYou have no previous appointments to display.\n")
-        else:
-            print("\nYour Previous Appointments:\n")
-            for i, appt in enumerate(appointments, start=1):
-                print(f"Appointment {i}:")
-                print(f"  Clinic: {appt.get_slot().get_clinic_name()}")
-                print(f"  GP: {appt.get_slot().get_gp_name()}")
-                print(f"  Date: {appt.get_slot().get_date()}")
-                print(f"  Time: {appt.get_slot().get_start_time()}")
-                print(f"  Duration: {appt.get_slot().get_duration()} minutes")
-                print(f"  Suburb: {appt.get_slot().get_clinic_suburb()}")
-                print(f"  Reason: {appt.get_slot().get_reason_for_visit()}")
-                print(f"  Status: {appt.get_status()}")
-                print("-" * 50)
+            self.show_prompt(type = "logout")
+            self.show_prompt(type = "back")
+            user_input = input("Your Input: ").strip()
+            if Validator.is_input_logout(user_input):
+                return "logout"
+            elif Validator.is_input_back(user_input):
+                return "back"
+            else:
+                return self.show_previous_appointments_page(appointments, page, page_size, attempt_number+1)
+
+        # Paginate the appointments
+        pagination = self.paginate_items(appointments, page_size, page)
+        prev_appointments = pagination["items"]
+
+        # Display pagination information
+        print(f"\nShowing {pagination['showing_from']}-{pagination['showing_to']} of {pagination['total_items']} appointments (Page {pagination['current_page']} of {pagination['total_pages']})\n")
+    
+
+        # Display the appointments for the current page
+        print("\nYour Previous Appointments:\n")
+        for i, appt in enumerate(prev_appointments, start=1):
+            actual_index = pagination['showing_from'] - 1 + i
+            print(f"Appointment {actual_index}:")
+            print(f"  Clinic: {appt.get_slot().get_clinic_name()}")
+            print(f"  GP: {appt.get_slot().get_gp_name()}")
+            print(f"  Date: {appt.get_slot().get_date()}")
+            print(f"  Time: {appt.get_slot().get_start_time()}")
+            print(f"  Duration: {appt.get_slot().get_duration()} minutes")
+            print(f"  Suburb: {appt.get_slot().get_clinic_suburb()}")
+            print(f"  Reason: {appt.get_slot().get_reason_for_visit()}")
+            print(f"  Status: {appt.get_status()}")
+            print("-" * 50)
+
+        # Show pagination navigation options
+        print("\nNavigation options:")
+        if pagination["has_prev"]:
+            print("P - Previous page")
+        if pagination["has_next"]:
+            print("N - Next page")
+        
         if attempt_number > 0:
             self.show_error_message("standard")
+
         self.show_prompt(type = "logout")
         self.show_prompt(type = "back")
+
         user_input = input("Your Input: ").strip()
         if Validator.is_input_logout(user_input):
             return "logout"
         elif Validator.is_input_back(user_input):
             return "back"
+        elif user_input.lower() == "p" and pagination["has_prev"]:
+            return self.show_previous_appointments_page(appointments, page-1, page_size)
+        elif user_input.lower() == "n" and pagination["has_next"]:
+            return self.show_previous_appointments_page(appointments, page+1, page_size)
         else:
-            return self.show_previous_appointments_page(appointments, attempt_number+1)
+            return self.show_previous_appointments_page(appointments, page, page_size, attempt_number+1)
 
     def show_profile_page(self, attempt_number, user_obj, is_user_admin):
         """
