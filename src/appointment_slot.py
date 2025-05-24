@@ -62,3 +62,24 @@ availability:{self.availability}
     # Setters
     def set_availability(self, value):
         self.availability = value
+
+    def set_clinic_name(self, value):
+        self.clinic_name = value
+
+    def set_clinic_suburb(self, value):
+        self.clinic_suburb = value
+
+    def set_date(self, value):
+        self.date = value
+
+    def set_duration(self, value):
+        self.duration = value
+
+    def set_gp_name(self, value):
+        self.gp_name = value
+
+    def set_reason_for_visit(self, value):
+        self.reason_for_visit = value
+
+    def set_start_time(self, value):
+        self.start_time = value

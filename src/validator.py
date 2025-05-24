@@ -102,18 +102,43 @@ class Validator:
 
     
     @staticmethod
-    def is_valid_date_format(date_str):
+    def is_valid_date_format(date_str, allow_past = True):
         """
         Check if the date string is in the format "dd-mm-yyyy".
         :param date_str: Date string to check
+        :param allow_past: Boolean flag value that decides if past date is valid or not
         :return: True if the date string is valid, False otherwise
         """
         try:
             datetime.strptime(date_str, "%d-%m-%Y")
+            if allow_past == False and datetime.strptime(date_str, "%d-%m-%Y") < datetime.now():
+                return False
             return True
         except ValueError:
             return False
 
+    @staticmethod
+    def is_valid_gp_name(name):
+        '''
+        Check if the entered name has "Dr." as a prefix or not and if there is a name after the title.
+        Args:
+            name(str): name of gp
+        '''
+        if name[:3] == "Dr." and len(name) > 3:
+            return True
+        return False
+        
+
+    @staticmethod
+    def is_valid_duration(duration):
+        '''
+        Check if the duration is an allowed value
+        Args:
+            duration(str): duration value.
+        '''
+        if duration in ["15", "20", "45", "60"]:
+            return True
+        return False
     
     @staticmethod
     def is_valid_patient_login(valid_patient_details, input_email, input_password):
@@ -141,3 +166,16 @@ class Validator:
         valid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() in available_clinics]
         invalid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() not in available_clinics]
         return len(invalid_clinics) == 0, valid_clinics, invalid_clinics
+    
+    @staticmethod
+    def is_valid_time_format(time_string):
+        '''
+        Check if the time_string is the acceptable 24hrs time format.
+        Args:
+            time_string(str): time value
+        '''
+        try:
+            datetime.strptime(time_string, "%H:%M")
+            return True
+        except:
+            return False
