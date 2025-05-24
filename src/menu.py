@@ -39,18 +39,103 @@ class Menu:
             subprocess.run('cls', shell=True)
         else:
             subprocess.run('clear', shell=True)
+    
+    def display_instances(self, instances, instance_type, pagination=None):
+        '''
+        This function displays all types of instances with indexing.
+        Args:
+            instances(list); List of all instances
+            instance_type(str): String value that identifies the type of instance.
+        '''
+        if instance_type == "gp":
+            for i, gp in enumerate(instances, start=1):
+                if not pagination:
+                    actual_index = i
+                else:
+                    actual_index = pagination['showing_from'] - 1 + i
+                print(f"--- GP {actual_index} ---")
+                print(f"gp_name:        {gp.get_gp_name()}")
+                print(f"email:             {gp.get_email()}")
+                print(f"assigned_clinics: {', '.join(gp.get_assigned_clinics())}")
+                print(f"specialisation: {', '.join(gp.get_specialisation())}")
+                print(f"availability:    {gp.get_availability()}")
+                print("-" * 50 + "\n")
+        elif instance_type == "appt":
+            for i, appt in enumerate(instances, start=1):
+                if not pagination:
+                    actual_index = i
+                else:
+                    actual_index = pagination['showing_from'] - 1 + i
+                print(f"Appointment {actual_index}:")
+                print(f"  GP: {appt.slot.gp_name}")
+                print(f"  Date: {appt.slot.date}")
+                print(f"  Time: {appt.slot.start_time}")
+                print(f"  Suburb: {appt.slot.clinic_suburb}")
+                print("-" * 50)
+        elif instance_type == "slot":
+            for i, slot in enumerate(instances, start=1):
+                if not pagination:
+                    actual_index = i
+                else:
+                    actual_index = pagination['showing_from'] - 1 + i
+                print(f"Slot {actual_index}:")
+                print(f"  Clinic: {slot.get_clinic_name()}")
+                print(f"  GP: {slot.get_gp_name()}")
+                print(f"  Date: {slot.get_date()}")
+                print(f"  Time: {slot.get_start_time()}")
+                print(f"  Duration: {slot.get_duration()}")
+                print(f"  Suburb: {slot.get_clinic_suburb()}")
+                print(f"  Reason: {slot.get_reason_for_visit()}")
+                print("-" * 50)
+        elif instance_type == "clinic":
+            for i, clinic in enumerate(instances, start=1):
+                if not pagination:
+                    actual_index = i
+                else:
+                    actual_index = pagination['showing_from'] - 1 + i
+                print(f"--- Clinic {i} ---")
+                print(f"clinic_name:        {clinic.get_clinic_name()}")
+                print(f"Suburb:             {clinic.get_suburb()}")
+                print(f"available_services: {', '.join(clinic.get_available_services())}")
+                print(f"Operating Hours:    {clinic.get_operating_hours()}")
+                print("-" * 50 + "\n")
+
 
     def get_filter_value(self, filter_type):
+        """
+        Prompts the user for a filter value based on the filter type.
+        Args:
+            filter_type (str): The type of filter to apply (date, gp_name, clinic_suburb).
+        Returns:
+            str: The filter value entered by the user.
+        """
         prompts = {
             "date": "Enter the date (DD-MM-YYYY): ",
-            "gp_name": "Enter the GP name (e.g., Dr. Smith): ",
+            "gp_name": "Enter the GP name (e.g., Dr. Emily Red): ",
             "clinic_suburb": "Enter the clinic suburb (e.g., Clayton): "
         }
         return input(prompts[filter_type]).strip()
     
+    def get_valid_input(self, prompt, validator_func):
+        '''
+        Helper function for input loop for wrong inputs while allowing the user to go Back or Logout.
+        '''
+        while True:
+            value = input(prompt).strip()
+            if Validator.is_input_back(value):
+                return "back"
+            if Validator.is_input_logout(value):
+                return "logout"
+            if validator_func(value):
+                return value
+            print("\033[91m!! Input validation failed. Please try again !!\033[0m")
+    
     def show_admin_home_page(self, attempt_number):
         """
         Displays the Admin home page on the terminal
+        Args:
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        
         """
         self.clear_screen()
         print(self.banner)
@@ -92,25 +177,144 @@ Please enter the Option Number or LOGOUT
             return "manage_patient_appointments"
         else:
             return self.show_admin_home_page(attempt_number+1)
-        
-    def show_appointment_slots_page(self, slots, attempt_number=0, is_skip_enabled = False):
+    
+    def show_appointment_slot_management_page(self, slots, attempt_number=0):
+        '''
+        Displays the appointment slots management page where the Admin can perform CRUD for AppointmentSlots.
+
+        Args:
+            slots(list): List of appointment slots.
+            attempt_number(int): Represents the number of times the user has failed to input valid details.
+        '''
         self.clear_screen()
         print(self.banner)
-        available_slots = [slot for slot in slots if slot.availability]
+        print("""
+                                                                    APPOINTMENT SLOT MANAGEMENT PAGE
+""")
+        if len(slots) == 0:
+            print("\nYou have no slots to display.\n")
+        else:
+            print("\n--- List of All Appointment Slots ---")
+            print("-" * 50)
+            self.display_instances(slots, instance_type="slot")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        self.show_prompt(type = "update")
+        self.show_prompt(type = "create")
+        self.show_prompt(type = "delete")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        elif attempt_number == -1:
+            print("\033[90m!!You have no appointment slots to update/delete!!\033[0m")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif user_input == "UPDATE":
+            if slots:
+                return "update"
+            else:
+                # No gps to update
+                attempt_number = -1
+                return self.show_appointment_slot_management_page(slots, attempt_number)
+        elif user_input == "CREATE":
+            return "create"
+        elif user_input == "DELETE":
+            return "delete"
+        else:
+            return self.show_appointment_slot_management_page(slots, attempt_number=1)
+
+    def show_appointment_slot_update_menu(self, slot_to_update, attempt_number=0):
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                                    APPOINTMENT SLOT UPDATE PAGE
+""")
+
+        print("\n--- Slot To Update ---")
+        print("-" * 50)
+        print(str(slot_to_update)[:-2])
+        print("\n--- Update Appointment Slot Details ---")
+        print("\nLeave the field empty if you don't want to change it.")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        new_availability = input(f"New Availability (True/False only): ") or slot_to_update.get_availability()
+        if new_availability not in ["True", "False"]:
+            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+        new_clinic_name = input(f"New Clinic Name (Minimum of 3 characters) ") or slot_to_update.get_clinic_name()
+        if len(new_clinic_name) < 3:
+            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+        new_clinic_suburb = input(f"New Clinic Suburb (Minimum of 3 characters): ") or slot_to_update.get_clinic_suburb()
+        if len(new_clinic_suburb) < 3:
+            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+        new_date = input(f"New Date (dd-mm-yyyy format only. Cannot enter date from past): ") or slot_to_update.get_date()
+        if not Validator.is_valid_date_format(new_date, allow_past=False):
+            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+        new_duration = input(f"New Duration (Valid duration values: 15, 20, 45, 60): ") or slot_to_update.get_duration()
+        if not Validator.is_valid_duration(new_duration):
+            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+        new_gp_name = input(f"New GP Name (Enter 'Dr.' as prefix. Name cannot be empty): ") or slot_to_update.get_gp_name()
+        if not Validator.is_valid_gp_name(new_gp_name):
+            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+        new_reason_for_visit = input(f"New Reason for Visit (valid options: 'General Consultation','Vaccination','Specialist Referral'): ") or slot_to_update.get_reason_for_visit()
+        if new_reason_for_visit not in ['General Consultation','Vaccination','Specialist Referral']:
+            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+        new_start_time = input(f"New Start Time (24hh:mm format only): ") or slot_to_update.get_start_time()
+        if not Validator.is_valid_time_format(new_start_time):
+            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+        updated_details = {
+            "availability": new_availability,
+            "clinic_name": new_clinic_name,
+            "clinic_suburb": new_clinic_suburb,
+            "date": new_date,
+            "duration": new_duration,
+            "gp_name": new_gp_name,
+            "reason_for_visit": new_reason_for_visit,
+            "start_time": new_start_time,
+        }
+        return updated_details
+
+    def show_appointment_slot_update_page(self, slots, attempt_number=0):
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                                    APPOINTMENT SLOT UPDATE PAGE
+""")
+        print("\n--- List of All Appointment Slots ---")
+        print("-" * 50)
+        self.display_instances(slots, instance_type="slot")
+        print("\nEnter the Slot Number to Update or type 'BACK' to return to the Home Page")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif user_input.isdigit() and (int(user_input)-1 in range(len(slots))): #Check if input is a digit and within range of options displayed.
+            return user_input
+        else:
+            return self.show_appointment_slot_update_page(slots, attempt_number=attempt_number+1)
+        
+    def show_appointment_slots_page(self, slots, attempt_number=0, is_skip_enabled = False):
+        """
+        Displays the appointment slots page with available slots for booking.
+        Args:
+            slots(list): List of available appointment slots.
+            attempt_number(int): Represents the number of times the user has failed to input valid details.
+            is_skip_enabled(bool): Flag to enable or disable the skip option.
+        """
+        self.clear_screen()
+        print(self.banner)
+        available_slots = [slot for slot in slots if slot.get_availability()]
         print("""
                                                                     APPOINTMENT BOOKING PAGE
 """)
         print("Available Appointment Slots:\n")
-        for i, slot in enumerate(available_slots, start=1):
-            print(f"Slot {i}:")
-            print(f"  Clinic: {slot.get_clinic_name()}")
-            print(f"  GP: {slot.get_gp_name()}")
-            print(f"  Date: {slot.get_date()}")
-            print(f"  Time: {slot.get_start_time()}")
-            print(f"  Duration: {slot.get_duration()}")
-            print(f"  Suburb: {slot.get_clinic_suburb()}")
-            print(f"  Reason: {slot.get_reason_for_visit()}")
-            print("-" * 50)
+        self.display_instances(slots, instance_type="slot")
         if is_skip_enabled:
             return "filter"
         print("Enter the slot number to book the appointment.")
@@ -132,6 +336,11 @@ Please enter the Option Number or LOGOUT
             return self.show_appointment_slots_page(slots, attempt_number=attempt_number+1)
     
     def show_booking_success_page(self, appointment):
+        """
+        Displays the booking success page with the appointment details.
+        Args:
+            appointment (object): The appointment object that was booked.
+        """
         self.clear_screen()
         print(self.banner)
         print("\033[92m Your Appointment has been successfully booked! \033[0m")
@@ -140,17 +349,27 @@ Please enter the Option Number or LOGOUT
         return user_input
 
     def show_cancellation_confirmation_page(self, appointment):
+        """
+        Displays the cancellation confirmation page with the appointment details.
+        Args:
+            appointment (object): The appointment object that was cancelled.
+        """
         print("\033[91m You are about to cancel the following appointment:\033[0m")
         print(appointment)
-        print("\nAre you sure you want to cancel this appointment? (CONFIRM/BACK)")
+        print("\nAre you sure you want to cancel this appointment? (CONFIRM/BACK/LOGOUT)")
         while True:
             user_input = input("Enter your choice: ").strip()
-            if user_input in ["CONFIRM", "BACK"]:
+            if user_input in ["CONFIRM", "BACK","LOGOUT"]:
                 return user_input
             else:
-                print("\033[91m Invalid input. Please enter 'CONFIRM' or 'BACK'.\033[0m")
+                print("\033[91m Invalid input. Please enter 'CONFIRM' or 'BACK' or 'LOGOUT'.\033[0m")
 
     def show_cancellation_success_page(self, appointment):
+        """
+        Displays the cancellation success page with the appointment details.
+        Args:
+            appointment (object): The appointment object that was cancelled.
+        """
         print("\033[92m The appointment has been successfully cancelled! \033[0m")
         print(appointment)
         # input("\nPress Enter to continue...")
@@ -158,6 +377,12 @@ Please enter the Option Number or LOGOUT
         return None
 
     def show_clinic_management_page(self, clinics, attempt_number = 0):
+        """
+        Displays the clinic management page with a list of clinics and options to create, update, or delete clinics.
+        Args:
+            clinics (list): List of clinic objects.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print("""
@@ -183,7 +408,7 @@ Please enter the Option Number or LOGOUT
         if attempt_number > 0:
             self.show_error_message("standard")
         elif attempt_number == -1:
-            print("\033[90m!!You have no clinics to update!!\033[0m")
+            print("\033[90m!!You have no clinics to update/delete!!\033[0m")
         user_input = input("Your Input: ").strip()
         if Validator.is_input_logout(user_input):
             return "logout"
@@ -204,58 +429,96 @@ Please enter the Option Number or LOGOUT
             return self.show_clinic_management_page(clinics, attempt_number=1)
         
 
-    def show_gp_management_page(self, gps, attempt_number = 0):
+    def show_create_appointment_slot_page(self, attempt_number = 0, user_input = None):
+        """
+        Displays the appointment slot creation page with sample slot details and prompts for user input.
+
+        Args:
+            attempt_number(int): Represents the number of times the user has failed to input valid details.
+            user_input(str): A variable to pass the default user_input value.
+        """
         self.clear_screen()
         print(self.banner)
-        print("""
-                                                                            GP DETAILS
+        print(f"""
+                                                                    APPOINTMENT SLOT CREATIION PAGE
+clinic_name:        Mulgrave Clinic
+gp_name:            Dr. Man
+date:               17-07-2025
+start_time:         23:34
+duration:           15
+clinic_suburb:      Mulgrave
+reason_for_visit:   Specialist Referral
+availability:       True
         """)
-        if len(gps) == 0:
-            print("\nYou have no gp details to display.\n")
-        else:
-            print("\n--- List of All GPs ---")
-            print("------------------------------")
-            for idx, gp in enumerate(gps, start=1):
-                print(f"--- GP {idx} ---")
-                print(f"gp_name:        {gp.get_gp_name()}")
-                print(f"email:             {gp.get_email()}")
-                print(f"assigned_clinics: {', '.join(gp.get_assigned_clinics())}")
-                print(f"specialisation: {', '.join(gp.get_specialisation())}")
-                print(f"availability:    {gp.get_availability()}")
-                print("-" * 50 + "\n")
-        self.show_prompt(type = "logout")
-        self.show_prompt(type = "back")
-        self.show_prompt(type = "update")
-        self.show_prompt(type = "create")
-        self.show_prompt(type = "delete")
-        if attempt_number > 0:
+        print('Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0m or \033[33m"LOGOUT"\033[0m to leave.')
+        if attempt_number == 1:
             self.show_error_message("standard")
-        elif attempt_number == -1:
-            print("\033[90m!!You have no gps to update!!\033[0m")
-        user_input = input("Your Input: ").strip()
-        if Validator.is_input_logout(user_input):
-            return "logout"
-        elif Validator.is_input_back(user_input):
+        if user_input is None:
+            user_input = input("Your Input: ").strip()
+        if Validator.is_input_back(user_input):
             return "back"
-        elif user_input == "UPDATE":
-            if gps:
-                return "update"
-            else:
-                # No gps to update
-                attempt_number = -1
-                return self.show_gp_management_page(gps, attempt_number)
-        elif user_input == "CREATE":
-            return "create"
-        elif user_input == "DELETE":
-            return "delete"
+        elif Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_continue(user_input):
+            new_clinic_name = self.get_valid_input("New Clinic Name (Minimum of 3 characters): ", lambda x: len(x) > 3)
+            if new_clinic_name in ["back", "logout"]:
+                return new_clinic_name
+
+            new_clinic_suburb = self.get_valid_input("New Clinic Suburb (Minimum of 3 characters): ", lambda x: len(x) > 3)
+            if new_clinic_suburb in ["back", "logout"]:
+                return new_clinic_suburb
+
+            new_date = self.get_valid_input("New Date (dd-mm-yyyy format only. Cannot enter date from past): ",
+                                            lambda x: Validator.is_valid_date_format(x, allow_past=False))
+            if new_date in ["back", "logout"]:
+                return new_date
+
+            new_duration = self.get_valid_input("New Duration (Valid: 15, 20, 45, 60): ", Validator.is_valid_duration)
+            if new_duration in ["back", "logout"]:
+                return new_duration
+
+            new_gp_name = self.get_valid_input("New GP Name (Enter 'Dr.' as prefix. Name cannot be empty): ",
+                                            Validator.is_valid_gp_name)
+            if new_gp_name in ["back", "logout"]:
+                return new_gp_name
+
+            new_reason_for_visit = self.get_valid_input(
+                "New Reason for Visit (General Consultation, Vaccination, Specialist Referral): ",
+                lambda x: x in ['General Consultation', 'Vaccination', 'Specialist Referral']
+            )
+            if new_reason_for_visit in ["back", "logout"]:
+                return new_reason_for_visit
+
+            new_start_time = self.get_valid_input("New Start Time (24hh:mm format only): ", Validator.is_valid_time_format)
+            if new_start_time in ["back", "logout"]:
+                return new_start_time
+
+            new_availability = self.get_valid_input("New Availability (True/False only): ",
+                                                    lambda x: x in ["True", "False"])
+            if new_availability in ["back", "logout"]:
+                return new_availability
+
+            return {
+                "availability": new_availability,
+                "clinic_name": new_clinic_name,
+                "clinic_suburb": new_clinic_suburb,
+                "date": new_date,
+                "duration": new_duration,
+                "gp_name": new_gp_name,
+                "reason_for_visit": new_reason_for_visit,
+                "start_time": new_start_time,
+            }
         else:
-            return self.show_gp_management_page(gps, attempt_number=1)
-
-
-
-
+            return self.show_create_appointment_slot_page(attempt_number=1)
+    
     
     def show_create_clinic_page(self, attempt_number = 0):
+        """
+        Displays the clinic creation page with sample clinic details and prompts for user input.
+        
+        Args:
+            attempt_number(int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -300,7 +563,6 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
                 break
         else:
             return self.show_create_clinic_page(attempt_number+1)
-
         new_clinic_details = {}
         new_clinic_details["clinic_name"] = new_name
         new_clinic_details["suburb"] = new_suburb
@@ -309,9 +571,13 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         return new_clinic_details
     
 
-
-
     def show_create_gp_page(self,clinic_list, attempt_number = 0):
+        """
+        Displays the GP creation page with sample GP details and prompts for user input.
+        Args:
+            clinic_list (list): List of available clinics.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -397,6 +663,12 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         return new_gp_details
 
     def show_creation_success_page(self, type, instance_variable):
+        """
+        Displays the creation success page with the details of the created instance.
+        Args:
+            type (str): The type of instance created (Clinic or GP).
+            instance_variable (object): The instance object that was created.
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -407,7 +679,81 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         input("Please Enter to continue.. ")
         return None
     
+
+    def show_delete_appointment_slot_page(self, slots, attempt_number=0):
+        """
+        Displays the Appointment Slot deletion page with a list of slots and prompts for user input to delete a slot.
+        Args:
+            slots(list): List of AppointmentSlot instances.
+            attempt_number(int): Represents the number of times the user has failed to input valid details.
+        """
+        self.clear_screen()
+        print(self.banner)
+        print(f"""
+                                                                            APPOINTMENT SLOT DELETTION PAGE
+        """)
+        if len(slots) == 0:
+            print("\nYou have no slots to display.\n")
+        else:
+            print("\n--- List of All Appointment Slots ---")
+            print("-" * 50)
+            for i, slot in enumerate(slots, start=1):
+                print(f"Slot {i}:")
+                print(f"  Clinic: {slot.get_clinic_name()}")
+                print(f"  GP: {slot.get_gp_name()}")
+                print(f"  Date: {slot.get_date()}")
+                print(f"  Time: {slot.get_start_time()}")
+                print(f"  Duration: {slot.get_duration()}")
+                print(f"  Suburb: {slot.get_clinic_suburb()}")
+                print(f"  Reason: {slot.get_reason_for_visit()}")
+                print("-" * 50)
+        print("Please enter the number to choose the Appointment Slot for deletion.")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        elif attempt_number == -1:
+            print("\033[90m!!You have no slots to delete!!\033[0m")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif user_input.isdigit():
+            if slots:
+                slot_index = int(user_input) - 1
+                if 0 <= slot_index < len(slots):
+                    user_input = input("Are You Sure? This Action Is Permanent (yes/no):  ")
+                    if user_input == "yes":
+                        slot = slots[slot_index]
+                        return slot
+                    elif user_input == "no":
+                        print("\033[91m!!Deletion of Appointment Slot Aborted!!\033[0m")
+                        input("Press Enter to continue.. ")
+                        return self.show_delete_appointment_slot_page(slots)
+                    else:
+                        print("\033[91m!! Invalid input. Appointment Slot Deletion Aborted!!\033[0m")
+                        input("Press Enter to continue.. ")
+                        return self.show_delete_appointment_slot_page(slots)
+                else:
+                    print("\033[91m!! Invalid selection. Please try again!!\033[0m")
+                    input("Press Enter to continue.. ")
+                    return self.show_delete_appointment_slot_page(slots)
+            else:
+                # No Appointment Slots to delete
+                attempt_number = -1
+                return self.show_appointment_slot_management_page(slots, attempt_number)
+        else:
+            return self.show_delete_appointment_slot_page(slots, attempt_number=1)
+    
+
     def show_delete_clinic_page(self, clinics, attempt_number=0):
+        """
+        Displays the clinic deletion page with a list of clinics and prompts for user input to delete a clinic.
+        Args:
+            clinics(list): List of clinic objects.
+            attempt_number(int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -447,15 +793,15 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
                     elif user_input == "no":
                         print("\033[91m!!Deletion of Clinic Aborted!!\033[0m")
                         input("Press Enter to continue.. ")
-                        self.show_delete_clinic_page(clinics)
+                        return self.show_delete_clinic_page(clinics)
                     else:
                         print("\033[91m!! Invalid input. Clinic Deletion Aborted!!\033[0m")
                         input("Press Enter to continue.. ")
-                        self.show_delete_clinic_page(clinics)
+                        return self.show_delete_clinic_page(clinics)
                 else:
                     print("\033[91m!! Invalid selection. Please try again!!\033[0m")
                     input("Press Enter to continue.. ")
-                    self.show_delete_clinic_page(clinics)
+                    return self.show_delete_clinic_page(clinics)
             else:
                 # No clinics to update
                 attempt_number = -1
@@ -465,6 +811,12 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         
 
     def show_delete_gp_page(self, gps, attempt_number=0):
+        """
+        Displays the GP deletion page with a list of GPs and prompts for user input to delete a GP.
+        Args:
+            gps (list): List of GP objects.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -505,15 +857,15 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
                     elif user_input == "no":
                         print("\033[91m!!Deletion of GP Aborted!!\033[0m")
                         input("Press Enter to continue.. ")
-                        self.show_delete_gp_page(gps)
+                        return self.show_delete_gp_page(gps)
                     else:
                         print("\033[91m!! Invalid input. GP Deletion Aborted!!\033[0m")
                         input("Press Enter to continue.. ")
-                        self.show_delete_gp_page(gps)
+                        return self.show_delete_gp_page(gps)
                 else:
                     print("\033[91m!! Invalid selection. Please try again!!\033[0m")
                     input("Press Enter to continue.. ")
-                    self.show_delete_gp_page(gps)
+                    return self.show_delete_gp_page(gps)
             else:
                 # No gps to update
                 attempt_number = -1
@@ -521,13 +873,12 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         else:
             return self.show_gp_management_page(gps, attempt_number=1)
 
-
-
-
-
-
     
     def show_deletion_confirmation_page(self, type, instance_variable):
+        '''
+        Args:
+            type(str): Can be either "Clinic" or "Gp"
+        '''
         self.clear_screen()
         print(self.banner)
         print(f"""
@@ -551,6 +902,11 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
             print("\033[91m!! Invalid input. Please try again !!\033[0m")
 
     def show_export_success_page(self, report_data):
+        """
+        Displays the export success page with the report data.
+        Args:
+            report_data (str): The report data that was exported.
+        """
         self.clear_screen()
         print(self.banner)
         print("\n\033[92m The report has been successfully exported! \033[0m")
@@ -560,6 +916,11 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         return None
 
     def show_filter_options(self, is_skip_enabled = False):
+        """
+        Displays the filter options for appointment slots.
+        Args:
+            is_skip_enabled (bool): Flag to enable or disable the skip option.
+        """
         print("""
 FILTER APPOINTMENT SLOTS
 
@@ -585,6 +946,96 @@ FILTER APPOINTMENT SLOTS
             return "clinic_suburb"
         else:
             return "error"
+    
+
+    def show_gp_appointment_slots(self, slots, gp_name, attempt_number = 0):
+        '''
+        Shows a specific GP's Appointment slots
+
+        Args:
+            slots(list): List of AppointmentSlot instances that are associated with the GP
+            attempt_number(int): Represents the number of times the user has failed to input valid details.
+        '''
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                                    GP's APPOINTMENT SLOTS PAGE
+""")
+        print(f"Available Appointment Slots for {gp_name}\n")
+        self.display_instances(slots, instance_type="slot")
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        print('''Enter \033[96m"FILTER"\033[0m to filter appointment slots by Clinic Suburb\n''')
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif Validator.is_input_filter(user_input):
+            return "filter"
+        else:
+            return self.show_appointment_slots_page(slots, attempt_number=attempt_number+1)
+        
+
+    def show_gp_management_page(self, gps, attempt_number = 0):
+        """
+        Displays the GP management page with a list of GPs and options to create, update, or delete GPs.
+        
+        Args:
+            gps(list): List of GP objects.
+            attempt_number(int): Represents the number of times the user has failed to input valid details.
+        """
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                                            GP DETAILS
+        """)
+        if len(gps) == 0:
+            print("\nYou have no gp details to display.\n")
+        else:
+            print("\n--- List of All GPs ---")
+            print("------------------------------")
+            for idx, gp in enumerate(gps, start=1):
+                print(f"--- GP {idx} ---")
+                print(f"gp_name:        {gp.get_gp_name()}")
+                print(f"email:             {gp.get_email()}")
+                print(f"assigned_clinics: {', '.join(gp.get_assigned_clinics())}")
+                print(f"specialisation: {', '.join(gp.get_specialisation())}")
+                print(f"availability:    {gp.get_availability()}")
+                print("-" * 50 + "\n")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        self.show_prompt(type = "update")
+        self.show_prompt(type = "create")
+        self.show_prompt(type = "delete")
+        print('''Enter \033[96m"SLOTS"\033[0m to view GP's appointment slots\n''')
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        elif attempt_number == -1:
+            print("\033[90m!!You have no gps to update/delete!!\033[0m")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif user_input == "UPDATE" or user_input == "SLOTS":
+            if gps and user_input == "UPDATE":
+                return "update"
+            elif gps and user_input == "SLOTS":
+                return "slots"
+            else:
+                # No gps to update
+                attempt_number = -1
+                return self.show_gp_management_page(gps, attempt_number)
+        elif user_input == "CREATE":
+            return "create"
+        elif user_input == "DELETE":
+            return "delete"
+        else:
+            return self.show_gp_management_page(gps, attempt_number=1)
+
 
     def show_login_page(self, valid_patient_details, valid_admin_details, attempt_number = 0):
         """
@@ -739,16 +1190,23 @@ Please enter the Option Number or LOGOUT
     def show_prompt(self, type):
         """
         Displays the standard prompt to inform the user that they can/cannot enter a certain Prompt as input on this screen.
+        Args:
+            type (str): The type of prompt to display.
         """
         if type == "back" : print('''Enter \033[34m"BACK"\033[0m to go back to previous page\n''')
         elif type == "logout" : print('''Enter \033[33m"LOGOUT"\033[0m to go back to Login Page\n''')
-        elif type == "filter" : print('''Enter \033[96m"FILTER"\033[0m to go back to filter appointment slots\n''')
+        elif type == "filter" : print('''Enter \033[96m"FILTER"\033[0m to filter appointment slots\n''')
         elif type == "cancel" : print('''Enter \033[96m"CANCEL"\033[0m to cancel the Appointment\n''')
         elif type == "update" : print('''Enter \033[96m"UPDATE"\033[0m to update the details\n''')
         elif type == "create" : print('''Enter \033[96m"CREATE"\033[0m to create a new entry\n''')
         elif type == "delete" : print('''Enter \033[90m"DELETE"\033[0m to delete an entry\n''')
     
     def get_report_date_range(self, attempt_number = 0):
+        """
+        Displays the report date range selection page and returns the selected date range.
+        Args:
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print("""
@@ -811,6 +1269,15 @@ Please enter the Option Number or LOGOUT
 
 
     def paginate_items(self, items, page_size=10, current_page=1):
+        """
+        Paginate a list of items.
+        Args:
+            items (list): List of items to paginate.
+            page_size (int): Number of items per page.
+            current_page (int): Current page number.
+        Returns:
+            dict: A dictionary containing paginated items and pagination information.
+        """
     
         total_items = len(items)
         total_pages = max(1, (total_items + page_size - 1) // page_size)  # Ceiling division
@@ -838,6 +1305,12 @@ Please enter the Option Number or LOGOUT
 
 
     def show_report_export_page(self, report_data, attempt_number = 0):
+        """
+        Displays the report export page with options to export the report in different formats.
+        Args:
+            report_data (str): The report data to be exported.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f'''
@@ -869,24 +1342,25 @@ Please Choose the Export Format
             return "csv"
         else:
             return self.show_report_export_page(report_data, attempt_number+1)
-
+        
 
     def show_update_success_page(self, type , instance_variable):
+        """
+        Displays the update success page with the details of the updated instance.
+        Args:
+            type (str): The type of instance updated (Clinic, GP or Slot).
+            instance_variable (object): The instance object that was updated.
+        """
         self.clear_screen()
         print(self.banner)
         if type == "clinic":
             print(f"\n\033[92mClinic updated successfully.\033[0m\n")
-            print(str(instance_variable)[:-2]) # [:-2] to perform some formatting of the output
-            input("\nPress  Enter to continue.. ")
-
         elif type == "gp":
             print(f"\n\033[92mGP updated successfully.\033[0m\n")
-            print(str(instance_variable)[:-2]) # [:-2] to perform some formatting of the output
-            input("\nPress  Enter to continue.. ")
-
-        
-
-        
+        elif type == "slot":
+            print(f"\n\033[92mAppointment Slot updated successfully.\033[0m\n")
+        print(str(instance_variable)[:-2]) # [:-2] to perform some formatting of the output
+        input("\nPress  Enter to continue.. ")      
         return None
         
     def show_upcoming_appointments_page(self, appointments,page=1, page_size=10, attempt_number = 0):
@@ -895,6 +1369,9 @@ Please Choose the Export Format
         
         Args:
             appointments (list): List of past Appointment objects
+            page (int): The current page number for pagination.
+            page_size (int): The number of items to display per page.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
         """
         self.clear_screen()
         print(self.banner)
@@ -921,7 +1398,6 @@ Please Choose the Export Format
                 print(f"  Time: {appt.slot.start_time}")
                 print(f"  Suburb: {appt.slot.clinic_suburb}")
                 print("-" * 50)
-                #print(appt)
         
         # Show pagination navigation options
         print("\nNavigation options:")
@@ -967,7 +1443,7 @@ Please Choose the Export Format
                 appt = appointments[selected_appointment]
                 print(f"\nAppointment {selected_appointment + 1} Details:")
                 print(appt)
-                input("Press Enter to return to appointment list")
+                input("Press Enter to return to appointment list.. ")
                 return self.show_upcoming_appointments_page(appointments,page, page_size, attempt_number=0)
             else:
                 return self.show_upcoming_appointments_page(appointments, page, page_size, attempt_number=1)
@@ -975,6 +1451,12 @@ Please Choose the Export Format
             return self.show_upcoming_appointments_page(appointments, page, page_size, attempt_number=1)
     
     def show_view_report_page(self, report_data, attempt_number = 0):
+        """
+        Displays the view report page with the generated report data.
+        Args:
+            report_data (str): The generated report data to be displayed.
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
         self.clear_screen()
         print(self.banner)
         print(f'''

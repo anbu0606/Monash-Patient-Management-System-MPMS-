@@ -11,8 +11,8 @@ from clinic import Clinic
 menu = Menu()
 mpms = MPMS()
 menu.clear_screen()
-
-clinics = FileIO.load_clinics(Clinic)
-
-for clinic in clinics:
-    print(str(clinic)[:-2])
+mpms.load_system_state()
+slots = mpms.get_slots_for_management()
+print(len(slots))
+for slot in slots:
+    print(slot)

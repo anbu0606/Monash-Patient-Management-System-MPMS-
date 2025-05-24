@@ -1,9 +1,10 @@
 class Clinic:
     def __init__(self, clinic_name=None, suburb=None, available_services=None, operating_hours=None):
-        self.clinic_name = clinic_name
-        self.suburb = suburb
         self.available_services = available_services if available_services is not None else []
+        self.clinic_name = clinic_name
         self.operating_hours = operating_hours
+        self.suburb = suburb
+
 
     #clinic obj into text for saving into the txt file
     def __str__(self):
@@ -39,25 +40,4 @@ operating_hours:{self.operating_hours}
             self.operating_hours = operating_hours
 
     def set_suburb(self, suburb):
-            self.suburb = suburb
-
-    # @classmethod
-    # def update_clinic(cls, clinic_name, updated_clinic):
-    #     """
-    #     Updates an existing clinic based on the name.
-    #     """
-    #     for idx, clinic in enumerate(cls.clinic_list):
-    #         if clinic.clinic_name == clinic_name:
-    #             cls.clinic_list[idx] = updated_clinic
-    #             cls.save_clinics(cls.clinic_list)
-    #             break
-    
-    # @classmethod
-    # def delete_clinic(cls, clinic_name):
-    #     """
-    #     Deletes a clinic from the list and updates the storage.
-    #     """
-    #     cls.clinic_list = [clinic for clinic in cls.clinic_list if clinic.clinic_name != clinic_name]
-    #     cls.save_clinics()
-
-    
+            self.suburb = suburb  

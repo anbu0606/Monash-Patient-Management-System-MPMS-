@@ -1,4 +1,7 @@
 class User:
+    """
+    User class to represent a user in the system.
+    """
     def __init__(
             self,
             email = None,
@@ -12,7 +15,7 @@ class User:
         self.lname = lname
         self.password = password
         self.mobile_num = mobile_num
-
+    
     def __str__(self):
         return f'''
     User Details:
@@ -22,7 +25,7 @@ class User:
                 Password:       {self.password}
                 Mobile number:  {self.mobile_num}
 '''
-    
+    # Accessors
     def get_email(self):
         return self.email
     

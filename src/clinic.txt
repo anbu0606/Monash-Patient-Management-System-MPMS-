@@ -1,41 +1,109 @@
 
-clinic_name:Anbu Apollo 
-suburb:Clayton
-available_services: General Consultation,Specialist Referral,Vaccinations
-operating_hours:Mon-Fri 6AM-7AM
-|
 clinic_name:Mulgrave Clinic
-suburb:Mulgrave
-available_services:General Consultation,Specialist Referral
-operating_hours:Tue-Fri 8AM-10PM
+gp_name:Dr. Man
+date:17-07-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:True
 |
-clinic_name:Srihari's Clinic
-suburb:Clayton
-available_services:General Consultation,Vaccincation
-operating_hours:Mon-Sat 11PM-5AM
+clinic_name:South Yarra Clinic
+gp_name:Dr. Murphy
+date:14-04-2025
+start_time:23:34
+duration:15
+clinic_suburb:South Yarra
+reason_for_visit:Vaccination
+availability:True
 |
-clinic_name:Glen Waverley hospital
-suburb:Glen Waverley
-available_services:Specialist Referral
-operating_hours:Tue-Fri 8AM-10PM
+clinic_name:JB Hills Clinic
+gp_name:Dr.Hari
+date:12-06-2025
+start_time:19:30
+duration:15
+clinic_suburb:JB Hills
+reason_for_visit:General Consultation
+availability:True
 |
 clinic_name:Clayton Clinic
-suburb:Clayton
-available_services:General Consultation,Chronic Condition Management
-operating_hours:Mon-Fri 9AM-5PM
+gp_name:Dr. Anbu
+date:11-06-2025
+start_time:9:00
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
 |
-clinic_name:Oakleigh Clinic
-suburb:Oakleigh
-available_services:General Consultation,Flu Vaccination
-operating_hours:Mon-Sat 8AM-6PM
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:11-06-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
 |
-clinic_name:Mount Waverley Medical
-suburb:Mount Waverley
-available_services:Specialist Referral,Mental Health Consultation
-operating_hours:Tue-Sun 10AM-8PM
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:15-06-2025
+start_time:9:00
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
 |
-clinic_name:Oakleigh Health Centre
-suburb:Oakleigh
-available_services:Mental Health Consultation,Chronic Condition Management
-operating_hours:Mon-Fri 7AM-3PM
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:12-06-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:14-06-2025
+start_time:9:00
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:16-06-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:10-07-2025
+start_time:9:00
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Dan
+date:17-06-2025
+start_time:23:34
+duration:15
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:False
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Anbu
+date:11-09-2025
+start_time:9:00
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:False
 |

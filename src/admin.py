@@ -6,8 +6,7 @@ class Admin(User):
             fname = None,
             lname = None,
             mobile_num = None,
-            password = None,
-            clinic_data = None
+            password = None
         ):
         super().__init__(email, fname, lname, password, mobile_num)
         self.email = email
@@ -15,7 +14,6 @@ class Admin(User):
         self.lname = lname
         self.password = password
         self.mobile_num = mobile_num
-        self.clinic_data = clinic_data
     def __str__(self):
         return f'''
 Admin Details:
@@ -25,17 +23,6 @@ Admin Details:
                 Mobile number:  {self.mobile_num}
                 password:       {self.password}
 '''
-    
-    def append_clinic_data(self, clinic_obj):
-        self.clinic_data.append(clinic_obj)
-
-    
-
-    def get_clinic_data(self):
-        return self.clinic_data
-    
-    def set_clinic_data(self, new_clinic_data):
-        self.clinic_data = new_clinic_data
     
     # Accessors
     def get_email(self):
