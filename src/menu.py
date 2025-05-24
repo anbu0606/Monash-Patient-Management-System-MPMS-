@@ -947,6 +947,32 @@ FILTER APPOINTMENT SLOTS
         else:
             return "error"
     
+    def show_clinic_filter_option(self, is_skip_enabled = False):
+        """
+        Displays the filter options for appointment slots.
+        Args:
+            is_skip_enabled (bool): Flag to enable or disable the skip option.
+        """
+        print("""
+FILTER APPOINTMENT SLOTS
+
+    You can filter by:
+    1. Clinic Suburb
+
+    Enter the option number or \033[34m"BACK"\033[0m/\033[33m"LOGOUT"\033[0m to return.
+        """)
+        if is_skip_enabled:
+            self.show_error_message("standard")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_back(user_input):
+            return "back"
+        elif Validator.is_input_logout(user_input):
+            return "logout"
+        elif user_input == "1":
+            return "clinic_suburb"
+        else:
+            return "error"
+    
 
     def show_gp_appointment_slots(self, slots, gp_name, attempt_number = 0):
         '''

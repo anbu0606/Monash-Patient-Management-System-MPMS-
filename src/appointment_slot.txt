@@ -116,3 +116,39 @@ clinic_suburb:JB Hills
 reason_for_visit:Vaccination
 availability:True
 |
+clinic_name:Gemini Clinic
+gp_name:Dr. Paul
+date:26-08-2025
+start_time:22:20
+duration:20
+clinic_suburb:Richmond
+reason_for_visit:Vaccination
+availability:True
+|
+clinic_name:Gemini Clinic
+gp_name:Dr. Helena Zhou
+date:26-06-2025
+start_time:22:20
+duration:20
+clinic_suburb:Richmond
+reason_for_visit:Vaccination
+availability:True
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Helena Zhou
+date:27-06-2025
+start_time:21:20
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Vaccination
+availability:True
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Helena Zhou
+date:28-06-2025
+start_time:20:20
+duration:15
+clinic_suburb:Clayton
+reason_for_visit:Vaccination
+availability:True
+|

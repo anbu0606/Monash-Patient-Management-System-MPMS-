@@ -967,14 +967,14 @@ class MPMS:
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_profile_page() in MPMS Class.")
     
-    def view_gp_slots(self, admin):
+    def view_gp_slots(self, admin,enable_skip = False):
         '''
         Functionality for user to select a GP and view the appointment associated with them.
         Args:
             admin(Admin): The admin instance.
         '''
         gps = self.gps
-        user_action = input("\n Enter the Slot Number of the GP to Update or type 'BACK' to return to the Home Page: ").strip()
+        user_action = input("\n Enter the Slot Number of the GP to list of all the appointment slots or type 'BACK' to return to the Home Page: ").strip()
         if user_action == "BACK":
             self.admin_home(admin)
         elif user_action.isdigit():
@@ -992,7 +992,7 @@ class MPMS:
 
         gp_slots = []
         for slot in self.get_slots_for_management():
-            if slot.get_gp_name() == selected_gp.get_gp_name():
+            if slot.get_gp_name().strip().lower() == selected_gp.get_gp_name().strip().lower():
                 gp_slots.append(slot)
         user_action = self.menu.show_gp_appointment_slots(gp_slots, selected_gp.get_gp_name())
         if user_action == "back":
@@ -1000,7 +1000,66 @@ class MPMS:
         elif user_action == "logout":
             self.logout(admin)
         elif user_action == "filter":
-            pass
+
+            while True:
+                filter_type = self.menu.show_clinic_filter_option(is_skip_enabled=enable_skip)
+
+                if filter_type == "back":
+                    return self.view_gp_slots(admin)
+                elif filter_type == "logout":
+                    return self.logout(admin)
+                elif filter_type not in ["clinic_suburb"]:
+                    print("\033[91mInvalid filter option. Please try again.\033[0m")
+                    continue  # Re-prompt
+
+                # Get the filter value from the user
+                value = self.menu.get_filter_value(filter_type)
+
+                if Validator.is_input_back(value):
+                    return self.view_gp_slots(admin)
+                if Validator.is_input_logout(value):
+                    return self.logout(admin)
+                
+                # #if they are filtering by date then check if the date is in the correct format
+                # if filter_type == "date" and not Validator.is_valid_date_format(value):
+                #     print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
+                #     input("Press Enter to try again...")
+                #     continue
+
+                # Filter the available slots based on the selected filter type and value
+                filtered_slots = [slot for slot in gp_slots if getattr(slot, filter_type) and getattr(slot, filter_type).lower() == value.lower()]
+                
+                # If no slots match the filter, inform the user and re-prompt
+                if not filtered_slots:
+                    print("\033[91mNo matching slots found. Press Enter to try again.\033[0m")
+                    input()
+                    continue  # Go back to filter option selection
+                user_action = self.menu.show_gp_appointment_slots(filtered_slots, selected_gp.get_gp_name())
+                # Show results
+                # print("\n\033[94mFiltered Appointment Slots:\033[0m")
+                # for i, slot in enumerate(filtered_slots, 1):
+                #     print(f"\nSlot {i}:")
+                #     print(f"  Clinic: {slot.clinic_name}")
+                #     print(f"  GP: {slot.gp_name}")
+                #     print(f"  Date: {slot.date}")
+                #     print(f"  Time: {slot.start_time}")
+                #     print(f"  Duration: {slot.duration}")
+                #     print(f"  Suburb: {slot.clinic_suburb}")
+                #     print(f"  Reason: {slot.reason_for_visit}")
+                #     print("  ------------------------------------------------------------")
+               
+                # # Prompt for preferred GP filter if applicable
+                # if filter_type in ["date", "clinic_suburb"]:
+                #     further_filter = input("\nWould you like to filter these results by a preferred GP? (yes/no): ").strip().lower()
+                #     if further_filter == "yes":
+                #         gp_name = input("Enter preferred GP name: ").strip()
+                #         filtered_slots = [slot for slot in filtered_slots if slot.gp_name and slot.gp_name.lower() == gp_name.lower()]
+                #         if not filtered_slots:
+                #             print("\033[91mNo matching GP found in these results. Press Enter to try again.\033[0m")
+                #             input()
+                #             continue  # Re-prompt from filter selection
+                # return self.finalise_appointment(filtered_slots, patient) #otherwise return the filtered slots to finalise the appointment
+
         else:
             raise ValueError(f"Invalid value for user_action:{user_action} received in delete_gp() in MPMS")
 
