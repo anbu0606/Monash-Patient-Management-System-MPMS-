@@ -282,6 +282,14 @@ class MPMS:
 
 
     def cancel_appointment(self, patient, appointment):
+        """
+        Handles the cancellation process for a given appointment by a patient.
+
+        Args:
+            patient (Patient): The patient object requesting the cancellation.
+            appointment (Appointment): The appointment object to be cancelled.
+
+        """
         # app_datetime_str = f"{appointment.date} {appointment.start_time}"
         appt_slot_details = appointment.get_slot() #Get slot instance as all details are stored there
         if len(appt_slot_details.get_start_time()) == 2:
@@ -338,6 +346,14 @@ class MPMS:
      
     # Remove the booked appoointment from appointments.txt
     def complete_cancellation(self, patient, appointment):
+        """
+        Finalizes the cancellation of a patient's appointment.
+
+        Args:
+            patient (Patient): The patient who is cancelling the appointment.
+            appointment (Appointment): The appointment to be cancelled.
+
+        """
         with open("src/appointments.txt", "r") as file:
             lines = file.readlines()
 
@@ -366,6 +382,13 @@ class MPMS:
         self.patient_home(patient)
 
     def create_appointment_slot(self, admin):
+        """
+            Allows an admin user to create a new appointment slot.
+
+            Args:
+                admin (Admin): The admin user performing the operation.        
+
+        """
         user_action = self.menu.show_create_appointment_slot_page()
         if isinstance(user_action, dict):
             new_slot_details = user_action
@@ -384,6 +407,13 @@ class MPMS:
             raise ValueError(f"Invalid value for user_action returned:{user_action} to create_appointment_slot() in MPMS")
 
     def create_clinic(self, admin):
+        """
+            Allows an admin user to create a new clinic.
+
+            Args:
+                admin (Admin): The admin user performing the operation.        
+
+        """
         user_action = self.menu.show_create_clinic_page()
         if isinstance(user_action, dict):
             new_clinic = Clinic(
@@ -405,6 +435,13 @@ class MPMS:
         
 
     def create_gp(self, admin):
+        """
+            Allows an admin user to create a new GP.
+
+            Args:
+                admin (Admin): The admin user performing the operation.        
+
+        """
         Clinic_list = [clinic.get_clinic_name() for clinic in self.clinics]  
         user_action = self.menu.show_create_gp_page(Clinic_list)
         if isinstance(user_action, dict):
@@ -429,6 +466,13 @@ class MPMS:
 
     
     def delete_appointment_slot(self, admin):
+        """
+            Allows an admin user to delete an existing appointment slot.
+
+            Args:
+                admin (Admin): The admin user performing the operation.        
+
+        """
         slots = self.get_slots_for_management()
         user_action = self.menu.show_delete_appointment_slot_page(slots)
         if isinstance(user_action, AppointmentSlot): #Appointment Slot instance returned.
@@ -446,6 +490,13 @@ class MPMS:
 
     
     def delete_clinic(self, admin):
+        """
+            Allows an admin user to delete an existing clinic.
+
+            Args:
+                admin (Admin): The admin user performing the operation.        
+
+        """
         user_action = self.menu.show_delete_clinic_page(self.clinics)
         if isinstance(user_action, int): #index of clinic instance returned.
             deleted_clinic = self.clinics.pop(user_action)
@@ -461,6 +512,13 @@ class MPMS:
         
 
     def delete_gp(self, admin):
+        """
+            Allows an admin user to delete an existing GP.
+
+            Args:
+                admin (Admin): The admin user performing the operation.        
+
+        """
         user_action = self.menu.show_delete_gp_page(self.gps)
         if isinstance(user_action, int): #index of gp instance returned.
             deleted_gp = self.gps.pop(user_action)
@@ -475,6 +533,15 @@ class MPMS:
             raise ValueError(f"Invalid value for user_action:{user_action} received in delete_gp() in MPMS")
 
     def export_report(self, admin, report_data, type):
+        """
+        Handles exporting of a generated report in TXT or CSV format based on admin input.
+
+        Args:
+            admin (Admin): The admin user performing the export.
+            report_data (list): A list containing the versions of the report
+            type (str): A string indicating the type of report being exported
+
+        """
         user_action = self.menu.show_report_export_page(report_data[0])
         if user_action == "back":
             self.generate_report(admin, type)
@@ -530,7 +597,13 @@ class MPMS:
         self.patient_home(patient)
     
     def generate_report(self, admin, type):
-        
+        """
+        Generates a report based on the selected type ('reason' or 'gp') and a specified date range.
+
+        Args:
+            admin (Admin): The admin user requesting the report.
+            type (str): The type of report to generate.
+        """
         date_range_result = self.menu.get_report_date_range()
     
         # Check if the result is a string
@@ -562,6 +635,14 @@ class MPMS:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_profile_page() in MPMS Class.")
 
     def get_non_duplicate_slots(self, associated_upcoming_slots):
+        """
+        Identifies appointment slots from the user's upcoming appointments that are not
+        present in the system's master list of appointment slots.
+
+        Args:
+            associated_upcoming_slots (list): A list of AppointmentSlot objects associated with a patient.
+
+        """
         slots_raw_data = []
         non_duplicate_slots = []
         for slot in self.appointment_slots:
@@ -621,6 +702,13 @@ class MPMS:
         return available_slots + unavailable_slots
     
     def get_user_object(self, email, user_type):
+        """
+        Retrieves a user object (Patient or Admin) based on the provided email and user type.
+
+        Args:
+            email (str): The email address of the user to retrieve.
+            user_type (str): The type of user to search for ("patient" or "admin").
+        """
         if user_type == "patient":
             user_list = self.patients
         elif user_type == "admin":
@@ -633,6 +721,13 @@ class MPMS:
                 return user
 
     def get_valid_user_details(self, user_type):
+        """
+        Returns a dictionary of valid login credentials (email and password) for all users
+        of the specified type.
+
+        Args:
+            user_type (str): The type of user ("patient" or "admin").
+        """
         valid_details = {}
         if user_type == "admin":
             user_list = self.admins
@@ -643,6 +738,9 @@ class MPMS:
         return valid_details
 
     def load_system_state(self):
+        """
+            Loads the current system state from the persistent storage.
+        """
         self.appointment_slots = FileIO.load_appointment_slots(appointment_slot_class=AppointmentSlot)
         self.patients = FileIO.load_patients(patient_class=Patient)
         self.appointments, associated_upcoming_slots = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
@@ -653,6 +751,13 @@ class MPMS:
         self.gps = FileIO.load_gp(gp_class=Gp)
     
     def logout(self, user):
+        """
+        Logs out the current user and returns to the login page.
+
+    Args:
+        user (object): The user object to log out. Must be an instance of Patient or Admin.
+
+        """
         if isinstance(user, Patient):
             self.user_login()
         elif isinstance(user, Admin):
@@ -761,9 +866,16 @@ class MPMS:
         elif user_action == "back":
             self.patient_home(patient)
         
-        #self.patient_home(patient)
+        
 
     def set_is_user_admin(self, value):
+        """
+        Sets the user role flag to indicate whether the current user is an admin.
+
+    Args:
+        value (bool): True if the user is an admin, False otherwise.
+
+        """
         self.is_user_admin = value
 
     def start_app(self):
@@ -774,6 +886,14 @@ class MPMS:
         self.user_login()  # Calls user login functionality.
     
     def upcoming_appointments(self,patient):
+        """
+        Display the patient's upcoming booked appointments and handle user actions 
+        related to viewing, cancelling, or navigating from the upcoming appointments page.
+
+        Args:
+            patient (Patient): The patient object whose upcoming appointments are to be displayed.
+
+        """
         upcoming_appts = self.get_patient_appointments(email=patient.get_email(), type="Booked")
         
         user_action = self.menu.show_upcoming_appointments_page(upcoming_appts)
@@ -827,6 +947,13 @@ class MPMS:
             raise ValueError(f"Invalid useraction:{user_action} returned to update_appointment_slot() in MPMS.")
 
     def update_clinic(self, admin):
+        """
+        Allows an admin user to update the details of a selected clinic.
+
+        Args:
+            admin (Admin): The admin user performing the update.
+
+        """
         clinics = self.clinics
         user_action = input("\n Enter the Slot Number of the Clinic to Update or type 'BACK' to return to the Home Page: ").strip()
         if user_action == "BACK":
@@ -863,6 +990,12 @@ class MPMS:
 
 
     def update_gp(self, admin):
+        """
+        Allows an admin user to update the details of a selected GP.
+
+        Args:
+            admin (Admin): The admin user performing the update.
+        """
         Clinic_list = [clinic.get_clinic_name() for clinic in self.clinics]
         gps = self.gps
         user_action = input("\n Enter the Slot Number of the GP to Update or type 'BACK' to return to the Home Page: ").strip()
@@ -955,6 +1088,14 @@ class MPMS:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_login() in MPMS Class.")
    
     def user_profile_page(self, user):
+        """
+
+        Display the profile page for the given user and handle navigation actions.
+
+        Args:
+            user (Admin or Patient): The user object whose profile is being displayed.
+
+        """
         user_action = self.menu.show_profile_page(user_obj=user, attempt_number=0, is_user_admin=self.is_user_admin)
         if user_action == "back":
             if isinstance(user, Admin):

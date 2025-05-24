@@ -6,6 +6,14 @@ class Report:
     
     @staticmethod
     def generate_appt_reason_report(appointments, start_date=None, end_date=None):
+        """
+        Generates a report summarizing the number and percentage of appointments by reason.
+
+        Args:
+            appointments (list): A list of Appointment objects, each with a linked AppointmentSlot.
+            start_date (str): Start date in "dd-mm-yyyy" format to filter the appointments. Defaults to None.
+            end_date (str): End date in "dd-mm-yyyy" format to filter the appointments. Defaults to None.
+        """
         
         # Filter appointments by date range if specified
         filtered_appts = appointments
@@ -68,7 +76,15 @@ class Report:
 
     @staticmethod
     def generate_gp_report(appointments, start_date=None, end_date=None):
-        
+        """
+        Generates a report detailing how many patients each GP handled and the reasons for visits.
+
+        Args:
+            appointments (list): A list of Appointment objects, each with a linked AppointmentSlot.
+            start_date (str): Start date in "dd-mm-yyyy" format to filter the appointments. Defaults to None.
+            end_date (str): End date in "dd-mm-yyyy" format to filter the appointments. Defaults to None.
+
+        """
         # Filter appointments by date range if specified
         filtered_appointments = appointments
         if start_date and end_date:
