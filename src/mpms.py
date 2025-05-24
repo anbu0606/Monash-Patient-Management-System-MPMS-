@@ -158,7 +158,7 @@ class MPMS:
         elif user_action == "reason_report":
             self.generate_report(admin, "reason")
         elif user_action == "manage_appointment_slots":
-            pass
+            self.manage_appointment_slots(admin)
         elif user_action == "manage_clinics":
             self.manage_clinics(admin)
         elif user_action == "manage_gp":
@@ -365,6 +365,24 @@ class MPMS:
         self.menu.show_cancellation_success_page(appointment)
         self.patient_home(patient)
 
+    def create_appointment_slot(self, admin):
+        user_action = self.menu.show_create_appointment_slot_page()
+        if isinstance(user_action, dict):
+            new_slot_details = user_action
+            new_slot = AppointmentSlot()
+            for attr, value in new_slot_details.items():
+                setattr(new_slot, attr, value)
+            self.appointment_slots.append(new_slot)
+            FileIO.save_appointment_slots(self.appointment_slots)
+            self.menu.show_creation_success_page(type="Slot", instance_variable=new_slot)
+            self.manage_appointment_slots(admin)
+        elif user_action == "back":
+            self.admin_home(admin)
+        elif user_action == "logout":
+            self.logout(admin)
+        else:
+            raise ValueError(f"Invalid value for user_action returned:{user_action} to create_appointment_slot() in MPMS")
+
     def create_clinic(self, admin):
         user_action = self.menu.show_create_clinic_page()
         if isinstance(user_action, dict):
@@ -409,13 +427,24 @@ class MPMS:
         else:
             raise ValueError(f"Invalid value for user_action returned:{user_action} to create_gp() in MPMS")
 
+    
+    def delete_appointment_slot(self, admin):
+        slots = self.get_slots_for_management()
+        user_action = self.menu.show_delete_appointment_slot_page(slots)
+        if isinstance(user_action, AppointmentSlot): #Appointment Slot instance returned.
+            deleted_slot = user_action
+            self.appointment_slots.remove(deleted_slot)
+            FileIO.save_appointment_slots(self.appointment_slots)
+            self.menu.show_deletion_confirmation_page(type = "slot", instance_variable = deleted_slot )
+            self.manage_appointment_slots(admin)
+        elif user_action == "back":
+            self.manage_appointment_slots(admin)
+        elif user_action == "logout":
+            self.logout(admin)
+        else:
+            raise ValueError(f"Invalid value for user_action:{user_action} received in delete_appointment_slot() in MPMS")
 
-
-
-
-
-
-
+    
     def delete_clinic(self, admin):
         user_action = self.menu.show_delete_clinic_page(self.clinics)
         if isinstance(user_action, int): #index of clinic instance returned.
@@ -444,11 +473,6 @@ class MPMS:
             self.logout(admin)
         else:
             raise ValueError(f"Invalid value for user_action:{user_action} received in delete_gp() in MPMS")
-
-
-
-
-
 
     def export_report(self, admin, report_data, type):
         user_action = self.menu.show_report_export_page(report_data[0])
@@ -575,6 +599,27 @@ class MPMS:
         else:
             return booked_appointments + previous_appointments
     
+    def get_slots_for_management(self):
+        '''
+        A function to get all available slots and all unavailable slots that are not associated with an appointment
+        and are not from the past.
+
+        Returns:
+            slots(list): List of all slots that the admin can manage.
+        ''' 
+        available_slots = [slot for slot in self.appointment_slots if slot.get_availability()] # Get all available slots
+        unavailable_slots = [slot for slot in self.appointment_slots if not slot.get_availability()] # Get all unavailable slots
+
+        # Filter unavailable slots to only contain valid slots -- slots that are not associated with an appointment or from the past.
+        for appointment in self.appointments:
+            occupied_slot = appointment.get_slot() # Get slot associated with Appointment
+            for slot in unavailable_slots:
+                if str(slot) == str(occupied_slot):
+                    unavailable_slots.remove(slot) # Remove is match.
+                if datetime.strptime(slot.get_date() + slot.get_start_time(), "%d-%m-%Y%H:%M") < datetime.now() and slot in unavailable_slots:
+                    unavailable_slots.remove(slot) # Remove if appointment from past.
+        return available_slots + unavailable_slots
+    
     def get_user_object(self, email, user_type):
         if user_type == "patient":
             user_list = self.patients
@@ -599,8 +644,6 @@ class MPMS:
 
     def load_system_state(self):
         self.appointment_slots = FileIO.load_appointment_slots(appointment_slot_class=AppointmentSlot)
-        for i in self.appointment_slots:
-            print(i)
         self.patients = FileIO.load_patients(patient_class=Patient)
         self.appointments, associated_upcoming_slots = FileIO.load_appointments(appointment_class=Appointment, appointment_slot_class=AppointmentSlot)
         self.appointment_slots += self.get_non_duplicate_slots(associated_upcoming_slots)
@@ -617,6 +660,27 @@ class MPMS:
             self.user_login()
         else:
             raise ValueError(f"Invalid user object argument:{user} passed to logout() in MPMS Class.")
+
+    def manage_appointment_slots(self, admin):
+        '''
+        Handles the Manage Appointment Slots function for Admins.
+        Args:
+            admin(Admin): Admin instance variable
+        '''
+        slots = self.get_slots_for_management()
+        user_action = self.menu.show_appointment_slot_management_page(slots)
+        if user_action == "logout":
+            self.logout(admin)
+        elif user_action == "back":
+            self.admin_home(admin)
+        elif user_action == "update":
+            self.update_appointment_slot(admin)
+        elif user_action == "create":
+            self.create_appointment_slot(admin)
+        elif user_action == "delete":
+            self.delete_appointment_slot(admin)
+        else:
+            raise ValueError(f"Invalid user_action received:{user_action} from show_clinic_management_page in manage_clinics() in MPMS class")
 
     def manage_clinics(self,admin):
         """
@@ -654,13 +718,12 @@ class MPMS:
             self.create_gp(admin)
         elif user_action == "delete":
             self.delete_gp(admin)
+        elif user_action == "slots":
+            self.view_gp_slots(admin)
         else:
             raise ValueError(f"Invalid user_action received:{user_action} from show_gp_management_page in manage_gps() in MPMS class")
 
 
-
-
-    
     def patient_home(self, patient):
         """
         This function contains the logic for the Patient Home Page to display UI, take input and route user.
@@ -739,6 +802,30 @@ class MPMS:
                 input("Press Enter to continue.. ")
                 self.upcoming_appointments(patient)
 
+    def update_appointment_slot(self, admin):
+        '''
+        Handles the updating of Appointment Slots as a function for admins.
+        Args:
+            admin(Admin): Admin instance variable
+        '''
+        slots = self.get_slots_for_management()
+        user_action = self.menu.show_appointment_slot_update_page(slots)
+        if user_action == "back":
+            self.manage_appointment_slots(admin)
+        elif user_action == "logout":
+            self.logout(admin)
+        elif user_action.isdigit():
+            slot_index = int(user_action) - 1
+            slot_to_update = slots[slot_index]
+            updated_slot_details = self.menu.show_appointment_slot_update_menu(slot_to_update)
+            for attr, value in updated_slot_details.items():
+                setattr(slot_to_update, attr, value)
+            FileIO.save_clinics(self.appointment_slots)
+            self.menu.show_update_success_page(type="slot", instance_variable=slot_to_update)
+            self.manage_appointment_slots(admin)
+        else:
+            raise ValueError(f"Invalid useraction:{user_action} returned to update_appointment_slot() in MPMS.")
+
     def update_clinic(self, admin):
         clinics = self.clinics
         user_action = input("\n Enter the Slot Number of the Clinic to Update or type 'BACK' to return to the Home Page: ").strip()
@@ -756,7 +843,6 @@ class MPMS:
             print("\033[91m!! Invalid input. Please try again!!\033[0m")
             input("Press Enter to continue.. ")
             self.manage_clinics(admin)
-
         print("\n--- Update Clinic Details ---")
         print("\nLeave the field empty if you don't want to change it:")
         new_name = input(f"New Name ({clinic_to_update.get_clinic_name()}): ") or clinic_to_update.get_clinic_name()
@@ -880,6 +966,44 @@ class MPMS:
             self.user_login()
         else:
             raise ValueError(f"Invalid user_action:{user_action} returned to user_profile_page() in MPMS Class.")
+    
+    def view_gp_slots(self, admin):
+        '''
+        Functionality for user to select a GP and view the appointment associated with them.
+        Args:
+            admin(Admin): The admin instance.
+        '''
+        gps = self.gps
+        user_action = input("\n Enter the Slot Number of the GP to Update or type 'BACK' to return to the Home Page: ").strip()
+        if user_action == "BACK":
+            self.admin_home(admin)
+        elif user_action.isdigit():
+            gp_index = int(user_action) - 1
+            if 0 <= gp_index < len(gps):
+                selected_gp = gps[gp_index]
+            else:
+                print("\033[91m!! Invalid selection. Please try again!!\033[0m")
+                input("Press Enter to continue.. ")
+                self.manage_gps(admin)
+        else:
+            print("\033[91m!! Invalid input. Please try again!!\033[0m")
+            input("Press Enter to continue.. ")
+            self.manage_gps(admin)
+
+        gp_slots = []
+        for slot in self.get_slots_for_management():
+            if slot.get_gp_name() == selected_gp.get_gp_name():
+                gp_slots.append(slot)
+        user_action = self.menu.show_gp_appointment_slots(gp_slots, selected_gp.get_gp_name())
+        if user_action == "back":
+            self.manage_gps(admin)
+        elif user_action == "logout":
+            self.logout(admin)
+        elif user_action == "filter":
+            pass
+        else:
+            raise ValueError(f"Invalid value for user_action:{user_action} received in delete_gp() in MPMS")
+
 
 if __name__ == "__main__":
     mpms = MPMS()
