@@ -821,37 +821,54 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         elif Validator.is_input_logout(user_input):
             return "logout"
         elif Validator.is_input_continue(user_input):
-            is_input_valid = True
-            while True:
-                if not is_input_valid:
-                    print("\033[91m!! Input cannot be Blank !!\033[0m")
-                new_name = input(f"New Name (Mulgrave Clinic): ").strip()
-                if new_name == "":
-                    is_input_valid = False
-                    continue
-                new_suburb = input(f"New Suburb (Mulgrave): ").strip()
-                if new_suburb == "":
-                    is_input_valid = False
-                    continue
-                new_services = input(f"New Services (comma-separated) (General Consultation,Specialist Referral): ").strip()
-                if new_services == "":
-                    is_input_valid = False
-                    continue
-                new_services = new_services.split(',')
-                new_hours = input(f"New Operating Hours (Tue-Fri 8AM-10PM): ").strip()
-                if new_hours == "":
-                    is_input_valid = False
-                    continue
-                break
+            # Get clinic name with validation
+            new_name = self.get_valid_input(
+                "New Clinic Name (minimum 3 characters): ", 
+                lambda x: len(x.strip()) >= 3
+            )
+            if new_name in ["back", "logout"]:
+                return new_name
+            
+            # Get suburb with validation
+            new_suburb = self.get_valid_input(
+                "New Suburb (minimum 3 characters): ", 
+                lambda x: len(x.strip()) >= 3
+            )
+            if new_suburb in ["back", "logout"]:
+                return new_suburb
+            
+            # Get services with validation
+            new_services = self.get_valid_input(
+                "New Services (comma-separated, e.g., General Consultation,Specialist Referral): ", 
+                Validator.is_valid_services
+            )
+            if new_services in ["back", "logout"]:
+                return new_services
+            
+            # Split services into list and clean them
+            new_services = [service.strip() for service in new_services.split(',') if service.strip()]
+            
+            # Get operating hours with validation
+            new_hours = self.get_valid_input(
+                "New Operating Hours (e.g., 09:00 - 17:00, 08:30-18:30): ", 
+                Validator.is_valid_operating_hours_clinic
+            )
+            if new_hours in ["back", "logout"]:
+                return new_hours
+
+            # Return the validated clinic details
+            new_clinic_details = {
+                "clinic_name": new_name.strip(),
+                "suburb": new_suburb.strip(),
+                "available_services": new_services,
+                "operating_hours": new_hours.strip()
+            }
+            return new_clinic_details
         else:
-            return self.show_create_clinic_page(attempt_number+1)
-        new_clinic_details = {}
-        new_clinic_details["clinic_name"] = new_name
-        new_clinic_details["suburb"] = new_suburb
-        new_clinic_details["available_services"] = new_services
-        new_clinic_details["operating_hours"] = new_hours
-        return new_clinic_details
-    
+            return self.show_create_clinic_page(attempt_number + 1)
+            
+
+
 
     def show_create_gp_page(self,clinic_list, attempt_number = 0):
         """
@@ -886,34 +903,41 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         elif Validator.is_input_logout(user_input):
             return "logout"
         elif Validator.is_input_continue(user_input):
-            is_input_valid = True
+            # Get GP name with validation
+            new_name = self.get_valid_input(
+                "New GP Name (must start with 'Dr.' e.g., Dr.David): ", 
+                Validator.is_valid_gp_name
+            )
+            if new_name in ["back", "logout"]:
+                return new_name
+
+            # Get email with validation using regex
+            new_email = self.get_valid_input(
+                "New email-id (e.g., david1@monash.gp.in): ", 
+                lambda x: re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', x) is not None
+            )
+            if new_email in ["back", "logout"]:
+                return new_email
+
+            # Get assigned clinics with validation (preserving existing logic)
             while True:
-                if not is_input_valid:
+                clinic_input = input("New Clinics (comma-separated) (Clayton Hospital,Glen Waverley Hospital): ").strip()
+                
+                # Check for back/logout
+                if Validator.is_input_back(clinic_input):
+                    return "back"
+                elif Validator.is_input_logout(clinic_input):
+                    return "logout"
+                
+                # Check for empty input
+                if clinic_input == "":
                     print("\033[91m!! Input cannot be Blank !!\033[0m")
-                new_name = input(f"New GP Name (Dr.David): ").strip()
-                if new_name == "":
-                    is_input_valid = False
                     continue
-
-                while True:
-
-                    new_email = input(f"New email-id (david1@monash.gp.in): ").strip()
-                    if new_email == "":
-                        is_input_valid = False
-                        continue
-
-                    if re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', new_email):
-                        break
-                    else:
-                        print("\033[91m!! Invalid Email id Format. Please enter a valid id. !!\033[0m") 
-                        continue
-
-                new_assigned_clinics = input(f"New Clinics (comma-separated) (Clayton Hospital,Glen Waverley Hospital): ").strip()
-                if new_assigned_clinics == "":
-                    is_input_valid = False
-                    continue
-                new_assigned_clinics = [clinic.strip() for clinic in new_assigned_clinics.split(',')]
-
+                
+                # Process the clinic list
+                new_assigned_clinics = [clinic.strip() for clinic in clinic_input.split(',')]
+                
+                # Use existing clinic validation logic
                 is_valid, valid_clinics, invalid_clinics = Validator.is_valid_clinic_list(
                     new_assigned_clinics, clinic_list
                 )
@@ -921,28 +945,40 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
                 if not is_valid:
                     print(f"\033[91m!! These clinics are not valid: {', '.join(invalid_clinics)} !!\033[0m")
                     continue
-                    
-            
-                new_specialisation = input(f"New specialisation (comma-separated) (Vaccinations,General Consultation): ").strip()
-                if new_specialisation == "":
-                    is_input_valid = False
-                    continue
-                new_specialisation = new_specialisation.split(',')
-                new_availability = input(f"New availability of the GP (Tue-Fri 8AM-10PM): ").strip()
-                if new_availability == "":
-                    is_input_valid = False
-                    continue
-                break
-        else:
-            return self.show_create_gp_page(attempt_number+1)
+                else:
+                    break  # Valid clinics, exit the loop
 
-        new_gp_details = {}
-        new_gp_details["gp_name"] = new_name
-        new_gp_details["email"] = new_email
-        new_gp_details["assigned_clinics"] = valid_clinics
-        new_gp_details["specialisation"] = new_specialisation
-        new_gp_details["availability"] = new_availability
-        return new_gp_details
+            # Get specialisation with validation
+            new_specialisation = self.get_valid_input(
+                "New specialisation (comma-separated) (Vaccinations,General Consultation): ", 
+                lambda x: len(x.strip()) > 0 and all(len(spec.strip()) >= 3 for spec in x.split(',') if spec.strip())
+            )
+            if new_specialisation in ["back", "logout"]:
+                return new_specialisation
+            
+            # Clean up specialisation list
+            new_specialisation = [spec.strip() for spec in new_specialisation.split(',') if spec.strip()]
+
+            # Get availability with validation
+            new_availability = self.get_valid_input(
+                "New availability days (e.g., Mon-Fri, Tue,Thu,Sat, Monday): ", 
+                Validator.is_valid_availability_gp
+            )
+            if new_availability in ["back", "logout"]:
+                return new_availability
+
+            # Return the validated GP details
+            new_gp_details = {
+                "gp_name": new_name.strip(),
+                "email": new_email.strip(),
+                "assigned_clinics": valid_clinics,
+                "specialisation": new_specialisation,
+                "availability": new_availability.strip()
+            }
+            return new_gp_details
+        else:
+            return self.show_create_gp_page(clinic_list, attempt_number + 1)
+
 
     def show_creation_success_page(self, type, instance_variable):
         """
