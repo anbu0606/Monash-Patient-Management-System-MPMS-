@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import re
 class Validator:
     def __init__(self):
         pass
@@ -100,7 +101,54 @@ class Validator:
                 return True
         return False
 
+    @staticmethod
+    def is_valid_availability_gp(availability_str):
+        """
+        Validates GP availability contains valid days of the week.
+        
+        Args:
+            availability_str (str): Availability string to validate
+            
+        Returns:
+            bool: True if valid format, False otherwise
+        """
+        if not availability_str or availability_str.strip() == "":
+            print("\033[91m!! Availability cannot be empty !!\033[0m")
+            return False
+        
+        availability = availability_str.strip()
+        
+        # Valid day abbreviations and full names
+        valid_days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun',
+                    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        
+        # Check if it contains at least one valid day
+        has_valid_day = any(day in availability for day in valid_days)
+        if not has_valid_day:
+            print("\033[91m!! Availability must include valid days (Mon, Tue, Wed, Thu, Fri, Sat, Sun) !!\033[0m")
+            return False
+        
+        # Check minimum length (at least 3 characters for shortest day "Mon")
+        if len(availability) < 3:
+            print("\033[91m!! Availability too short. Please include day(s) of the week !!\033[0m")
+            return False
+        
+        return True
     
+    @staticmethod
+    def is_valid_clinic_list(assigned_clinics, available_clinics):
+        """
+        Check if the assigned clinics are valid by comparing them with the available clinics.
+        :param assigned_clinics: List of assigned clinics
+        :param available_clinics: List of available clinics
+        :return: Tuple (is_valid, valid_clinics, invalid_clinics)
+        """
+        # Check if the assigned clinics are in the list of available clinics
+        valid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() in available_clinics]
+        invalid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() not in available_clinics]
+        return len(invalid_clinics) == 0, valid_clinics, invalid_clinics
+    
+
     @staticmethod
     def is_valid_date_format(date_str, allow_past = True):
         """
@@ -117,18 +165,6 @@ class Validator:
             return True
         except ValueError:
             return False
-
-    @staticmethod
-    def is_valid_gp_name(name):
-        '''
-        Check if the entered name has "Dr." as a prefix or not and if there is a name after the title.
-        Args:
-            name(str): name of gp
-        '''
-        # Check if the name starts with "Dr." and has more than 3 characters (to ensure there's a name after the title)
-        if name[:3] == "Dr." and len(name) > 3:
-            return True
-        return False
         
 
     @staticmethod
@@ -144,6 +180,46 @@ class Validator:
         return False
     
     @staticmethod
+    def is_valid_gp_name(name):
+        '''
+        Check if the entered name has "Dr." as a prefix or not and if there is a name after the title.
+        Args:
+            name(str): name of gp
+        '''
+        # Check if the name starts with "Dr." and has more than 3 characters (to ensure there's a name after the title)
+        if name[:3] == "Dr." and len(name) > 3:
+            return True
+        return False
+    
+
+    @staticmethod
+    def is_valid_operating_hours_clinic(hours_str):
+        """
+        Validation for operating hours format.
+
+        Args:
+            hours_str (str): Operating hours string to validate
+            
+        Returns:
+            bool: True if valid format, False otherwise
+        """
+        if not hours_str or hours_str.strip() == "":
+            print("\033[91m!! Operating hours cannot be empty !!\033[0m")
+            return False
+        
+        hours = hours_str.strip()
+        
+        # Pattern for time format: HH:MM - HH:MM
+        time_pattern = r'\d{1,2}:\d{2}\s*-\s*\d{1,2}:\d{2}'
+        
+        if re.search(time_pattern, hours):
+            return True
+        else:
+            print("\033[91m!! Invalid format. Use: '00:00 - 24:00' format !!\033[0m")
+            return False
+
+
+    @staticmethod
     def is_valid_patient_login(valid_patient_details, input_email, input_password):
         """
         Check if the patient login credentials are valid.
@@ -158,20 +234,39 @@ class Validator:
             if input_password == valid_patient_details[input_email]:
                 return True
         return False
-    
-    
+        
     @staticmethod
-    def is_valid_clinic_list(assigned_clinics, available_clinics):
+    def is_valid_services(services_input):
         """
-        Check if the assigned clinics are valid by comparing them with the available clinics.
-        :param assigned_clinics: List of assigned clinics
-        :param available_clinics: List of available clinics
-        :return: Tuple (is_valid, valid_clinics, invalid_clinics)
+        Validates the services input string with flexible service names.
+        
+        Args:
+            services_input (str): Comma-separated services string
+            
+        Returns:
+            bool: True if valid, False otherwise
         """
-        # Check if the assigned clinics are in the list of available clinics
-        valid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() in available_clinics]
-        invalid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() not in available_clinics]
-        return len(invalid_clinics) == 0, valid_clinics, invalid_clinics
+        if not services_input or services_input.strip() == "":
+            return False
+        
+        # Split by comma and check each service
+        services = [service.strip() for service in services_input.split(',')]
+        
+        # Check if we have at least one non-empty service
+        valid_services = [service for service in services if service and len(service) >= 3]
+        
+        if len(valid_services) == 0:
+            print("\033[91m!! Please provide at least one service with minimum 3 characters !!\033[0m")
+            return False
+        
+        # Check for reasonable service name length
+        for service in valid_services:
+            if len(service) > 50:
+                print(f"\033[91m!! Service name too long: '{service}' (max 50 characters) !!\033[0m")
+                return False
+        
+        return True
+    
     
     @staticmethod
     def is_valid_time_format(time_string):
