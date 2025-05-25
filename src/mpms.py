@@ -30,56 +30,116 @@ class MPMS:
         self.is_user_admin = False
     
     
-    def admin_cancel_patient_appointment(self, admin):
+    def admin_cancel_patient_appointment(self, admin, page=1, page_size=5):
         """
     This function contains the logic for the Admin Cancel Patient Appointment. 
     It displays appointments booked by pateints and allows the admin to cancel a patient's appointment.
     It then provides the option to make the slot available again for other patients or not.
     Args:
         admin (Admin):  Stores the admin object.
+        page (int): Current page number for pagination.
+        page_size (int): Number of appointments to display per page.
     
     """
-        print("\n--- Admin: Cancel a Patient's Appointment ---")
+        self.menu.clear_screen()
+        print(self.menu.banner)
+        print("""
+                                                        ADMIN: CANCEL PATIENT APPOINTMENT
+        """)
+        
+        #print("\n--- Admin: Cancel a Patient's Appointment ---")
 
         # Filter booked appointments only
         booked_appointments = [appt for appt in self.appointments if appt.get_status() == "Booked"]
+        
         # If no booked appointments, inform the admin
         if not booked_appointments:
             print("\033[91mNo booked appointments available to cancel.\033[0m")
-            input("Press Enter to return to admin home.")
-            return self.admin_home(admin)
+            self.menu.show_prompt(type="logout")
+            self.menu.show_prompt(type="back")
+            
+            user_input = input("Your Input: ").strip()
+            if Validator.is_input_logout(user_input):
+                return self.logout(admin)
+            elif Validator.is_input_back(user_input):
+                return self.admin_home(admin)
+            else:
+                return self.admin_cancel_patient_appointment(admin, page, page_size)
+
+        print("\n--- List of Booked Patient Appointments ---")
+        print("-" * 60)
+
+        # Paginate and display appointments
+        pagination = self.menu.paginate_items(booked_appointments, page_size, page)
+        current_appointments = pagination["items"]
+
+        # Display pagination information
+        print(f"Showing {pagination['showing_from']}-{pagination['showing_to']} of {pagination['total_items']} appointments (Page {pagination['current_page']} of {pagination['total_pages']})\n")
+
 
         # Display booked appointments with index
-        for i, appt in enumerate(booked_appointments, 1):
-            print(f"\nAppointment {i}:")
+        for i, appt in enumerate(current_appointments, 1):
+            actual_index = pagination['showing_from'] - 1 + i
+            print(f"\nAppointment {actual_index}:")
             print(f"  Patient Email: {appt.get_email()}")
-            print(appt)
+            print(f"  GP: {appt.get_slot().get_gp_name()}")
+            print(f"  Date: {appt.get_slot().get_date()}")
+            print(f"  Time: {appt.get_slot().get_start_time()}")
+            print(f"  Duration: {appt.get_slot().get_duration()} minutes")
+            print(f"  Clinic: {appt.get_slot().get_clinic_name()}")
+            print(f"  Suburb: {appt.get_slot().get_clinic_suburb()}")
+            print(f"  Reason: {appt.get_slot().get_reason_for_visit()}")
+            print("-" * 60)
+
+        # Show pagination navigation options
+        if pagination["total_pages"] > 1:
+            print("\nNavigation options:")
+            if pagination["has_prev"]:
+                print("P - Previous page")
+            if pagination["has_next"]:
+                print("N - Next page")
 
         # Ask admin to select an appointment
-        while True:
-            choice = input("\nEnter the number of the appointment to cancel, or type BACK/LOGOUT: ").strip()
-
-            if Validator.is_input_back(choice):
-                return self.admin_home(admin)
-            if Validator.is_input_logout(choice):
-                return self.logout(admin)
-            # Check if the choice is a valid number
-            if choice.isdigit() and 1 <= int(choice) <= len(booked_appointments):
-                selected_appt = booked_appointments[int(choice) - 1]
-                break
-            else:
-                print("\033[91mInvalid selection. Please enter a valid number, BACK, or LOGOUT.\033[0m")
-
-        # Confirm cancellation only if the admin types "CONFIRM"
-        input1 = self.menu.show_cancellation_confirmation_page(selected_appt).strip().upper()
-
-        if input1 == "BACK":
+        print("\nEnter the number of the appointment to cancel")
+        self.menu.show_prompt(type="logout")
+        self.menu.show_prompt(type="back")
+    
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_back(user_input):
             return self.admin_home(admin)
-        elif input1 == "LOGOUT":
+        elif Validator.is_input_logout(user_input):
             return self.logout(admin)
-        elif input1 != "CONFIRM":
-            print("\033[91mInvalid input. Please enter 'CONFIRM', 'BACK', or 'LOGOUT'.\033[0m")
+        elif user_input == "P" and pagination["has_prev"]:
+            return self.admin_cancel_patient_appointment(admin, page-1, page_size)
+        elif user_input == "N" and pagination["has_next"]:
+            return self.admin_cancel_patient_appointment(admin, page+1, page_size)
 
+        # Handle appointment selection
+        if not user_input.isdigit():
+            print("\033[91mInvalid input. Please enter a valid appointment number, P, N, BACK, or LOGOUT.\033[0m")
+            input("Press Enter to continue...")
+            return self.admin_cancel_patient_appointment(admin, page, page_size)
+        
+        appointment_number = int(user_input)
+        if appointment_number < 1 or appointment_number > len(booked_appointments):
+            print("\033[91mInvalid selection. Please enter a valid appointment number.\033[0m")
+            input("Press Enter to continue...")
+            return self.admin_cancel_patient_appointment(admin, page, page_size)
+
+        # Get the selected appointment
+        selected_appt = booked_appointments[appointment_number - 1] 
+
+        # Confirm cancellation
+        confirmation_result = self.menu.show_cancellation_confirmation_page(selected_appt).strip().upper()
+
+        if confirmation_result == "BACK":
+            return self.admin_cancel_patient_appointment(admin, page, page_size)
+        elif confirmation_result == "LOGOUT":
+            return self.logout(admin)
+        elif confirmation_result != "CONFIRM":
+            print("\033[91mInvalid input. Please enter 'CONFIRM', 'BACK', or 'LOGOUT'.\033[0m")
+            input("Press Enter to continue...")
+            return self.admin_cancel_patient_appointment(admin, page, page_size)
 
         # Ask whether to make the slot available to other patients again
         while True:
@@ -88,7 +148,7 @@ class MPMS:
             if availability_choice == "logout":
                 return self.logout(admin)
             elif availability_choice == "back":
-                return self.admin_home(admin)
+                return self.admin_cancel_patient_appointment(admin, page, page_size)
             elif availability_choice == "yes":
                 make_slot_available = True
                 break
@@ -301,11 +361,6 @@ class MPMS:
 
         current_time = datetime.now()
         time_diff = appointment_datetime - current_time
-
-        # if time_diff > timedelta(hours=24):
-        #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
-        # else:
-        #     input1 = self.menu.show_cancellation_confirmation_page(appointment)
 
         if time_diff < timedelta(hours=24):
             print("\033[91m This cancellation is within 24 hours of the appointment time. \033[0m")
@@ -754,8 +809,8 @@ class MPMS:
         """
         Logs out the current user and returns to the login page.
 
-        Args:
-            user (object): The user object to log out. Must be an instance of Patient or Admin.
+    Args:
+        user (object): The user object to log out. Must be an instance of Patient or Admin.
 
         """
         if isinstance(user, Patient):
@@ -790,8 +845,10 @@ class MPMS:
     def manage_clinics(self,admin):
         """
         Displays all the clinics in the system.
+        
         Args:
             admin(Admin): Admin instance variable
+
         """
         clinics = self.clinics
         user_action = self.menu.show_clinic_management_page(clinics)
@@ -812,8 +869,10 @@ class MPMS:
     def manage_gps(self,admin):
         """
         Displays all the gps in the system.
+
         Args:
             admin(Admin): Admin instance variable
+
         """
         gps = self.gps
         user_action = self.menu.show_gp_management_page(gps)
@@ -1165,11 +1224,6 @@ class MPMS:
                 if Validator.is_input_logout(value):
                     return self.logout(admin)
                 
-                # #if they are filtering by date then check if the date is in the correct format
-                # if filter_type == "date" and not Validator.is_valid_date_format(value):
-                #     print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
-                #     input("Press Enter to try again...")
-                #     continue
 
                 # Filter the available slots based on the selected filter type and value
                 filtered_slots = [slot for slot in gp_slots if getattr(slot, filter_type) and getattr(slot, filter_type).lower() == value.lower()]
@@ -1180,31 +1234,7 @@ class MPMS:
                     input()
                     continue  # Go back to filter option selection
                 user_action = self.menu.show_gp_appointment_slots(filtered_slots, selected_gp.get_gp_name())
-                # Show results
-                # print("\n\033[94mFiltered Appointment Slots:\033[0m")
-                # for i, slot in enumerate(filtered_slots, 1):
-                #     print(f"\nSlot {i}:")
-                #     print(f"  Clinic: {slot.clinic_name}")
-                #     print(f"  GP: {slot.gp_name}")
-                #     print(f"  Date: {slot.date}")
-                #     print(f"  Time: {slot.start_time}")
-                #     print(f"  Duration: {slot.duration}")
-                #     print(f"  Suburb: {slot.clinic_suburb}")
-                #     print(f"  Reason: {slot.reason_for_visit}")
-                #     print("  ------------------------------------------------------------")
-               
-                # # Prompt for preferred GP filter if applicable
-                # if filter_type in ["date", "clinic_suburb"]:
-                #     further_filter = input("\nWould you like to filter these results by a preferred GP? (yes/no): ").strip().lower()
-                #     if further_filter == "yes":
-                #         gp_name = input("Enter preferred GP name: ").strip()
-                #         filtered_slots = [slot for slot in filtered_slots if slot.gp_name and slot.gp_name.lower() == gp_name.lower()]
-                #         if not filtered_slots:
-                #             print("\033[91mNo matching GP found in these results. Press Enter to try again.\033[0m")
-                #             input()
-                #             continue  # Re-prompt from filter selection
-                # return self.finalise_appointment(filtered_slots, patient) #otherwise return the filtered slots to finalise the appointment
-
+                
         else:
             raise ValueError(f"Invalid value for user_action:{user_action} received in delete_gp() in MPMS")
 

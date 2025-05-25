@@ -1,109 +1,29 @@
-
 clinic_name:Mulgrave Clinic
-gp_name:Dr. Man
-date:17-07-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:True
+suburb:Mulgrave
+available_services:Vaccination, General Consultation, Specialist Referral
+operating_hours:08:00 - 16:00
 |
 clinic_name:South Yarra Clinic
-gp_name:Dr. Murphy
-date:14-04-2025
-start_time:23:34
-duration:15
-clinic_suburb:South Yarra
-reason_for_visit:Vaccination
-availability:True
-|
-clinic_name:JB Hills Clinic
-gp_name:Dr.Hari
-date:12-06-2025
-start_time:19:30
-duration:15
-clinic_suburb:JB Hills
-reason_for_visit:General Consultation
-availability:True
+suburb:South Yarra
+available_services:Specialist Referral, GP Consultation
+operating_hours:09:00 - 15:00
 |
 clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:11-06-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
+suburb:Clayton
+available_services:Specialist Referral, Vaccination
+operating_hours:09:00 - 16:00
 |
-clinic_name:Mulgrave Clinic
-gp_name:Dr. Dan
-date:11-06-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:False
+clinic_name:Jb Hills Clinic
+suburb:JB Hills
+available_services:Opthomologist, General Consultation
+operating_hours:06:00 - 14:00
 |
-clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:15-06-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
+clinic_name:Caulfied Clinic
+suburb:Caulfied
+available_services:Dentist, Paediatrician, General Consultation
+operating_hours:09:00 - 18:00
 |
-clinic_name:Mulgrave Clinic
-gp_name:Dr. Dan
-date:12-06-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:14-06-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Mulgrave Clinic
-gp_name:Dr. Dan
-date:16-06-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:10-07-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Mulgrave Clinic
-gp_name:Dr. Dan
-date:17-06-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:11-09-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
-|
+clinic_name:Saint Kilda Clinic
+suburb:Saint Kilda
+available_services:Specialist Referral, Blood Test
+operating_hours:07:00 - 16:00
