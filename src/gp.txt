@@ -14,7 +14,7 @@ availability:Monday,Tuesday
 gp_name:Dr. Emily
 email:ered@monashclinic.com
 assigned_clinics:Mulgrave Clinic
-specialisation:Chronic Condition Management
+specialisation:FHU
 availability:Wednesday,Friday
 |
 gp_name:Dr. Nina
@@ -46,4 +46,10 @@ email:rcook@monashclinic.com
 assigned_clinics:Oakleigh Health Centre
 specialisation:Skin Specialist
 availability:Tuesday,Thursday
+|
+gp_name:Dr. Sarah Tan
+email:stan@monashclinic.com
+assigned_clinics:Clayton Clinic
+specialisation:General Consultation
+availability:Monday
 |

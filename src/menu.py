@@ -390,29 +390,29 @@ Please enter the Option Number or LOGOUT
         if attempt_number > 0:
             self.show_error_message("standard")
         new_availability = input(f"New Availability (True/False only): ") or slot_to_update.get_availability()
-        if new_availability not in ["True", "False"]:
-            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+        if new_availability not in ["True", "False", True, False]:
+            return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
         new_clinic_name = input(f"New Clinic Name (Minimum of 3 characters) ") or slot_to_update.get_clinic_name()
         if len(new_clinic_name) < 3:
-            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+            return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
         new_clinic_suburb = input(f"New Clinic Suburb (Minimum of 3 characters): ") or slot_to_update.get_clinic_suburb()
         if len(new_clinic_suburb) < 3:
-            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+            return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
         new_date = input(f"New Date (dd-mm-yyyy format only. Cannot enter date from past): ") or slot_to_update.get_date()
         if not Validator.is_valid_date_format(new_date, allow_past=False):
-            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+            return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
         new_duration = input(f"New Duration (Valid duration values: 15, 20, 45, 60): ") or slot_to_update.get_duration()
         if not Validator.is_valid_duration(new_duration):
-            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+            return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
         new_gp_name = input(f"New GP Name (Enter 'Dr.' as prefix. Name cannot be empty): ") or slot_to_update.get_gp_name()
         if not Validator.is_valid_gp_name(new_gp_name):
-            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+            return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
         new_reason_for_visit = input(f"New Reason for Visit (valid options: 'General Consultation','Vaccination','Specialist Referral'): ") or slot_to_update.get_reason_for_visit()
         if new_reason_for_visit not in ['General Consultation','Vaccination','Specialist Referral']:
-            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+            return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
         new_start_time = input(f"New Start Time (24hh:mm format only): ") or slot_to_update.get_start_time()
         if not Validator.is_valid_time_format(new_start_time):
-            self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
+            return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
         updated_details = {
             "availability": new_availability,
             "clinic_name": new_clinic_name,

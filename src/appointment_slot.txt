@@ -1,154 +1,136 @@
 
-clinic_name:Mulgrave Clinic
-gp_name:Dr. Man
-date:17-07-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:True
-|
-clinic_name:South Yarra Clinic
-gp_name:Dr. Murphy
-date:14-04-2025
-start_time:23:34
-duration:15
-clinic_suburb:South Yarra
+clinic_name:Oakleigh Health Centre
+gp_name:Dr. James
+date:01-06-2025
+start_time:10:00
+duration:60
+clinic_suburb:Oakleigh
 reason_for_visit:Vaccination
 availability:True
 |
-clinic_name:Detroit Clinic
-gp_name:Dr. Mann
-date:14-08-2025
-start_time:23:34
-duration:15
-clinic_suburb:Detroit
+clinic_name:Mount Waverley Medical
+gp_name:Dr. James
+date:01-06-2025
+start_time:15:45
+duration:40
+clinic_suburb:Mount
 reason_for_visit:General Consultation
-availability:False
-|
-clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:11-06-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Mulgrave Clinic
-gp_name:Dr. Dan
-date:11-06-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:15-06-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Mulgrave Clinic
-gp_name:Dr. Dan
-date:12-06-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:14-06-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Mulgrave Clinic
-gp_name:Dr. Dan
-date:16-06-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:10-07-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Mulgrave Clinic
-gp_name:Dr. Dan
-date:17-06-2025
-start_time:23:34
-duration:15
-clinic_suburb:Mulgrave
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:Clayton Clinic
-gp_name:Dr. Anbu
-date:11-09-2025
-start_time:9:00
-duration:15
-clinic_suburb:Clayton
-reason_for_visit:Specialist Referral
-availability:False
-|
-clinic_name:JB Hills Clinic
-gp_name:Dr. Priyanka
-date:12-12-2025
-start_time:12:00
-duration:20
-clinic_suburb:JB Hills
-reason_for_visit:Vaccination
 availability:True
 |
-clinic_name:Gemini Clinic
-gp_name:Dr. Paul
-date:26-08-2025
-start_time:22:20
-duration:20
-clinic_suburb:Richmond
-reason_for_visit:Vaccination
-availability:True
-|
-clinic_name:Gemini Clinic
-gp_name:Dr. Helena Zhou
-date:26-06-2025
-start_time:22:20
-duration:20
-clinic_suburb:Richmond
-reason_for_visit:Vaccination
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Emily
+date:01-06-2025
+start_time:16:45
+duration:60
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
 availability:True
 |
 clinic_name:Clayton Clinic
-gp_name:Dr. Helena Zhou
-date:27-06-2025
-start_time:21:20
+gp_name:Dr. Nina
+date:01-06-2025
+start_time:10:30
+duration:25
+clinic_suburb:Clayton
+reason_for_visit:Mental Health Consultation
+availability:True
+|
+clinic_name:Oakleigh Clinic
+gp_name:Dr. Nina
+date:01-06-2025
+start_time:16:15
 duration:15
+clinic_suburb:Oakleigh
+reason_for_visit:Vaccination
+availability:True
+|
+clinic_name:Oakleigh Clinic
+gp_name:Dr. Amina
+date:01-06-2025
+start_time:10:15
+duration:25
+clinic_suburb:Oakleigh
+reason_for_visit:Skin Check
+availability:True
+|
+clinic_name:Mount Waverley Medical
+gp_name:Dr. Thomas
+date:01-06-2025
+start_time:12:15
+duration:40
+clinic_suburb:Mount
+reason_for_visit:General Consultation
+availability:True
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Thomas
+date:01-06-2025
+start_time:9:15
+duration:25
 clinic_suburb:Clayton
 reason_for_visit:Vaccination
 availability:True
 |
+clinic_name:Oakleigh Health Centre
+gp_name:Dr. Ryan
+date:01-06-2025
+start_time:13:00
+duration:40
+clinic_suburb:Oakleigh
+reason_for_visit:Vaccination
+availability:True
+|
 clinic_name:Clayton Clinic
-gp_name:Dr. Helena Zhou
-date:28-06-2025
-start_time:20:20
-duration:15
+gp_name:Dr. Sarah
+date:02-06-2025
+start_time:10:30
+duration:25
 clinic_suburb:Clayton
 reason_for_visit:Vaccination
+availability:True
+|
+clinic_name:Mulgrave Clinic
+gp_name:Dr. Emily
+date:02-06-2025
+start_time:16:00
+duration:60
+clinic_suburb:Mulgrave
+reason_for_visit:Specialist Referral
+availability:True
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Nina
+date:02-06-2025
+start_time:14:45
+duration:60
+clinic_suburb:Clayton
+reason_for_visit:Specialist Referral
+availability:True
+|
+clinic_name:Oakleigh Clinic
+gp_name:Dr. Nina
+date:02-06-2025
+start_time:10:30
+duration:60
+clinic_suburb:Oakleigh
+reason_for_visit:Mental Health Consultation
+availability:True
+|
+clinic_name:Mount Waverley Medical
+gp_name:Dr. Thomas
+date:02-06-2025
+start_time:16:00
+duration:25
+clinic_suburb:Mount
+reason_for_visit:General Consultation
+availability:True
+|
+clinic_name:Clayton Clinic
+gp_name:Dr. Thomas
+date:02-06-2025
+start_time:13:00
+duration:25
+clinic_suburb:Clayton
+reason_for_visit:General Consultation
 availability:True
 |

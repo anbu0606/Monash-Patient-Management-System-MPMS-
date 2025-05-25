@@ -1003,7 +1003,7 @@ class MPMS:
             updated_slot_details = self.menu.show_appointment_slot_update_menu(slot_to_update)
             for attr, value in updated_slot_details.items():
                 setattr(slot_to_update, attr, value)
-            FileIO.save_clinics(self.appointment_slots)
+            FileIO.save_appointment_slots(self.appointment_slots)
             self.menu.show_update_success_page(type="slot", instance_variable=slot_to_update)
             self.manage_appointment_slots(admin)
         else:
