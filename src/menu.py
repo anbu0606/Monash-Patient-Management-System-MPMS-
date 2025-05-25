@@ -116,6 +116,72 @@ class Menu:
         }
         return input(prompts[filter_type]).strip()
     
+    def get_report_date_range(self, attempt_number = 0):
+        """
+        Displays the report date range selection page and returns the selected date range.
+        Args:
+            attempt_number (int): Represents the number of times the user has failed to input valid details.
+        """
+        self.clear_screen()
+        print(self.banner)
+        print("""
+                                                        SELECT REPORT DATE RANGE
+        """)
+        print("""
+        1. Daily (Today)
+        2. Weekly (Last 7 days)
+        3. Monthly (Last 30 days)
+        4. Custom range
+        5. All time
+        """)
+        
+        today = datetime.now()
+        if attempt_number > 0:
+            self.show_error_message("standard")
+        self.show_prompt(type = "logout")
+        self.show_prompt(type = "back")
+        user_input = input("Your Input: ").strip()
+        if Validator.is_input_logout(user_input):
+            return "logout"
+        elif Validator.is_input_back(user_input):
+            return "back"
+        elif user_input == "1":
+            # Daily - just today
+            start_date = today.strftime("%d-%m-%Y")
+            end_date = start_date
+            return start_date, end_date
+        elif user_input == "2":
+            # Weekly - last 7 days
+            start_date = (today - timedelta(days=6)).strftime("%d-%m-%Y")
+            end_date = today.strftime("%d-%m-%Y")
+            return start_date, end_date
+        elif user_input == "3":
+            # Monthly - last 30 days
+            start_date = (today - timedelta(days=29)).strftime("%d-%m-%Y")
+            end_date = today.strftime("%d-%m-%Y")
+            return start_date, end_date
+        elif user_input == "4":
+            # Custom range
+            print("\nEnter date in DD-MM-YYYY format")
+            while True:
+                start_date = input("Start date: ").strip()
+                if Validator.is_valid_date_format(start_date):
+                    break
+                print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
+            
+            while True:
+                end_date = input("End date: ").strip()
+                if Validator.is_valid_date_format(end_date):
+                    break
+                print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
+            
+            return start_date, end_date
+        elif user_input == "5":
+            # All time
+            return None, None
+        else:
+            return self.get_report_date_range(attempt_number = 1)
+
     def get_valid_input(self, prompt, validator_func):
         '''
         Helper function for input loop for wrong inputs while allowing the user to go Back or Logout.
@@ -129,6 +195,41 @@ class Menu:
             if validator_func(value):
                 return value
             print("\033[91m!! Input validation failed. Please try again !!\033[0m")
+    
+    def paginate_items(self, items, page_size=10, current_page=1):
+        """
+        Paginate a list of items.
+        Args:
+            items (list): List of items to paginate.
+            page_size (int): Number of items per page.
+            current_page (int): Current page number.
+        Returns:
+            dict: A dictionary containing paginated items and pagination information.
+        """
+    
+        total_items = len(items)
+        total_pages = max(1, (total_items + page_size - 1) // page_size)  # Ceiling division
+        
+        # Ensure current_page is within valid range
+        current_page = max(1, min(current_page, total_pages))
+        
+        # Calculate start and end indices
+        start_index = (current_page - 1) * page_size
+        end_index = min(start_index + page_size, total_items)
+        
+        # Get items for the current page
+        current_items = items[start_index:end_index]
+        
+        return {
+            "items": current_items,
+            "total_pages": total_pages,
+            "current_page": current_page,
+            "has_next": current_page < total_pages,
+            "has_prev": current_page > 1,
+            "total_items": total_items,
+            "showing_from": start_index + 1 if total_items > 0 else 0,
+            "showing_to": end_index
+        }
     
     def show_admin_home_page(self, attempt_number):
         """
@@ -1141,12 +1242,16 @@ Please enter the Option Number or LOGOUT
         else:
             return self.show_patient_home_page(attempt_number+1)
     
-    def show_previous_appointments_page(self, appointments, attempt_number = 0):
+    def show_previous_appointments_page(self, appointments, page=1, page_size=5, attempt_number = 0):
         """
         Displays the previous appointments page with a list of past appointments.
         
         Args:
             appointments (list): List of past Appointment objects
+            page (int): Current page number
+            page_size (int): Number of appointments per page
+            attempt_number (int): Number of invalid attempts
+        
         """
         self.clear_screen()
         print(self.banner)
@@ -1155,30 +1260,63 @@ Please enter the Option Number or LOGOUT
         """)
         if not appointments:
             print("\nYou have no previous appointments to display.\n")
-        else:
-            print("\nYour Previous Appointments:\n")
-            for i, appt in enumerate(appointments, start=1):
-                print(f"Appointment {i}:")
-                print(f"  Clinic: {appt.get_slot().get_clinic_name()}")
-                print(f"  GP: {appt.get_slot().get_gp_name()}")
-                print(f"  Date: {appt.get_slot().get_date()}")
-                print(f"  Time: {appt.get_slot().get_start_time()}")
-                print(f"  Duration: {appt.get_slot().get_duration()} minutes")
-                print(f"  Suburb: {appt.get_slot().get_clinic_suburb()}")
-                print(f"  Reason: {appt.get_slot().get_reason_for_visit()}")
-                print(f"  Status: {appt.get_status()}")
-                print("-" * 50)
+            self.show_prompt(type = "logout")
+            self.show_prompt(type = "back")
+            user_input = input("Your Input: ").strip()
+            if Validator.is_input_logout(user_input):
+                return "logout"
+            elif Validator.is_input_back(user_input):
+                return "back"
+            else:
+                return self.show_previous_appointments_page(appointments, page, page_size, attempt_number+1)
+
+        # Paginate the appointments
+        pagination = self.paginate_items(appointments, page_size, page)
+        prev_appointments = pagination["items"]
+
+        # Display pagination information
+        print(f"\nShowing {pagination['showing_from']}-{pagination['showing_to']} of {pagination['total_items']} appointments (Page {pagination['current_page']} of {pagination['total_pages']})\n")
+    
+
+        # Display the appointments for the current page
+        print("\nYour Previous Appointments:\n")
+        for i, appt in enumerate(prev_appointments, start=1):
+            actual_index = pagination['showing_from'] - 1 + i
+            print(f"Appointment {actual_index}:")
+            print(f"  Clinic: {appt.get_slot().get_clinic_name()}")
+            print(f"  GP: {appt.get_slot().get_gp_name()}")
+            print(f"  Date: {appt.get_slot().get_date()}")
+            print(f"  Time: {appt.get_slot().get_start_time()}")
+            print(f"  Duration: {appt.get_slot().get_duration()} minutes")
+            print(f"  Suburb: {appt.get_slot().get_clinic_suburb()}")
+            print(f"  Reason: {appt.get_slot().get_reason_for_visit()}")
+            print(f"  Status: {appt.get_status()}")
+            print("-" * 50)
+
+        # Show pagination navigation options
+        print("\nNavigation options:")
+        if pagination["has_prev"]:
+            print("P - Previous page")
+        if pagination["has_next"]:
+            print("N - Next page")
+        
         if attempt_number > 0:
             self.show_error_message("standard")
+
         self.show_prompt(type = "logout")
         self.show_prompt(type = "back")
+
         user_input = input("Your Input: ").strip()
         if Validator.is_input_logout(user_input):
             return "logout"
         elif Validator.is_input_back(user_input):
             return "back"
+        elif user_input.lower() == "p" and pagination["has_prev"]:
+            return self.show_previous_appointments_page(appointments, page-1, page_size)
+        elif user_input.lower() == "n" and pagination["has_next"]:
+            return self.show_previous_appointments_page(appointments, page+1, page_size)
         else:
-            return self.show_previous_appointments_page(appointments, attempt_number+1)
+            return self.show_previous_appointments_page(appointments, page, page_size, attempt_number+1)
 
     def show_profile_page(self, attempt_number, user_obj, is_user_admin):
         """
@@ -1226,108 +1364,6 @@ Please enter the Option Number or LOGOUT
         elif type == "update" : print('''Enter \033[96m"UPDATE"\033[0m to update the details\n''')
         elif type == "create" : print('''Enter \033[96m"CREATE"\033[0m to create a new entry\n''')
         elif type == "delete" : print('''Enter \033[90m"DELETE"\033[0m to delete an entry\n''')
-    
-    def get_report_date_range(self, attempt_number = 0):
-        """
-        Displays the report date range selection page and returns the selected date range.
-        Args:
-            attempt_number (int): Represents the number of times the user has failed to input valid details.
-        """
-        self.clear_screen()
-        print(self.banner)
-        print("""
-                                                        SELECT REPORT DATE RANGE
-        """)
-        print("""
-        1. Daily (Today)
-        2. Weekly (Last 7 days)
-        3. Monthly (Last 30 days)
-        4. Custom range
-        5. All time
-        """)
-        
-        today = datetime.now()
-        if attempt_number > 0:
-            self.show_error_message("standard")
-        self.show_prompt(type = "logout")
-        self.show_prompt(type = "back")
-        user_input = input("Your Input: ").strip()
-        if Validator.is_input_logout(user_input):
-            return "logout"
-        elif Validator.is_input_back(user_input):
-            return "back"
-        elif user_input == "1":
-            # Daily - just today
-            start_date = today.strftime("%d-%m-%Y")
-            end_date = start_date
-            return start_date, end_date
-        elif user_input == "2":
-            # Weekly - last 7 days
-            start_date = (today - timedelta(days=6)).strftime("%d-%m-%Y")
-            end_date = today.strftime("%d-%m-%Y")
-            return start_date, end_date
-        elif user_input == "3":
-            # Monthly - last 30 days
-            start_date = (today - timedelta(days=29)).strftime("%d-%m-%Y")
-            end_date = today.strftime("%d-%m-%Y")
-            return start_date, end_date
-        elif user_input == "4":
-            # Custom range
-            print("\nEnter date in DD-MM-YYYY format")
-            while True:
-                start_date = input("Start date: ").strip()
-                if Validator.is_valid_date_format(start_date):
-                    break
-                print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
-            
-            while True:
-                end_date = input("End date: ").strip()
-                if Validator.is_valid_date_format(end_date):
-                    break
-                print("\033[91mInvalid date format. Please use DD-MM-YYYY.\033[0m")
-            
-            return start_date, end_date
-        elif user_input == "5":
-            # All time
-            return None, None
-        else:
-            return self.get_report_date_range(attempt_number = 1)
-
-
-    def paginate_items(self, items, page_size=10, current_page=1):
-        """
-        Paginate a list of items.
-        Args:
-            items (list): List of items to paginate.
-            page_size (int): Number of items per page.
-            current_page (int): Current page number.
-        Returns:
-            dict: A dictionary containing paginated items and pagination information.
-        """
-    
-        total_items = len(items)
-        total_pages = max(1, (total_items + page_size - 1) // page_size)  # Ceiling division
-        
-        # Ensure current_page is within valid range
-        current_page = max(1, min(current_page, total_pages))
-        
-        # Calculate start and end indices
-        start_index = (current_page - 1) * page_size
-        end_index = min(start_index + page_size, total_items)
-        
-        # Get items for the current page
-        current_items = items[start_index:end_index]
-        
-        return {
-            "items": current_items,
-            "total_pages": total_pages,
-            "current_page": current_page,
-            "has_next": current_page < total_pages,
-            "has_prev": current_page > 1,
-            "total_items": total_items,
-            "showing_from": start_index + 1 if total_items > 0 else 0,
-            "showing_to": end_index
-        }
 
 
     def show_report_export_page(self, report_data, attempt_number = 0):
@@ -1389,7 +1425,7 @@ Please Choose the Export Format
         input("\nPress  Enter to continue.. ")      
         return None
         
-    def show_upcoming_appointments_page(self, appointments,page=1, page_size=10, attempt_number = 0):
+    def show_upcoming_appointments_page(self, appointments,page=1, page_size=5, attempt_number = 0):
         """
         Displays the upcoming appointments page with a list of upcoming appointments.
         
