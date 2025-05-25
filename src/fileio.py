@@ -1,4 +1,10 @@
 class FileIO:
+    """
+    This class used for handling file input/output operations related to the whole MPMS system.
+    
+    This class includes static methods to load and save different entities like
+    clinics, GPs, patients, appointments, and appointment slots. It also used for exporting reports in different formats.
+    """
     
     def __init__(self):
         pass
@@ -10,6 +16,8 @@ class FileIO:
         Args:
             format(str): The format in which the report data should be exported.
             report_data(str): The report data to be exported.
+        Raises:
+            ValueError: If an unsupported format is passed in the function.
         """
         if format == ".txt":
             with open("appoint_reason_report.txt", "w") as file:
@@ -27,7 +35,11 @@ class FileIO:
         It then stores the admin objects in a class variable.
 
         Args:
-            filename(str):  A string storing the name of the text file from which data will be extracted. 
+            admin_class(type): The Admin class to instantiate.
+            filename(str):  A string storing the name of the text file from which data will be extracted.
+
+        Returns:
+            list: A list of Admin objects. 
         """
         admins = []
         with open(f"src\\{filename}", "r") as file:  
@@ -51,7 +63,11 @@ class FileIO:
         It then stores the objects in a class variable.
 
         Args:
-            filename(str):  A string storing the name of the text file from which data will be extracted. 
+            appointment_slot_class (type): The AppointmentSlot class to instantiate.
+            filename(str):  A string storing the name of the text file from which data will be extracted.
+
+        Returns:
+            list: A list of AppointmentSlot objects. 
         """
         appointment_slots = []
         with open(f"src\\{filename}", "r") as file:  
@@ -80,7 +96,11 @@ class FileIO:
         This function creates Appointment objects and restores their instance state using a text file storing object state.
         It then stores the appointment objects in a class variable.
         Args:
-            filename(str):  A string storing the name of the text file from which data will be extracted. 
+            appointment_class (type): The Appointment class to instantiate.
+            appointment_slot_class (type): The AppointmentSlot class to instantiate slot info.
+        
+        Returns:
+            tuple: A list of Appointment objects and a list of booked slot objects.
         """
         appointments= []
         associated_upcoming_slots = []
@@ -115,6 +135,13 @@ class FileIO:
         """
         This function creates Clinic objects and restores their state from a text file.
         It then stores the objects in a class variable.
+
+        Args:
+            clinic_class (type): The Clinic class to instantiate.
+            filename (str): The name of the clinic data file.
+
+        Returns:
+            list: A list of Clinic objects.
         """
         clinic_list = []
         with open(f"src\\{filename}", "r") as file:
@@ -136,6 +163,13 @@ class FileIO:
         """
         This function creates gp objects and restores their state from a text file.
         It then stores the objects in a class variable.
+
+        Args:
+            gp_class(type): The GP class to instantiate.
+            filename(str): The name of the GP data file.
+
+        Returns:
+            list: A list of GP objects.
         """
         gp_list = []
         with open(f"src\\{filename}", "r") as file:
@@ -162,10 +196,11 @@ class FileIO:
         It then stores the patient objects in a class variable.
 
         Args:
+            patient_class (type): The Patient class to instantiate.
             filename(str):  A string storing the name of the text file from which data will be extracted.
 
         Returns:
-            patients_list(List<Patient>): List of patient instances
+            list: A list of Patient objects.
         """
         patients_list = []
         with open(f"src\\{filename}", "r") as file:  
