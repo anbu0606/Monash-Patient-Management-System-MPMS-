@@ -1,47 +1,47 @@
 
-gp_name:Dr. Sarah Tan
+gp_name:Dr. Sarah
 email:stan@monashclinic.com
 assigned_clinics:Clayton Clinic
 specialisation:General Consultation
 availability:Sunday
 |
-gp_name:Dr. James Wong
+gp_name:Dr. James
 email:jwong@monashclinic.com
 assigned_clinics:Oakleigh Health Centre,Mount Waverley Medical
 specialisation:Mental Health Consultation
 availability:Monday,Tuesday
 |
-gp_name:Dr. Emily Red
+gp_name:Dr. Emily
 email:ered@monashclinic.com
 assigned_clinics:Mulgrave Clinic
 specialisation:Chronic Condition Management
 availability:Wednesday,Friday
 |
-gp_name:Dr. Nina Mehra
+gp_name:Dr. Nina
 email:nmehra@monashclinic.com
 assigned_clinics:Clayton Clinic,Oakleigh Clinic
 specialisation:Specialist Referral
 availability:Saturday
 |
-gp_name:Dr. Amina Patel
+gp_name:Dr. Amina
 email:apatel@monashclinic.com
 assigned_clinics:Oakleigh Clinic
 specialisation:Vaccination
 availability:Monday
 |
-gp_name:Dr. Thomas Lee
+gp_name:Dr. Thomas
 email:tlee@monashclinic.com
 assigned_clinics:Mount Waverley Medical,Clayton Clinic
 specialisation:General Consultation
 availability:Friday,Saturday
 |
-gp_name:Dr. Helena Zhou
+gp_name:Dr. Helena
 email:hzhou@monashclinic.com
 assigned_clinics:Mulgrave Clinic
 specialisation:Mental Health Consultation
 availability:Sunday
 |
-gp_name:Dr. Ryan Cook
+gp_name:Dr. Ryan
 email:rcook@monashclinic.com
 assigned_clinics:Oakleigh Health Centre
 specialisation:Skin Specialist
