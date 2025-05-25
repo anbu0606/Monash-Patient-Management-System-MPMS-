@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module src.fileio</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="src.html" class="white">src</a>.fileio</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cadmin%5Cdocuments%5Cfit5136%5Cproject%5Csrc%5Cfileio.py">c:\users\admin\documents\fit5136\project\src\fileio.py</a></td></tr></table>
+    <p></p>
+<p>
+<table class="section">
+<tr class="decor index-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
+    
+<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="src.fileio.html#FileIO">FileIO</a>
+</dt></dl>
+</dd>
+</dl>
+ <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="FileIO">class <strong>FileIO</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code">This&nbsp;class&nbsp;used&nbsp;for&nbsp;handling&nbsp;file&nbsp;input/output&nbsp;operations&nbsp;related&nbsp;to&nbsp;the&nbsp;whole&nbsp;MPMS&nbsp;system.<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;includes&nbsp;static&nbsp;methods&nbsp;to&nbsp;load&nbsp;and&nbsp;save&nbsp;different&nbsp;entities&nbsp;like<br>
+clinics,&nbsp;GPs,&nbsp;patients,&nbsp;appointments,&nbsp;and&nbsp;appointment&nbsp;slots.&nbsp;It&nbsp;also&nbsp;used&nbsp;for&nbsp;exporting&nbsp;reports&nbsp;in&nbsp;different&nbsp;formats.<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn">Methods defined here:<br>
+<dl><dt><a name="FileIO-__init__"><strong>__init__</strong></a>(self)</dt><dd><span class="code">Initialize&nbsp;self.&nbsp;&nbsp;See&nbsp;help(type(self))&nbsp;for&nbsp;accurate&nbsp;signature.</span></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="FileIO-export_report"><strong>export_report</strong></a>(format, report_data)</dt><dd><span class="code">This&nbsp;function&nbsp;exports&nbsp;the&nbsp;report&nbsp;data&nbsp;to&nbsp;a&nbsp;file&nbsp;in&nbsp;the&nbsp;specified&nbsp;format.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;format(str):&nbsp;The&nbsp;format&nbsp;in&nbsp;which&nbsp;the&nbsp;report&nbsp;data&nbsp;should&nbsp;be&nbsp;exported.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;report_data(str):&nbsp;The&nbsp;report&nbsp;data&nbsp;to&nbsp;be&nbsp;exported.<br>
+Raises:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ValueError:&nbsp;If&nbsp;an&nbsp;unsupported&nbsp;format&nbsp;is&nbsp;passed&nbsp;in&nbsp;the&nbsp;function.</span></dd></dl>
+
+<dl><dt><a name="FileIO-load_admins"><strong>load_admins</strong></a>(admin_class, filename='admin.txt')</dt><dd><span class="code">This&nbsp;function&nbsp;creates&nbsp;admin&nbsp;objects&nbsp;and&nbsp;restores&nbsp;their&nbsp;instance&nbsp;state&nbsp;using&nbsp;a&nbsp;text&nbsp;file&nbsp;storing&nbsp;<a href="builtins.html#object">object</a>&nbsp;state.<br>
+It&nbsp;then&nbsp;stores&nbsp;the&nbsp;admin&nbsp;objects&nbsp;in&nbsp;a&nbsp;class&nbsp;variable.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin_class(type):&nbsp;The&nbsp;Admin&nbsp;class&nbsp;to&nbsp;instantiate.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;&nbsp;A&nbsp;string&nbsp;storing&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;text&nbsp;file&nbsp;from&nbsp;which&nbsp;data&nbsp;will&nbsp;be&nbsp;extracted.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;A&nbsp;list&nbsp;of&nbsp;Admin&nbsp;objects.</span></dd></dl>
+
+<dl><dt><a name="FileIO-load_appointment_slots"><strong>load_appointment_slots</strong></a>(appointment_slot_class, filename='appointment_slot.txt')</dt><dd><span class="code">This&nbsp;function&nbsp;creates&nbsp;AppointmentSlot&nbsp;objects&nbsp;and&nbsp;restores&nbsp;their&nbsp;instance&nbsp;state&nbsp;using&nbsp;a&nbsp;text&nbsp;file&nbsp;storing&nbsp;<a href="builtins.html#object">object</a>&nbsp;state.<br>
+It&nbsp;then&nbsp;stores&nbsp;the&nbsp;objects&nbsp;in&nbsp;a&nbsp;class&nbsp;variable.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment_slot_class&nbsp;(type):&nbsp;The&nbsp;AppointmentSlot&nbsp;class&nbsp;to&nbsp;instantiate.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;&nbsp;A&nbsp;string&nbsp;storing&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;text&nbsp;file&nbsp;from&nbsp;which&nbsp;data&nbsp;will&nbsp;be&nbsp;extracted.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;A&nbsp;list&nbsp;of&nbsp;AppointmentSlot&nbsp;objects.</span></dd></dl>
+
+<dl><dt><a name="FileIO-load_appointments"><strong>load_appointments</strong></a>(appointment_class, appointment_slot_class)</dt><dd><span class="code">This&nbsp;function&nbsp;creates&nbsp;Appointment&nbsp;objects&nbsp;and&nbsp;restores&nbsp;their&nbsp;instance&nbsp;state&nbsp;using&nbsp;a&nbsp;text&nbsp;file&nbsp;storing&nbsp;<a href="builtins.html#object">object</a>&nbsp;state.<br>
+It&nbsp;then&nbsp;stores&nbsp;the&nbsp;appointment&nbsp;objects&nbsp;in&nbsp;a&nbsp;class&nbsp;variable.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment_class&nbsp;(type):&nbsp;The&nbsp;Appointment&nbsp;class&nbsp;to&nbsp;instantiate.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment_slot_class&nbsp;(type):&nbsp;The&nbsp;AppointmentSlot&nbsp;class&nbsp;to&nbsp;instantiate&nbsp;slot&nbsp;info.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple:&nbsp;A&nbsp;list&nbsp;of&nbsp;Appointment&nbsp;objects&nbsp;and&nbsp;a&nbsp;list&nbsp;of&nbsp;booked&nbsp;slot&nbsp;objects.</span></dd></dl>
+
+<dl><dt><a name="FileIO-load_clinics"><strong>load_clinics</strong></a>(clinic_class, filename='clinic.txt')</dt><dd><span class="code">This&nbsp;function&nbsp;creates&nbsp;Clinic&nbsp;objects&nbsp;and&nbsp;restores&nbsp;their&nbsp;state&nbsp;from&nbsp;a&nbsp;text&nbsp;file.<br>
+It&nbsp;then&nbsp;stores&nbsp;the&nbsp;objects&nbsp;in&nbsp;a&nbsp;class&nbsp;variable.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clinic_class&nbsp;(type):&nbsp;The&nbsp;Clinic&nbsp;class&nbsp;to&nbsp;instantiate.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;(str):&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;clinic&nbsp;data&nbsp;file.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;A&nbsp;list&nbsp;of&nbsp;Clinic&nbsp;objects.</span></dd></dl>
+
+<dl><dt><a name="FileIO-load_gp"><strong>load_gp</strong></a>(gp_class, filename='gp.txt')</dt><dd><span class="code">This&nbsp;function&nbsp;creates&nbsp;gp&nbsp;objects&nbsp;and&nbsp;restores&nbsp;their&nbsp;state&nbsp;from&nbsp;a&nbsp;text&nbsp;file.<br>
+It&nbsp;then&nbsp;stores&nbsp;the&nbsp;objects&nbsp;in&nbsp;a&nbsp;class&nbsp;variable.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;gp_class(type):&nbsp;The&nbsp;GP&nbsp;class&nbsp;to&nbsp;instantiate.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;GP&nbsp;data&nbsp;file.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;A&nbsp;list&nbsp;of&nbsp;GP&nbsp;objects.</span></dd></dl>
+
+<dl><dt><a name="FileIO-load_patients"><strong>load_patients</strong></a>(patient_class, filename='patient.txt')</dt><dd><span class="code">This&nbsp;function&nbsp;creates&nbsp;patient&nbsp;objects&nbsp;and&nbsp;restores&nbsp;their&nbsp;instance&nbsp;state&nbsp;using&nbsp;a&nbsp;text&nbsp;file&nbsp;storing&nbsp;<a href="builtins.html#object">object</a>&nbsp;state.<br>
+It&nbsp;then&nbsp;stores&nbsp;the&nbsp;patient&nbsp;objects&nbsp;in&nbsp;a&nbsp;class&nbsp;variable.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;patient_class&nbsp;(type):&nbsp;The&nbsp;Patient&nbsp;class&nbsp;to&nbsp;instantiate.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename(str):&nbsp;&nbsp;A&nbsp;string&nbsp;storing&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;text&nbsp;file&nbsp;from&nbsp;which&nbsp;data&nbsp;will&nbsp;be&nbsp;extracted.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list:&nbsp;A&nbsp;list&nbsp;of&nbsp;Patient&nbsp;objects.</span></dd></dl>
+
+<dl><dt><a name="FileIO-save_appointment"><strong>save_appointment</strong></a>(appointment)</dt><dd><span class="code">Save&nbsp;a&nbsp;single&nbsp;appointment&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;the&nbsp;appointments.txt&nbsp;file.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment&nbsp;(Appointment):&nbsp;The&nbsp;appointment&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;save.</span></dd></dl>
+
+<dl><dt><a name="FileIO-save_appointment_slots"><strong>save_appointment_slots</strong></a>(slots, filename='appointment_slot.txt')</dt><dd><span class="code">Save&nbsp;all&nbsp;appointment&nbsp;slots&nbsp;in&nbsp;the&nbsp;text&nbsp;file.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slots&nbsp;(list):&nbsp;A&nbsp;list&nbsp;of&nbsp;appointment&nbsp;slot&nbsp;objects&nbsp;to&nbsp;save.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;(str):&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;save&nbsp;the&nbsp;appointment&nbsp;slots&nbsp;to.</span></dd></dl>
+
+<dl><dt><a name="FileIO-save_appointments"><strong>save_appointments</strong></a>(appointments)</dt><dd><span class="code">Save&nbsp;a&nbsp;list&nbsp;of&nbsp;appointment&nbsp;objects&nbsp;to&nbsp;the&nbsp;appointments.txt&nbsp;file.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointments&nbsp;(list):&nbsp;A&nbsp;list&nbsp;of&nbsp;appointment&nbsp;objects&nbsp;to&nbsp;save.</span></dd></dl>
+
+<dl><dt><a name="FileIO-save_clinics"><strong>save_clinics</strong></a>(clinics=[], filename='clinic.txt')</dt><dd><span class="code">Save&nbsp;all&nbsp;clinic&nbsp;objects&nbsp;in&nbsp;the&nbsp;text&nbsp;file.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clinics&nbsp;(list):&nbsp;A&nbsp;list&nbsp;of&nbsp;clinic&nbsp;objects&nbsp;to&nbsp;save.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;(str):&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;save&nbsp;the&nbsp;clinics&nbsp;to.</span></dd></dl>
+
+<dl><dt><a name="FileIO-save_gps"><strong>save_gps</strong></a>(gps=[], filename='gp.txt')</dt><dd><span class="code">Save&nbsp;all&nbsp;gp&nbsp;objects&nbsp;in&nbsp;the&nbsp;text&nbsp;file.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;gps&nbsp;(list):&nbsp;A&nbsp;list&nbsp;of&nbsp;gp&nbsp;objects&nbsp;to&nbsp;save.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filename&nbsp;(str):&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;file&nbsp;to&nbsp;save&nbsp;the&nbsp;gps&nbsp;to.</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>

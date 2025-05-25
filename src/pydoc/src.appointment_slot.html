@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module src.appointment_slot</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="src.html" class="white">src</a>.appointment_slot</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cadmin%5Cdocuments%5Cfit5136%5Cproject%5Csrc%5Cappointment_slot.py">c:\users\admin\documents\fit5136\project\src\appointment_slot.py</a></td></tr></table>
+    <p></p>
+<p>
+<table class="section">
+<tr class="decor index-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
+    
+<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="src.appointment_slot.html#AppointmentSlot">AppointmentSlot</a>
+</dt></dl>
+</dd>
+</dl>
+ <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="AppointmentSlot">class <strong>AppointmentSlot</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#AppointmentSlot">AppointmentSlot</a>(availability=True,&nbsp;clinic_name=None,&nbsp;clinic_suburb=None,&nbsp;date=None,&nbsp;duration=None,&nbsp;gp_name=None,&nbsp;reason_for_visit=None,&nbsp;start_time=None)<br>
+&nbsp;<br>
+This&nbsp;class&nbsp;holds&nbsp;all&nbsp;the&nbsp;details&nbsp;of&nbsp;an&nbsp;Appointment&nbsp;Slot&nbsp;available&nbsp;in&nbsp;MPMS.<br>
+An&nbsp;appointment&nbsp;slot&nbsp;refers&nbsp;to&nbsp;a&nbsp;pre-defined&nbsp;entity&nbsp;in&nbsp;MPMS&nbsp;that&nbsp;can&nbsp;be&nbsp;booked&nbsp;when&nbsp;available.<br>
+It&nbsp;can&nbsp;be&nbsp;associated&nbsp;with&nbsp;an&nbsp;Appointment&nbsp;or&nbsp;exist&nbsp;independently.<br>
+&nbsp;<br>
+An&nbsp;appointment&nbsp;slot&nbsp;is&nbsp;created&nbsp;by&nbsp;the&nbsp;Administrator.<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn">Methods defined here:<br>
+<dl><dt><a name="AppointmentSlot-__init__"><strong>__init__</strong></a>(self, availability=True, clinic_name=None, clinic_suburb=None, date=None, duration=None, gp_name=None, reason_for_visit=None, start_time=None)</dt><dd><span class="code">Constructor&nbsp;for&nbsp;<a href="#AppointmentSlot">AppointmentSlot</a>&nbsp;class.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;availability(bool):&nbsp;A&nbsp;flag&nbsp;to&nbsp;store&nbsp;whether&nbsp;the&nbsp;Appointment&nbsp;Slot&nbsp;is&nbsp;available&nbsp;for&nbsp;Booking&nbsp;or&nbsp;not.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clinic_name(str):&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;clinic&nbsp;for&nbsp;which&nbsp;the&nbsp;Appointment&nbsp;Slot&nbsp;was&nbsp;created.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clinic_suburb(str):&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;suburb&nbsp;in&nbsp;which&nbsp;the&nbsp;associated&nbsp;clinic&nbsp;resides.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;date(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;scheduled&nbsp;date&nbsp;of&nbsp;the&nbsp;Appointment&nbsp;Slot<br>
+&nbsp;&nbsp;&nbsp;&nbsp;duration(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;total&nbsp;duration&nbsp;of&nbsp;the&nbsp;Appointment&nbsp;Slot&nbsp;in&nbsp;minutes.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;gp_name(str):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;name&nbsp;of&nbsp;the&nbsp;gp&nbsp;who&nbsp;will&nbsp;take&nbsp;up&nbsp;the&nbsp;Appointment&nbsp;Slot.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;reason_for_visit(str):&nbsp;The&nbsp;slot's&nbsp;associated&nbsp;reason&nbsp;for&nbsp;visit.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;start_time(str):&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;scheduled&nbsp;start&nbsp;time&nbsp;of&nbsp;the&nbsp;Appointment&nbsp;Slot.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-__str__"><strong>__str__</strong></a>(self)</dt><dd><span class="code">Return&nbsp;str(self).</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-get_availability"><strong>get_availability</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;availability<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;availability(bool):&nbsp;slot's&nbsp;availability.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-get_clinic_name"><strong>get_clinic_name</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;clinic&nbsp;name<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clinic_name(str):&nbsp;slot's&nbsp;associated&nbsp;clinic&nbsp;name.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-get_clinic_suburb"><strong>get_clinic_suburb</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;clinic&nbsp;suburb<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clinic_suburb(str):&nbsp;slot's&nbsp;associated&nbsp;clinic&nbsp;suburb.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-get_date"><strong>get_date</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;date<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;date(str):&nbsp;slot's&nbsp;associated&nbsp;date.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-get_duration"><strong>get_duration</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;slot&nbsp;duration.<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;duration(str):&nbsp;slot's&nbsp;associated&nbsp;slot&nbsp;duration.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-get_gp_name"><strong>get_gp_name</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;gp&nbsp;name<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;gp_name(str):&nbsp;slot's&nbsp;associated&nbsp;gp&nbsp;name.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-get_reason_for_visit"><strong>get_reason_for_visit</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;reason&nbsp;for&nbsp;visit<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;reason_for_visit(str):&nbsp;slot's&nbsp;associated&nbsp;reason&nbsp;for&nbsp;visit</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-get_start_time"><strong>get_start_time</strong></a>(self)</dt><dd><span class="code">Returns&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;slot&nbsp;start&nbsp;time<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;start_time(str):&nbsp;slot's&nbsp;associated&nbsp;slot&nbsp;start&nbsp;time.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-set_availability"><strong>set_availability</strong></a>(self, value)</dt><dd><span class="code">Sets&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;availability<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value(bool):&nbsp;new&nbsp;availability&nbsp;for&nbsp;slot&nbsp;instance.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-set_clinic_name"><strong>set_clinic_name</strong></a>(self, value)</dt><dd><span class="code">Sets&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;clinic&nbsp;name<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value(bool):&nbsp;new&nbsp;associated&nbsp;clinic&nbsp;name&nbsp;for&nbsp;slot&nbsp;instance.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-set_clinic_suburb"><strong>set_clinic_suburb</strong></a>(self, value)</dt><dd><span class="code">Sets&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;clinic&nbsp;suburb<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value(bool):&nbsp;new&nbsp;associated&nbsp;clinic&nbsp;suburb&nbsp;for&nbsp;slot&nbsp;instance.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-set_date"><strong>set_date</strong></a>(self, value)</dt><dd><span class="code">Sets&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;scheduled&nbsp;date.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value(bool):&nbsp;new&nbsp;scheduled&nbsp;date&nbsp;for&nbsp;slot&nbsp;instance.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-set_duration"><strong>set_duration</strong></a>(self, value)</dt><dd><span class="code">Sets&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;scheduled&nbsp;duration<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value(bool):&nbsp;new&nbsp;scheduled&nbsp;duration&nbsp;for&nbsp;slot&nbsp;instance.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-set_gp_name"><strong>set_gp_name</strong></a>(self, value)</dt><dd><span class="code">Sets&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;gp&nbsp;name<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value(bool):&nbsp;new&nbsp;associated&nbsp;gp&nbsp;name&nbsp;for&nbsp;slot&nbsp;instance.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-set_reason_for_visit"><strong>set_reason_for_visit</strong></a>(self, value)</dt><dd><span class="code">Sets&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;associated&nbsp;reason&nbsp;for&nbsp;visit<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value(bool):&nbsp;new&nbsp;associated&nbsp;reason&nbsp;for&nbsp;visit&nbsp;for&nbsp;slot&nbsp;instance.</span></dd></dl>
+
+<dl><dt><a name="AppointmentSlot-set_start_time"><strong>set_start_time</strong></a>(self, value)</dt><dd><span class="code">Sets&nbsp;the&nbsp;slot&nbsp;instance's&nbsp;scheduled&nbsp;start&nbsp;time<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value(bool):&nbsp;new&nbsp;scheduled&nbsp;start&nbsp;time&nbsp;for&nbsp;slot&nbsp;instance.</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>
