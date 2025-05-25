@@ -537,6 +537,8 @@ Please enter the Option Number or LOGOUT
         Args:
             attempt_number(int): Represents the number of times the user has failed to input valid details.
             user_input(str): A variable to pass the default user_input value.
+        Returns:
+            (dict): AppointmentSlot details for creation
         """
         self.clear_screen()
         print(self.banner)
@@ -1103,7 +1105,7 @@ FILTER APPOINTMENT SLOTS
         elif Validator.is_input_filter(user_input):
             return "filter"
         else:
-            return self.show_appointment_slots_page(slots, attempt_number=attempt_number+1)
+            return self.show_gp_appointment_slots(slots, gp_name, attempt_number+1)
         
 
     def show_gp_management_page(self, gps, attempt_number = 0):

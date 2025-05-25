@@ -754,8 +754,8 @@ class MPMS:
         """
         Logs out the current user and returns to the login page.
 
-    Args:
-        user (object): The user object to log out. Must be an instance of Patient or Admin.
+        Args:
+            user (object): The user object to log out. Must be an instance of Patient or Admin.
 
         """
         if isinstance(user, Patient):
@@ -790,6 +790,8 @@ class MPMS:
     def manage_clinics(self,admin):
         """
         Displays all the clinics in the system.
+        Args:
+            admin(Admin): Admin instance variable
         """
         clinics = self.clinics
         user_action = self.menu.show_clinic_management_page(clinics)
@@ -810,6 +812,8 @@ class MPMS:
     def manage_gps(self,admin):
         """
         Displays all the gps in the system.
+        Args:
+            admin(Admin): Admin instance variable
         """
         gps = self.gps
         user_action = self.menu.show_gp_management_page(gps)
