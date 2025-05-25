@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module src.menu</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="src.html" class="white">src</a>.menu</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cadmin%5Cdocuments%5Cfit5136%5Cproject%5Csrc%5Cmenu.py">c:\users\admin\documents\fit5136\project\src\menu.py</a></td></tr></table>
+    <p></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="re.html">re</a><br>
+</td><td class="multicolumn"><a href="subprocess.html">subprocess</a><br>
+</td><td class="multicolumn"><a href="sys.html">sys</a><br>
+</td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor index-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
+    
+<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="src.menu.html#Menu">Menu</a>
+</dt></dl>
+</dd>
+</dl>
+ <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="Menu">class <strong>Menu</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code"><a href="#Menu">Menu</a>&nbsp;class&nbsp;handles&nbsp;the&nbsp;display&nbsp;of&nbsp;user&nbsp;interface&nbsp;for&nbsp;the&nbsp;MPMS&nbsp;Application.<br>
+&nbsp;<br>
+Instance&nbsp;Variables:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;banner&nbsp;(str):&nbsp;&nbsp;&nbsp;The&nbsp;raw&nbsp;string&nbsp;of&nbsp;the&nbsp;ASCII&nbsp;Art&nbsp;for&nbsp;displaying&nbsp;as&nbsp;banner&nbsp;on&nbsp;all&nbsp;screens&nbsp;of&nbsp;MPMS<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn">Methods defined here:<br>
+<dl><dt><a name="Menu-__init__"><strong>__init__</strong></a>(self)</dt><dd><span class="code">Initialises&nbsp;a&nbsp;<a href="#Menu">Menu</a>&nbsp;instance&nbsp;with&nbsp;the&nbsp;banner.</span></dd></dl>
+
+<dl><dt><a name="Menu-clear_screen"><strong>clear_screen</strong></a>(self)</dt><dd><span class="code">This&nbsp;function&nbsp;clears&nbsp;the&nbsp;terminal&nbsp;screen.</span></dd></dl>
+
+<dl><dt><a name="Menu-display_instances"><strong>display_instances</strong></a>(self, instances, instance_type, pagination=None)</dt><dd><span class="code">This&nbsp;function&nbsp;displays&nbsp;all&nbsp;types&nbsp;of&nbsp;instances&nbsp;with&nbsp;indexing.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;instances(list);&nbsp;List&nbsp;of&nbsp;all&nbsp;instances<br>
+&nbsp;&nbsp;&nbsp;&nbsp;instance_type(str):&nbsp;String&nbsp;value&nbsp;that&nbsp;identifies&nbsp;the&nbsp;type&nbsp;of&nbsp;instance.</span></dd></dl>
+
+<dl><dt><a name="Menu-get_filter_value"><strong>get_filter_value</strong></a>(self, filter_type)</dt><dd><span class="code">Prompts&nbsp;the&nbsp;user&nbsp;for&nbsp;a&nbsp;filter&nbsp;value&nbsp;based&nbsp;on&nbsp;the&nbsp;filter&nbsp;type.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;filter_type&nbsp;(str):&nbsp;The&nbsp;type&nbsp;of&nbsp;filter&nbsp;to&nbsp;apply&nbsp;(date,&nbsp;gp_name,&nbsp;clinic_suburb).<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;str:&nbsp;The&nbsp;filter&nbsp;value&nbsp;entered&nbsp;by&nbsp;the&nbsp;user.</span></dd></dl>
+
+<dl><dt><a name="Menu-get_report_date_range"><strong>get_report_date_range</strong></a>(self, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;report&nbsp;date&nbsp;range&nbsp;selection&nbsp;page&nbsp;and&nbsp;returns&nbsp;the&nbsp;selected&nbsp;date&nbsp;range.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-get_valid_input"><strong>get_valid_input</strong></a>(self, prompt, validator_func)</dt><dd><span class="code">Helper&nbsp;function&nbsp;for&nbsp;input&nbsp;loop&nbsp;for&nbsp;wrong&nbsp;inputs&nbsp;while&nbsp;allowing&nbsp;the&nbsp;user&nbsp;to&nbsp;go&nbsp;Back&nbsp;or&nbsp;Logout.</span></dd></dl>
+
+<dl><dt><a name="Menu-paginate_items"><strong>paginate_items</strong></a>(self, items, page_size=10, current_page=1)</dt><dd><span class="code">Paginate&nbsp;a&nbsp;list&nbsp;of&nbsp;items.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;items&nbsp;(list):&nbsp;List&nbsp;of&nbsp;items&nbsp;to&nbsp;paginate.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page_size&nbsp;(int):&nbsp;Number&nbsp;of&nbsp;items&nbsp;per&nbsp;page.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;current_page&nbsp;(int):&nbsp;Current&nbsp;page&nbsp;number.<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;dict:&nbsp;A&nbsp;dictionary&nbsp;containing&nbsp;paginated&nbsp;items&nbsp;and&nbsp;pagination&nbsp;information.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_admin_home_page"><strong>show_admin_home_page</strong></a>(self, attempt_number)</dt><dd><span class="code">Displays&nbsp;the&nbsp;Admin&nbsp;home&nbsp;page&nbsp;on&nbsp;the&nbsp;terminal<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_appointment_slot_management_page"><strong>show_appointment_slot_management_page</strong></a>(self, slots, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;appointment&nbsp;slots&nbsp;management&nbsp;page&nbsp;where&nbsp;the&nbsp;Admin&nbsp;can&nbsp;perform&nbsp;CRUD&nbsp;for&nbsp;AppointmentSlots.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slots(list):&nbsp;List&nbsp;of&nbsp;appointment&nbsp;slots.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page(int):&nbsp;Current&nbsp;page&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page_size(int):&nbsp;Number&nbsp;of&nbsp;slots&nbsp;to&nbsp;display&nbsp;per&nbsp;page<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_appointment_slot_update_menu"><strong>show_appointment_slot_update_menu</strong></a>(self, slot_to_update, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;appointment&nbsp;slot&nbsp;update&nbsp;menu&nbsp;and&nbsp;collects&nbsp;new&nbsp;slot&nbsp;details&nbsp;from&nbsp;the&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slot_to_update&nbsp;(AppointmentSlot):&nbsp;The&nbsp;current&nbsp;appointment&nbsp;slot&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;be&nbsp;updated.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;The&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;attempted&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.&nbsp;Used&nbsp;to&nbsp;display&nbsp;error&nbsp;messages&nbsp;on&nbsp;subsequent&nbsp;attempts.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_appointment_slot_update_page"><strong>show_appointment_slot_update_page</strong></a>(self, slots, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;a&nbsp;paginated&nbsp;list&nbsp;of&nbsp;appointment&nbsp;slots&nbsp;and&nbsp;allows&nbsp;the&nbsp;user&nbsp;to&nbsp;select&nbsp;one&nbsp;for&nbsp;updating.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slots&nbsp;(list):&nbsp;A&nbsp;list&nbsp;of&nbsp;appointment&nbsp;slot&nbsp;objects&nbsp;to&nbsp;be&nbsp;displayed.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page&nbsp;(int):&nbsp;The&nbsp;current&nbsp;page&nbsp;number&nbsp;to&nbsp;display&nbsp;(default&nbsp;is&nbsp;1).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page_size&nbsp;(int):&nbsp;The&nbsp;number&nbsp;of&nbsp;slots&nbsp;to&nbsp;display&nbsp;per&nbsp;page&nbsp;(default&nbsp;is&nbsp;5).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;The&nbsp;number&nbsp;of&nbsp;attempts&nbsp;made&nbsp;by&nbsp;the&nbsp;user;&nbsp;used&nbsp;to&nbsp;control&nbsp;error&nbsp;message&nbsp;display&nbsp;on&nbsp;invalid&nbsp;input&nbsp;(default&nbsp;is&nbsp;0).</span></dd></dl>
+
+<dl><dt><a name="Menu-show_appointment_slots_page"><strong>show_appointment_slots_page</strong></a>(self, slots, page=1, page_size=5, attempt_number=0, is_skip_enabled=False)</dt><dd><span class="code">Displays&nbsp;the&nbsp;appointment&nbsp;slots&nbsp;page&nbsp;with&nbsp;available&nbsp;slots&nbsp;for&nbsp;booking.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slots(list):&nbsp;List&nbsp;of&nbsp;available&nbsp;appointment&nbsp;slots.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;is_skip_enabled(bool):&nbsp;Flag&nbsp;to&nbsp;enable&nbsp;or&nbsp;disable&nbsp;the&nbsp;skip&nbsp;option.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_booking_success_page"><strong>show_booking_success_page</strong></a>(self, appointment)</dt><dd><span class="code">Displays&nbsp;the&nbsp;booking&nbsp;success&nbsp;page&nbsp;with&nbsp;the&nbsp;appointment&nbsp;details.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;The&nbsp;appointment&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;was&nbsp;booked.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_cancellation_confirmation_page"><strong>show_cancellation_confirmation_page</strong></a>(self, appointment)</dt><dd><span class="code">Displays&nbsp;the&nbsp;cancellation&nbsp;confirmation&nbsp;page&nbsp;with&nbsp;the&nbsp;appointment&nbsp;details.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;The&nbsp;appointment&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;was&nbsp;cancelled.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_cancellation_success_page"><strong>show_cancellation_success_page</strong></a>(self, appointment)</dt><dd><span class="code">Displays&nbsp;the&nbsp;cancellation&nbsp;success&nbsp;page&nbsp;with&nbsp;the&nbsp;appointment&nbsp;details.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;The&nbsp;appointment&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;was&nbsp;cancelled.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_clinic_filter_option"><strong>show_clinic_filter_option</strong></a>(self, is_skip_enabled=False)</dt><dd><span class="code">Displays&nbsp;the&nbsp;filter&nbsp;options&nbsp;for&nbsp;appointment&nbsp;slots.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;is_skip_enabled&nbsp;(bool):&nbsp;Flag&nbsp;to&nbsp;enable&nbsp;or&nbsp;disable&nbsp;the&nbsp;skip&nbsp;option.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_clinic_management_page"><strong>show_clinic_management_page</strong></a>(self, clinics, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;clinic&nbsp;management&nbsp;page&nbsp;with&nbsp;a&nbsp;list&nbsp;of&nbsp;clinics&nbsp;and&nbsp;options&nbsp;to&nbsp;create,&nbsp;update,&nbsp;or&nbsp;delete&nbsp;clinics.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clinics&nbsp;(list):&nbsp;List&nbsp;of&nbsp;clinic&nbsp;objects.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_create_appointment_slot_page"><strong>show_create_appointment_slot_page</strong></a>(self, attempt_number=0, user_input=None)</dt><dd><span class="code">Displays&nbsp;the&nbsp;appointment&nbsp;slot&nbsp;creation&nbsp;page&nbsp;with&nbsp;sample&nbsp;slot&nbsp;details&nbsp;and&nbsp;prompts&nbsp;for&nbsp;user&nbsp;input.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_input(str):&nbsp;A&nbsp;variable&nbsp;to&nbsp;pass&nbsp;the&nbsp;default&nbsp;user_input&nbsp;value.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;(dict):&nbsp;AppointmentSlot&nbsp;details&nbsp;for&nbsp;creation</span></dd></dl>
+
+<dl><dt><a name="Menu-show_create_clinic_page"><strong>show_create_clinic_page</strong></a>(self, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;clinic&nbsp;creation&nbsp;page&nbsp;with&nbsp;sample&nbsp;clinic&nbsp;details&nbsp;and&nbsp;prompts&nbsp;for&nbsp;user&nbsp;input.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_create_gp_page"><strong>show_create_gp_page</strong></a>(self, clinic_list, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;GP&nbsp;creation&nbsp;page&nbsp;with&nbsp;sample&nbsp;GP&nbsp;details&nbsp;and&nbsp;prompts&nbsp;for&nbsp;user&nbsp;input.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clinic_list&nbsp;(list):&nbsp;List&nbsp;of&nbsp;available&nbsp;clinics.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_creation_success_page"><strong>show_creation_success_page</strong></a>(self, type, instance_variable)</dt><dd><span class="code">Displays&nbsp;the&nbsp;creation&nbsp;success&nbsp;page&nbsp;with&nbsp;the&nbsp;details&nbsp;of&nbsp;the&nbsp;created&nbsp;instance.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;(str):&nbsp;The&nbsp;type&nbsp;of&nbsp;instance&nbsp;created&nbsp;(Clinic&nbsp;or&nbsp;GP).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;instance_variable&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;The&nbsp;instance&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;was&nbsp;created.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_delete_appointment_slot_page"><strong>show_delete_appointment_slot_page</strong></a>(self, slots, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;Appointment&nbsp;Slot&nbsp;deletion&nbsp;page&nbsp;with&nbsp;a&nbsp;list&nbsp;of&nbsp;slots&nbsp;and&nbsp;prompts&nbsp;for&nbsp;user&nbsp;input&nbsp;to&nbsp;delete&nbsp;a&nbsp;slot.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slots(list):&nbsp;List&nbsp;of&nbsp;AppointmentSlot&nbsp;instances.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_delete_clinic_page"><strong>show_delete_clinic_page</strong></a>(self, clinics, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;clinic&nbsp;deletion&nbsp;page&nbsp;with&nbsp;a&nbsp;list&nbsp;of&nbsp;clinics&nbsp;and&nbsp;prompts&nbsp;for&nbsp;user&nbsp;input&nbsp;to&nbsp;delete&nbsp;a&nbsp;clinic.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;clinics(list):&nbsp;List&nbsp;of&nbsp;clinic&nbsp;objects.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_delete_gp_page"><strong>show_delete_gp_page</strong></a>(self, gps, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;GP&nbsp;deletion&nbsp;page&nbsp;with&nbsp;a&nbsp;list&nbsp;of&nbsp;GPs&nbsp;and&nbsp;prompts&nbsp;for&nbsp;user&nbsp;input&nbsp;to&nbsp;delete&nbsp;a&nbsp;GP.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;gps&nbsp;(list):&nbsp;List&nbsp;of&nbsp;GP&nbsp;objects.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_deletion_confirmation_page"><strong>show_deletion_confirmation_page</strong></a>(self, type, instance_variable)</dt><dd><span class="code">Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type(str):&nbsp;Can&nbsp;be&nbsp;either&nbsp;"Clinic"&nbsp;or&nbsp;"Gp"</span></dd></dl>
+
+<dl><dt><a name="Menu-show_error_message"><strong>show_error_message</strong></a>(self, type)</dt><dd><span class="code">This&nbsp;function&nbsp;displays&nbsp;an&nbsp;error&nbsp;message&nbsp;based&nbsp;on&nbsp;the&nbsp;type&nbsp;provided.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;(str):&nbsp;Type&nbsp;of&nbsp;error&nbsp;to&nbsp;be&nbsp;displayed.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_export_success_page"><strong>show_export_success_page</strong></a>(self, report_data)</dt><dd><span class="code">Displays&nbsp;the&nbsp;export&nbsp;success&nbsp;page&nbsp;with&nbsp;the&nbsp;report&nbsp;data.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;report_data&nbsp;(str):&nbsp;The&nbsp;report&nbsp;data&nbsp;that&nbsp;was&nbsp;exported.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_filter_options"><strong>show_filter_options</strong></a>(self, is_skip_enabled=False)</dt><dd><span class="code">Displays&nbsp;the&nbsp;filter&nbsp;options&nbsp;for&nbsp;appointment&nbsp;slots.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;is_skip_enabled&nbsp;(bool):&nbsp;Flag&nbsp;to&nbsp;enable&nbsp;or&nbsp;disable&nbsp;the&nbsp;skip&nbsp;option.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_gp_appointment_slots"><strong>show_gp_appointment_slots</strong></a>(self, slots, gp_name, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Shows&nbsp;a&nbsp;specific&nbsp;GP's&nbsp;Appointment&nbsp;slots<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slots(list):&nbsp;List&nbsp;of&nbsp;AppointmentSlot&nbsp;instances&nbsp;that&nbsp;are&nbsp;associated&nbsp;with&nbsp;the&nbsp;GP<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_gp_management_page"><strong>show_gp_management_page</strong></a>(self, gps, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;GP&nbsp;management&nbsp;page&nbsp;with&nbsp;a&nbsp;list&nbsp;of&nbsp;GPs&nbsp;and&nbsp;options&nbsp;to&nbsp;create,&nbsp;update,&nbsp;or&nbsp;delete&nbsp;GPs.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;gps(list):&nbsp;List&nbsp;of&nbsp;GP&nbsp;objects.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_login_page"><strong>show_login_page</strong></a>(self, valid_patient_details, valid_admin_details, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;Login&nbsp;Page&nbsp;and&nbsp;an&nbsp;Error&nbsp;message&nbsp;based&nbsp;on&nbsp;user&nbsp;attempt&nbsp;number.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;valid_patient_details(dict):&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;valid_admin_details(dict):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_patient_home_page"><strong>show_patient_home_page</strong></a>(self, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;&nbsp;patient&nbsp;home&nbsp;page&nbsp;with&nbsp;user&nbsp;action&nbsp;menu.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_previous_appointments_page"><strong>show_previous_appointments_page</strong></a>(self, appointments, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;previous&nbsp;appointments&nbsp;page&nbsp;with&nbsp;a&nbsp;list&nbsp;of&nbsp;past&nbsp;appointments.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointments&nbsp;(list):&nbsp;List&nbsp;of&nbsp;past&nbsp;Appointment&nbsp;objects<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page&nbsp;(int):&nbsp;Current&nbsp;page&nbsp;number<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page_size&nbsp;(int):&nbsp;Number&nbsp;of&nbsp;appointments&nbsp;per&nbsp;page<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Number&nbsp;of&nbsp;invalid&nbsp;attempts</span></dd></dl>
+
+<dl><dt><a name="Menu-show_profile_page"><strong>show_profile_page</strong></a>(self, attempt_number, user_obj, is_user_admin)</dt><dd><span class="code">Displays&nbsp;the&nbsp;user&nbsp;profile&nbsp;page&nbsp;with&nbsp;user&nbsp;details.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_obj&nbsp;(Admin/Patient):&nbsp;&nbsp;&nbsp;User&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;is&nbsp;user&nbsp;to&nbsp;extract&nbsp;user&nbsp;details&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;is_user_admin&nbsp;(bool):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;flag&nbsp;to&nbsp;represent&nbsp;the&nbsp;user's&nbsp;system&nbsp;role.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_prompt"><strong>show_prompt</strong></a>(self, type)</dt><dd><span class="code">Displays&nbsp;the&nbsp;standard&nbsp;prompt&nbsp;to&nbsp;inform&nbsp;the&nbsp;user&nbsp;that&nbsp;they&nbsp;can/cannot&nbsp;enter&nbsp;a&nbsp;certain&nbsp;Prompt&nbsp;as&nbsp;input&nbsp;on&nbsp;this&nbsp;screen.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;(str):&nbsp;The&nbsp;type&nbsp;of&nbsp;prompt&nbsp;to&nbsp;display.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_report_export_page"><strong>show_report_export_page</strong></a>(self, report_data, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;report&nbsp;export&nbsp;page&nbsp;with&nbsp;options&nbsp;to&nbsp;export&nbsp;the&nbsp;report&nbsp;in&nbsp;different&nbsp;formats.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;report_data&nbsp;(str):&nbsp;The&nbsp;report&nbsp;data&nbsp;to&nbsp;be&nbsp;exported.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_upcoming_appointments_page"><strong>show_upcoming_appointments_page</strong></a>(self, appointments, page=1, page_size=5, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;upcoming&nbsp;appointments&nbsp;page&nbsp;with&nbsp;a&nbsp;list&nbsp;of&nbsp;upcoming&nbsp;appointments.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointments&nbsp;(list):&nbsp;List&nbsp;of&nbsp;past&nbsp;Appointment&nbsp;objects<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page&nbsp;(int):&nbsp;The&nbsp;current&nbsp;page&nbsp;number&nbsp;for&nbsp;pagination.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page_size&nbsp;(int):&nbsp;The&nbsp;number&nbsp;of&nbsp;items&nbsp;to&nbsp;display&nbsp;per&nbsp;page.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_update_success_page"><strong>show_update_success_page</strong></a>(self, type, instance_variable)</dt><dd><span class="code">Displays&nbsp;the&nbsp;update&nbsp;success&nbsp;page&nbsp;with&nbsp;the&nbsp;details&nbsp;of&nbsp;the&nbsp;updated&nbsp;instance.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;(str):&nbsp;The&nbsp;type&nbsp;of&nbsp;instance&nbsp;updated&nbsp;(Clinic,&nbsp;GP&nbsp;or&nbsp;Slot).<br>
+&nbsp;&nbsp;&nbsp;&nbsp;instance_variable&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;The&nbsp;instance&nbsp;<a href="builtins.html#object">object</a>&nbsp;that&nbsp;was&nbsp;updated.</span></dd></dl>
+
+<dl><dt><a name="Menu-show_view_report_page"><strong>show_view_report_page</strong></a>(self, report_data, attempt_number=0)</dt><dd><span class="code">Displays&nbsp;the&nbsp;view&nbsp;report&nbsp;page&nbsp;with&nbsp;the&nbsp;generated&nbsp;report&nbsp;data.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;report_data&nbsp;(str):&nbsp;The&nbsp;generated&nbsp;report&nbsp;data&nbsp;to&nbsp;be&nbsp;displayed.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;attempt_number&nbsp;(int):&nbsp;Represents&nbsp;the&nbsp;number&nbsp;of&nbsp;times&nbsp;the&nbsp;user&nbsp;has&nbsp;failed&nbsp;to&nbsp;input&nbsp;valid&nbsp;details.</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>

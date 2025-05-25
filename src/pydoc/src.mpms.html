@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Python: module src.mpms</title>
+</head><body>
+
+<table class="heading">
+<tr class="heading-text decor">
+<td class="title">&nbsp;<br><strong class="title"><a href="src.html" class="white">src</a>.mpms</strong></td>
+<td class="extra"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cadmin%5Cdocuments%5Cfit5136%5Cproject%5Csrc%5Cmpms.py">c:\users\admin\documents\fit5136\project\src\mpms.py</a></td></tr></table>
+    <p></p>
+<p>
+<table class="section">
+<tr class="decor pkg-content-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Modules</strong></td></tr>
+    
+<tr><td class="decor pkg-content-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><table><tr><td class="multicolumn"><a href="re.html">re</a><br>
+</td><td class="multicolumn"></td><td class="multicolumn"></td><td class="multicolumn"></td></tr></table></td></tr></table><p>
+<table class="section">
+<tr class="decor index-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><strong class="bigsection">Classes</strong></td></tr>
+    
+<tr><td class="decor index-decor"><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td>&nbsp;</td>
+<td class="singlecolumn"><dl>
+<dt class="heading-text"><a href="builtins.html#object">builtins.object</a>
+</dt><dd>
+<dl>
+<dt class="heading-text"><a href="src.mpms.html#MPMS">MPMS</a>
+</dt></dl>
+</dd>
+</dl>
+ <p>
+<table class="section">
+<tr class="decor title-decor heading-text">
+<td class="section-title" colspan=3>&nbsp;<br><a name="MPMS">class <strong>MPMS</strong></a>(<a href="builtins.html#object">builtins.object</a>)</td></tr>
+    
+<tr><td class="decor title-decor" rowspan=2><span class="code">&nbsp;&nbsp;&nbsp;</span></td>
+<td class="decor title-decor" colspan=2><span class="code">This&nbsp;class&nbsp;contains&nbsp;the&nbsp;core&nbsp;logic&nbsp;of&nbsp;the&nbsp;Monash&nbsp;Patient&nbsp;Management&nbsp;System.<br>&nbsp;</span></td></tr>
+<tr><td>&nbsp;</td>
+<td class="singlecolumn">Methods defined here:<br>
+<dl><dt><a name="MPMS-__init__"><strong>__init__</strong></a>(self)</dt><dd><span class="code">Initialises&nbsp;<a href="#MPMS">MPMS</a>&nbsp;Class&nbsp;instance.</span></dd></dl>
+
+<dl><dt><a name="MPMS-admin_cancel_patient_appointment"><strong>admin_cancel_patient_appointment</strong></a>(self, admin, page=1, page_size=5)</dt><dd><span class="code">This&nbsp;function&nbsp;contains&nbsp;the&nbsp;logic&nbsp;for&nbsp;the&nbsp;Admin&nbsp;Cancel&nbsp;Patient&nbsp;Appointment.&nbsp;<br>
+It&nbsp;displays&nbsp;appointments&nbsp;booked&nbsp;by&nbsp;pateints&nbsp;and&nbsp;allows&nbsp;the&nbsp;admin&nbsp;to&nbsp;cancel&nbsp;a&nbsp;patient's&nbsp;appointment.<br>
+It&nbsp;then&nbsp;provides&nbsp;the&nbsp;option&nbsp;to&nbsp;make&nbsp;the&nbsp;slot&nbsp;available&nbsp;again&nbsp;for&nbsp;other&nbsp;patients&nbsp;or&nbsp;not.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;&nbsp;Stores&nbsp;the&nbsp;admin&nbsp;<a href="builtins.html#object">object</a>.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page&nbsp;(int):&nbsp;Current&nbsp;page&nbsp;number&nbsp;for&nbsp;pagination.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page_size&nbsp;(int):&nbsp;Number&nbsp;of&nbsp;appointments&nbsp;to&nbsp;display&nbsp;per&nbsp;page.</span></dd></dl>
+
+<dl><dt><a name="MPMS-admin_home"><strong>admin_home</strong></a>(self, admin)</dt><dd><span class="code">This&nbsp;function&nbsp;contains&nbsp;the&nbsp;logic&nbsp;for&nbsp;the&nbsp;Admin&nbsp;Home&nbsp;Page&nbsp;to&nbsp;display&nbsp;UI,&nbsp;take&nbsp;input&nbsp;and&nbsp;route&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;&nbsp;Stores&nbsp;the&nbsp;admin&nbsp;<a href="builtins.html#object">object</a>.</span></dd></dl>
+
+<dl><dt><a name="MPMS-book_appointment"><strong>book_appointment</strong></a>(self, patient, enable_skip=False)</dt><dd><span class="code">This&nbsp;function&nbsp;contains&nbsp;the&nbsp;logic&nbsp;for&nbsp;the&nbsp;Book&nbsp;Appointment&nbsp;feature.<br>
+It&nbsp;enables&nbsp;the&nbsp;user&nbsp;to&nbsp;filter&nbsp;the&nbsp;appointment&nbsp;slots&nbsp;based&nbsp;on&nbsp;date,&nbsp;GP&nbsp;name,&nbsp;and&nbsp;suburb.<br>
+If&nbsp;the&nbsp;patient&nbsp;chooses&nbsp;to&nbsp;filter&nbsp;by&nbsp;date&nbsp;or&nbsp;GP&nbsp;name,&nbsp;they&nbsp;can&nbsp;also&nbsp;choose&nbsp;to&nbsp;book&nbsp;using&nbsp;their&nbsp;preferred&nbsp;GP.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;patient&nbsp;(Patient):&nbsp;&nbsp;The&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;current&nbsp;user&nbsp;of&nbsp;the&nbsp;system.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;enable_skip&nbsp;(bool):&nbsp;&nbsp;If&nbsp;True,&nbsp;allows&nbsp;the&nbsp;user&nbsp;to&nbsp;skip&nbsp;the&nbsp;filter&nbsp;step.</span></dd></dl>
+
+<dl><dt><a name="MPMS-cancel_appointment"><strong>cancel_appointment</strong></a>(self, patient, appointment)</dt><dd><span class="code">Handles&nbsp;the&nbsp;cancellation&nbsp;process&nbsp;for&nbsp;a&nbsp;given&nbsp;appointment&nbsp;by&nbsp;a&nbsp;patient.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;patient&nbsp;(Patient):&nbsp;The&nbsp;patient&nbsp;<a href="builtins.html#object">object</a>&nbsp;requesting&nbsp;the&nbsp;cancellation.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment&nbsp;(Appointment):&nbsp;The&nbsp;appointment&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;be&nbsp;cancelled.</span></dd></dl>
+
+<dl><dt><a name="MPMS-check_appointment_booking_validity"><strong>check_appointment_booking_validity</strong></a>(self, appointment)</dt><dd><span class="code">Check&nbsp;if&nbsp;the&nbsp;user&nbsp;is&nbsp;booking&nbsp;the&nbsp;appointment&nbsp;within&nbsp;2&nbsp;hours&nbsp;of&nbsp;the&nbsp;appointment&nbsp;time.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment&nbsp;(Appointment):&nbsp;&nbsp;The&nbsp;appointment&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;check.<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;bool:&nbsp;&nbsp;True&nbsp;if&nbsp;the&nbsp;booking&nbsp;is&nbsp;valid,&nbsp;False&nbsp;otherwise.</span></dd></dl>
+
+<dl><dt><a name="MPMS-complete_cancellation"><strong>complete_cancellation</strong></a>(self, patient, appointment)</dt><dd><span class="code">Finalizes&nbsp;the&nbsp;cancellation&nbsp;of&nbsp;a&nbsp;patient's&nbsp;appointment.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;patient&nbsp;(Patient):&nbsp;The&nbsp;patient&nbsp;who&nbsp;is&nbsp;cancelling&nbsp;the&nbsp;appointment.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;appointment&nbsp;(Appointment):&nbsp;The&nbsp;appointment&nbsp;to&nbsp;be&nbsp;cancelled.</span></dd></dl>
+
+<dl><dt><a name="MPMS-create_appointment_slot"><strong>create_appointment_slot</strong></a>(self, admin)</dt><dd><span class="code">Allows&nbsp;an&nbsp;admin&nbsp;user&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;appointment&nbsp;slot.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;performing&nbsp;the&nbsp;operation.</span></dd></dl>
+
+<dl><dt><a name="MPMS-create_clinic"><strong>create_clinic</strong></a>(self, admin)</dt><dd><span class="code">Allows&nbsp;an&nbsp;admin&nbsp;user&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;clinic.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;performing&nbsp;the&nbsp;operation.</span></dd></dl>
+
+<dl><dt><a name="MPMS-create_gp"><strong>create_gp</strong></a>(self, admin)</dt><dd><span class="code">Allows&nbsp;an&nbsp;admin&nbsp;user&nbsp;to&nbsp;create&nbsp;a&nbsp;new&nbsp;GP.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;performing&nbsp;the&nbsp;operation.</span></dd></dl>
+
+<dl><dt><a name="MPMS-delete_appointment_slot"><strong>delete_appointment_slot</strong></a>(self, admin)</dt><dd><span class="code">Allows&nbsp;an&nbsp;admin&nbsp;user&nbsp;to&nbsp;delete&nbsp;an&nbsp;existing&nbsp;appointment&nbsp;slot.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;performing&nbsp;the&nbsp;operation.</span></dd></dl>
+
+<dl><dt><a name="MPMS-delete_clinic"><strong>delete_clinic</strong></a>(self, admin)</dt><dd><span class="code">Allows&nbsp;an&nbsp;admin&nbsp;user&nbsp;to&nbsp;delete&nbsp;an&nbsp;existing&nbsp;clinic.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;performing&nbsp;the&nbsp;operation.</span></dd></dl>
+
+<dl><dt><a name="MPMS-delete_gp"><strong>delete_gp</strong></a>(self, admin)</dt><dd><span class="code">Allows&nbsp;an&nbsp;admin&nbsp;user&nbsp;to&nbsp;delete&nbsp;an&nbsp;existing&nbsp;GP.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;performing&nbsp;the&nbsp;operation.</span></dd></dl>
+
+<dl><dt><a name="MPMS-export_report"><strong>export_report</strong></a>(self, admin, report_data, type)</dt><dd><span class="code">Handles&nbsp;exporting&nbsp;of&nbsp;a&nbsp;generated&nbsp;report&nbsp;in&nbsp;TXT&nbsp;or&nbsp;CSV&nbsp;format&nbsp;based&nbsp;on&nbsp;admin&nbsp;input.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;performing&nbsp;the&nbsp;export.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;report_data&nbsp;(list):&nbsp;A&nbsp;list&nbsp;containing&nbsp;the&nbsp;versions&nbsp;of&nbsp;the&nbsp;report<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;(str):&nbsp;A&nbsp;string&nbsp;indicating&nbsp;the&nbsp;type&nbsp;of&nbsp;report&nbsp;being&nbsp;exported</span></dd></dl>
+
+<dl><dt><a name="MPMS-finalise_appointment"><strong>finalise_appointment</strong></a>(self, slots, patient, slot_index=None)</dt><dd><span class="code">This&nbsp;function&nbsp;finalises&nbsp;the&nbsp;appointment&nbsp;booking&nbsp;process.<br>
+It&nbsp;sets&nbsp;the&nbsp;selected&nbsp;slot&nbsp;as&nbsp;unavailable&nbsp;and&nbsp;creates&nbsp;a&nbsp;new&nbsp;appointment&nbsp;<a href="builtins.html#object">object</a>.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slots&nbsp;(list&lt;AppointmentSlot&gt;):&nbsp;&nbsp;List&nbsp;of&nbsp;available&nbsp;appointment&nbsp;slots.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;patient&nbsp;(Patient):&nbsp;&nbsp;The&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;current&nbsp;user&nbsp;of&nbsp;the&nbsp;system.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slot_index&nbsp;(int):&nbsp;&nbsp;Index&nbsp;of&nbsp;the&nbsp;selected&nbsp;appointment&nbsp;slot.</span></dd></dl>
+
+<dl><dt><a name="MPMS-generate_report"><strong>generate_report</strong></a>(self, admin, type)</dt><dd><span class="code">Generates&nbsp;a&nbsp;report&nbsp;based&nbsp;on&nbsp;the&nbsp;selected&nbsp;type&nbsp;('reason'&nbsp;or&nbsp;'gp')&nbsp;and&nbsp;a&nbsp;specified&nbsp;date&nbsp;range.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;requesting&nbsp;the&nbsp;report.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;(str):&nbsp;The&nbsp;type&nbsp;of&nbsp;report&nbsp;to&nbsp;generate.</span></dd></dl>
+
+<dl><dt><a name="MPMS-get_non_duplicate_slots"><strong>get_non_duplicate_slots</strong></a>(self, associated_upcoming_slots)</dt><dd><span class="code">Identifies&nbsp;appointment&nbsp;slots&nbsp;from&nbsp;the&nbsp;user's&nbsp;upcoming&nbsp;appointments&nbsp;that&nbsp;are&nbsp;not<br>
+present&nbsp;in&nbsp;the&nbsp;system's&nbsp;master&nbsp;list&nbsp;of&nbsp;appointment&nbsp;slots.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;associated_upcoming_slots&nbsp;(list):&nbsp;A&nbsp;list&nbsp;of&nbsp;AppointmentSlot&nbsp;objects&nbsp;associated&nbsp;with&nbsp;a&nbsp;patient.</span></dd></dl>
+
+<dl><dt><a name="MPMS-get_patient_appointments"><strong>get_patient_appointments</strong></a>(self, email, type)</dt><dd><span class="code">Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;appointments&nbsp;that&nbsp;are&nbsp;associated&nbsp;with&nbsp;the&nbsp;given&nbsp;user&nbsp;email.<br>
+The&nbsp;returned&nbsp;list&nbsp;depends&nbsp;on&nbsp;the&nbsp;type&nbsp;requested.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;email&nbsp;(str):&nbsp;email&nbsp;of&nbsp;the&nbsp;user&nbsp;whose&nbsp;appointments&nbsp;are&nbsp;to&nbsp;be&nbsp;returned<br>
+&nbsp;&nbsp;&nbsp;&nbsp;type&nbsp;(str):&nbsp;&nbsp;type&nbsp;of&nbsp;appointments&nbsp;that&nbsp;are&nbsp;to&nbsp;be&nbsp;returned<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Values:&nbsp;"Booked",&nbsp;"Previous",&nbsp;"All"<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;list&lt;Appointment&gt;:&nbsp;A&nbsp;list&nbsp;of&nbsp;appointment&nbsp;instances&nbsp;of&nbsp;given&nbsp;type&nbsp;associated&nbsp;to&nbsp;given&nbsp;email</span></dd></dl>
+
+<dl><dt><a name="MPMS-get_slots_for_management"><strong>get_slots_for_management</strong></a>(self)</dt><dd><span class="code">A&nbsp;function&nbsp;to&nbsp;get&nbsp;all&nbsp;available&nbsp;slots&nbsp;and&nbsp;all&nbsp;unavailable&nbsp;slots&nbsp;that&nbsp;are&nbsp;not&nbsp;associated&nbsp;with&nbsp;an&nbsp;appointment<br>
+and&nbsp;are&nbsp;not&nbsp;from&nbsp;the&nbsp;past.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;slots(list):&nbsp;List&nbsp;of&nbsp;all&nbsp;slots&nbsp;that&nbsp;the&nbsp;admin&nbsp;can&nbsp;manage.</span></dd></dl>
+
+<dl><dt><a name="MPMS-get_user_object"><strong>get_user_object</strong></a>(self, email, user_type)</dt><dd><span class="code">Retrieves&nbsp;a&nbsp;user&nbsp;<a href="builtins.html#object">object</a>&nbsp;(Patient&nbsp;or&nbsp;Admin)&nbsp;based&nbsp;on&nbsp;the&nbsp;provided&nbsp;email&nbsp;and&nbsp;user&nbsp;type.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;email&nbsp;(str):&nbsp;The&nbsp;email&nbsp;address&nbsp;of&nbsp;the&nbsp;user&nbsp;to&nbsp;retrieve.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_type&nbsp;(str):&nbsp;The&nbsp;type&nbsp;of&nbsp;user&nbsp;to&nbsp;search&nbsp;for&nbsp;("patient"&nbsp;or&nbsp;"admin").</span></dd></dl>
+
+<dl><dt><a name="MPMS-get_valid_user_details"><strong>get_valid_user_details</strong></a>(self, user_type)</dt><dd><span class="code">Returns&nbsp;a&nbsp;dictionary&nbsp;of&nbsp;valid&nbsp;login&nbsp;credentials&nbsp;(email&nbsp;and&nbsp;password)&nbsp;for&nbsp;all&nbsp;users<br>
+of&nbsp;the&nbsp;specified&nbsp;type.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_type&nbsp;(str):&nbsp;The&nbsp;type&nbsp;of&nbsp;user&nbsp;("patient"&nbsp;or&nbsp;"admin").</span></dd></dl>
+
+<dl><dt><a name="MPMS-load_system_state"><strong>load_system_state</strong></a>(self)</dt><dd><span class="code">Loads&nbsp;the&nbsp;current&nbsp;system&nbsp;state&nbsp;from&nbsp;the&nbsp;persistent&nbsp;storage.</span></dd></dl>
+
+<dl><dt><a name="MPMS-logout"><strong>logout</strong></a>(self, user)</dt><dd><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;Logs&nbsp;out&nbsp;the&nbsp;current&nbsp;user&nbsp;and&nbsp;returns&nbsp;to&nbsp;the&nbsp;login&nbsp;page.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user&nbsp;(<a href="builtins.html#object">object</a>):&nbsp;The&nbsp;user&nbsp;<a href="builtins.html#object">object</a>&nbsp;to&nbsp;log&nbsp;out.&nbsp;Must&nbsp;be&nbsp;an&nbsp;instance&nbsp;of&nbsp;Patient&nbsp;or&nbsp;Admin.</span></dd></dl>
+
+<dl><dt><a name="MPMS-manage_appointment_slots"><strong>manage_appointment_slots</strong></a>(self, admin)</dt><dd><span class="code">Handles&nbsp;the&nbsp;Manage&nbsp;Appointment&nbsp;Slots&nbsp;function&nbsp;for&nbsp;Admins.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin(Admin):&nbsp;Admin&nbsp;instance&nbsp;variable</span></dd></dl>
+
+<dl><dt><a name="MPMS-manage_clinics"><strong>manage_clinics</strong></a>(self, admin)</dt><dd><span class="code">Displays&nbsp;all&nbsp;the&nbsp;clinics&nbsp;in&nbsp;the&nbsp;system.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin(Admin):&nbsp;Admin&nbsp;instance&nbsp;variable</span></dd></dl>
+
+<dl><dt><a name="MPMS-manage_gps"><strong>manage_gps</strong></a>(self, admin)</dt><dd><span class="code">Displays&nbsp;all&nbsp;the&nbsp;gps&nbsp;in&nbsp;the&nbsp;system.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin(Admin):&nbsp;Admin&nbsp;instance&nbsp;variable</span></dd></dl>
+
+<dl><dt><a name="MPMS-patient_home"><strong>patient_home</strong></a>(self, patient)</dt><dd><span class="code">This&nbsp;function&nbsp;contains&nbsp;the&nbsp;logic&nbsp;for&nbsp;the&nbsp;Patient&nbsp;Home&nbsp;Page&nbsp;to&nbsp;display&nbsp;UI,&nbsp;take&nbsp;input&nbsp;and&nbsp;route&nbsp;user.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;patient&nbsp;(Patient):&nbsp;&nbsp;The&nbsp;<a href="builtins.html#object">object</a>&nbsp;of&nbsp;current&nbsp;user&nbsp;of&nbsp;the&nbsp;system.</span></dd></dl>
+
+<dl><dt><a name="MPMS-previous_appointments"><strong>previous_appointments</strong></a>(self, patient)</dt><dd><span class="code">Display&nbsp;a&nbsp;list&nbsp;of&nbsp;the&nbsp;patient's&nbsp;previous&nbsp;appointments.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;patient&nbsp;(Patient):&nbsp;The&nbsp;patient&nbsp;<a href="builtins.html#object">object</a></span></dd></dl>
+
+<dl><dt><a name="MPMS-set_is_user_admin"><strong>set_is_user_admin</strong></a>(self, value)</dt><dd><span class="code">&nbsp;&nbsp;&nbsp;&nbsp;Sets&nbsp;the&nbsp;user&nbsp;role&nbsp;flag&nbsp;to&nbsp;indicate&nbsp;whether&nbsp;the&nbsp;current&nbsp;user&nbsp;is&nbsp;an&nbsp;admin.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;value&nbsp;(bool):&nbsp;True&nbsp;if&nbsp;the&nbsp;user&nbsp;is&nbsp;an&nbsp;admin,&nbsp;False&nbsp;otherwise.</span></dd></dl>
+
+<dl><dt><a name="MPMS-start_app"><strong>start_app</strong></a>(self)</dt><dd><span class="code">Starts&nbsp;the&nbsp;<a href="#MPMS">MPMS</a>&nbsp;Application.</span></dd></dl>
+
+<dl><dt><a name="MPMS-upcoming_appointments"><strong>upcoming_appointments</strong></a>(self, patient)</dt><dd><span class="code">Display&nbsp;the&nbsp;patient's&nbsp;upcoming&nbsp;booked&nbsp;appointments&nbsp;and&nbsp;handle&nbsp;user&nbsp;actions&nbsp;<br>
+related&nbsp;to&nbsp;viewing,&nbsp;cancelling,&nbsp;or&nbsp;navigating&nbsp;from&nbsp;the&nbsp;upcoming&nbsp;appointments&nbsp;page.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;patient&nbsp;(Patient):&nbsp;The&nbsp;patient&nbsp;<a href="builtins.html#object">object</a>&nbsp;whose&nbsp;upcoming&nbsp;appointments&nbsp;are&nbsp;to&nbsp;be&nbsp;displayed.</span></dd></dl>
+
+<dl><dt><a name="MPMS-update_appointment_slot"><strong>update_appointment_slot</strong></a>(self, admin)</dt><dd><span class="code">Handles&nbsp;the&nbsp;updating&nbsp;of&nbsp;Appointment&nbsp;Slots&nbsp;as&nbsp;a&nbsp;function&nbsp;for&nbsp;admins.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin(Admin):&nbsp;Admin&nbsp;instance&nbsp;variable</span></dd></dl>
+
+<dl><dt><a name="MPMS-update_clinic"><strong>update_clinic</strong></a>(self, admin)</dt><dd><span class="code">Allows&nbsp;an&nbsp;admin&nbsp;user&nbsp;to&nbsp;update&nbsp;the&nbsp;details&nbsp;of&nbsp;a&nbsp;selected&nbsp;clinic.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;performing&nbsp;the&nbsp;update.</span></dd></dl>
+
+<dl><dt><a name="MPMS-update_gp"><strong>update_gp</strong></a>(self, admin)</dt><dd><span class="code">Allows&nbsp;an&nbsp;admin&nbsp;user&nbsp;to&nbsp;update&nbsp;the&nbsp;details&nbsp;of&nbsp;a&nbsp;selected&nbsp;GP.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin&nbsp;(Admin):&nbsp;The&nbsp;admin&nbsp;user&nbsp;performing&nbsp;the&nbsp;update.</span></dd></dl>
+
+<dl><dt><a name="MPMS-user_login"><strong>user_login</strong></a>(self)</dt><dd><span class="code">This&nbsp;function&nbsp;contains&nbsp;the&nbsp;logic&nbsp;for&nbsp;<a href="#MPMS">MPMS</a>&nbsp;Login&nbsp;Page&nbsp;to&nbsp;display&nbsp;UI,&nbsp;take&nbsp;input&nbsp;and&nbsp;route&nbsp;user&nbsp;for&nbsp;the</span></dd></dl>
+
+<dl><dt><a name="MPMS-user_profile_page"><strong>user_profile_page</strong></a>(self, user)</dt><dd><span class="code">Display&nbsp;the&nbsp;profile&nbsp;page&nbsp;for&nbsp;the&nbsp;given&nbsp;user&nbsp;and&nbsp;handle&nbsp;navigation&nbsp;actions.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user&nbsp;(Admin&nbsp;or&nbsp;Patient):&nbsp;The&nbsp;user&nbsp;<a href="builtins.html#object">object</a>&nbsp;whose&nbsp;profile&nbsp;is&nbsp;being&nbsp;displayed.</span></dd></dl>
+
+<dl><dt><a name="MPMS-view_gp_slots"><strong>view_gp_slots</strong></a>(self, admin, enable_skip=False)</dt><dd><span class="code">Functionality&nbsp;for&nbsp;user&nbsp;to&nbsp;select&nbsp;a&nbsp;GP&nbsp;and&nbsp;view&nbsp;the&nbsp;appointment&nbsp;associated&nbsp;with&nbsp;them.<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;admin(Admin):&nbsp;The&nbsp;admin&nbsp;instance.</span></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><span class="code">dictionary&nbsp;for&nbsp;instance&nbsp;variables</span></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><span class="code">list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object</span></dd>
+</dl>
+</td></tr></table></td></tr></table>
+</body></html>
