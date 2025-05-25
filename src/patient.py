@@ -1,6 +1,16 @@
 from user import User
 class Patient(User):
-    def __init__(
+    """
+    Represents a patient in the healthcare system, inheriting from User.
+    Attributes:
+        email (str): The email of the patient.
+        fname (str): The first name of the patient.
+        lname (str): The last name of the patient.
+        password (str): The password for the patient's account.
+        mobile_num (str): The mobile number of the patient.
+        dob (str): The date of birth of the patient
+    """
+    def __init__(            
             self,
             email = None,
             fname = None,
@@ -17,6 +27,9 @@ class Patient(User):
         self.address = address
     
     def __str__(self):
+        """
+        Returns a string representation of the patient details.
+        """
         return f'''
 Patient Details:
                 First name:     {self.fname}
@@ -30,4 +43,7 @@ Patient Details:
 '''
 
     def get_email(self):
+        """
+        Returns the email of the patient.
+        """
         return self.email

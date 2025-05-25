@@ -1,6 +1,11 @@
 from datetime import datetime
 
 class Report:
+    """
+    A class to generate reports based on appointment data.
+    This class provides methods to generate reports summarizing appointment reasons
+    and the number of patients handled by each GP.
+    """
     def __init__(self):
         pass 
     
@@ -42,7 +47,8 @@ class Report:
             date_range_text = f"Period: {start_date} to {end_date}"
         else:
             date_range_text = "Period: All Time"
-
+            
+        #Report formatting
         report_txt_data = []
         report_csv_data = [r"Appointment Reason,Number of Appointments,% of Total No of Appointments"+"\n"]
         for reason, number_of_appts in appt_reason_statistics.items():
@@ -118,7 +124,8 @@ class Report:
                 }
             
             gp_statistics[key]["total_patients"] += 1
-            
+            # Count the reasons for visits
+            # If the reason already exists, increment its count, otherwise initialize it
             if reason in gp_statistics[key]["reasons"]:
                 gp_statistics[key]["reasons"][reason] += 1
             else:
@@ -126,10 +133,6 @@ class Report:
         
         # Generate text report
         date_range_text = f"Period: {start_date} to {end_date}"
-        #if start_date and end_date:
-        #    date_range_text = f"Period: {start_date} to {end_date}"
-        #else:
-        #    date_range_text = "Period: All Time"
         
         report_txt_data = []
         report_csv_data = ["GP Name,Clinic Suburb,Total Patients,Appointment Reasons\n"]

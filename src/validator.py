@@ -5,12 +5,12 @@ class Validator:
 
     @staticmethod
     def is_booking_valid(slot):
-        #print(slot)
         """
         Check if the booking slot is valid.
         :param slot: AppointmentSlot object
         :return: True if the slot is valid, False otherwise
         """
+        # Check if the slot is available and if the time is at least 2 hours in the future
         try:
             slot_time = datetime.strptime(f"{slot.get_date()} {slot.get_start_time()}", "%d-%m-%Y %H:%M")
             return slot.get_availability() and slot_time > datetime.now() + timedelta(hours=2)
@@ -109,6 +109,7 @@ class Validator:
         :param allow_past: Boolean flag value that decides if past date is valid or not
         :return: True if the date string is valid, False otherwise
         """
+        # Check if the date string is in the format "dd-mm-yyyy" and if it is a valid date.
         try:
             datetime.strptime(date_str, "%d-%m-%Y")
             if allow_past == False and datetime.strptime(date_str, "%d-%m-%Y") < datetime.now():
@@ -124,6 +125,7 @@ class Validator:
         Args:
             name(str): name of gp
         '''
+        # Check if the name starts with "Dr." and has more than 3 characters (to ensure there's a name after the title)
         if name[:3] == "Dr." and len(name) > 3:
             return True
         return False
@@ -136,6 +138,7 @@ class Validator:
         Args:
             duration(str): duration value.
         '''
+        # Check if the duration is one of the allowed values
         if duration in ["15", "20", "45", "60"]:
             return True
         return False
@@ -149,6 +152,8 @@ class Validator:
         :param input_password: Input password from the user
         :return: True if the credentials are valid, False otherwise
         """
+        # Check if the input email exists in the valid patient details
+        # and if the input password matches the stored password for that email.
         if input_email in valid_patient_details:
             if input_password == valid_patient_details[input_email]:
                 return True
@@ -163,6 +168,7 @@ class Validator:
         :param available_clinics: List of available clinics
         :return: Tuple (is_valid, valid_clinics, invalid_clinics)
         """
+        # Check if the assigned clinics are in the list of available clinics
         valid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() in available_clinics]
         invalid_clinics = [clinic.strip() for clinic in assigned_clinics if clinic.strip() not in available_clinics]
         return len(invalid_clinics) == 0, valid_clinics, invalid_clinics
