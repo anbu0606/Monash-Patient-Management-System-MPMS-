@@ -32,7 +32,7 @@ date:01-06-2025
 start_time:10:30
 duration:25
 clinic_suburb:Clayton
-reason_for_visit:Mental Health Consultation
+reason_for_visit:Specialist Referral
 availability:True
 |
 clinic_name:Oakleigh Clinic
@@ -44,13 +44,13 @@ clinic_suburb:Oakleigh
 reason_for_visit:Vaccination
 availability:True
 |
-clinic_name:Oakleigh Clinic
+clinic_name:Clayton Clinic
 gp_name:Dr. Amina
-date:01-06-2025
-start_time:10:15
-duration:25
-clinic_suburb:Oakleigh
-reason_for_visit:Skin Check
+date:13-07-2025
+start_time:13:45
+duration:20
+clinic_suburb:Clayton
+reason_for_visit:General Consultation
 availability:True
 |
 clinic_name:Mount Waverley Medical
@@ -113,7 +113,7 @@ date:02-06-2025
 start_time:10:30
 duration:60
 clinic_suburb:Oakleigh
-reason_for_visit:Mental Health Consultation
+reason_for_visit:Vaccination
 availability:True
 |
 clinic_name:Mount Waverley Medical
