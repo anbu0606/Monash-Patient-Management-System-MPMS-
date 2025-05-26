@@ -1085,7 +1085,7 @@ class MPMS:
         print("\nLeave the field empty if you don't want to change it:")
         while True:
             new_name = input(f"New Name ({gp_to_update.get_gp_name()}): ") or gp_to_update.get_gp_name()
-            if new_name == "" or not Validator.is_valid_gp_name(new_name, gp_list):
+            if new_name == "" or not Validator.is_valid_gp_name(new_name, gp_list.remove(gp_to_update.get_gp_name())):
                 is_input_valid = False
                 print("\033[91m!! Invalid Name. Please enter new name. !!\033[0m")
                 continue
@@ -1096,7 +1096,7 @@ class MPMS:
                 print("\033[91m!! Invalid Name. Please enter new name. !!\033[0m") 
         while True:
             new_email = input(f"New Email ({gp_to_update.get_email()}): ") or gp_to_update.get_email()
-            if new_email == "" or not Validator.is_valid_email(new_email, gp_email_list):
+            if new_email == "" or not Validator.is_valid_email(new_email, gp_email_list.remove(gp_to_update.get_email())):
                 is_input_valid = False
                 print("\033[91m!! Invalid Email id Format. Please enter a valid id. !!\033[0m") 
                 continue
