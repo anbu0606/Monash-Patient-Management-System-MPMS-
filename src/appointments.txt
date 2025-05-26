@@ -1,0 +1,5 @@
+patient1@student.monash.edu|Oakleigh Health Centre|Dr. James|01-06-2025|10:00|60|Oakleigh|Vaccination|Booked
+patient1@student.monash.edu|Mulgrave Clinic|Dr. Emily|01-06-2025|16:45|60|Mulgrave|Specialist Referral|Booked
+patient1@student.monash.edu|Mount Waverley Medical|Dr. Thomas|01-06-2025|12:15|40|Mount|General Consultation|Booked
+patient1@student.monash.edu|Clayton Clinic|Dr. Thomas|01-06-2025|9:15|25|Clayton|Vaccination|Booked
+patient1@student.monash.edu|Mount Waverley Medical|Dr. James|01-06-2025|15:45|40|Mount|General Consultation|Cancelled by Clinic
