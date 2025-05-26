@@ -991,7 +991,7 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
             }
             return new_gp_details
         else:
-            return self.show_create_gp_page(clinic_list, attempt_number + 1)
+            return self.show_create_gp_page(clinic_list, gp_list, attempt_number+1)
 
 
     def show_creation_success_page(self, type, instance_variable):

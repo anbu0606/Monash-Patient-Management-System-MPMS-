@@ -487,7 +487,7 @@ class MPMS:
         elif user_action == "logout":
             self.logout(admin)
         else:
-            raise ValueError(f"Invalid value for user_action returned:{user_action} to create_clinic() in MPMS")
+            return self.create_clinic(admin)
         
 
     def create_gp(self, admin):
@@ -520,7 +520,7 @@ class MPMS:
         elif user_action == "logout":
             self.logout(admin)
         else:
-            raise ValueError(f"Invalid value for user_action returned:{user_action} to create_gp() in MPMS")
+            return self.create_gp(admin)
 
     
     def delete_appointment_slot(self, admin):
