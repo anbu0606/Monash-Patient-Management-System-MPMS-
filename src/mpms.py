@@ -1003,7 +1003,7 @@ class MPMS:
         elif user_action.isdigit():
             slot_index = int(user_action) - 1
             slot_to_update = slots[slot_index]
-            updated_slot_details = self.menu.show_appointment_slot_update_menu(slot_to_update)
+            updated_slot_details = self.menu.show_appointment_slot_update_menu(slot_to_update, attempt_number=0)
             for attr, value in updated_slot_details.items():
                 setattr(slot_to_update, attr, value)
             FileIO.save_appointment_slots(self.appointment_slots)
