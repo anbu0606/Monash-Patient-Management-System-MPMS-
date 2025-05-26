@@ -6,7 +6,7 @@ start_time:10:00
 duration:60
 clinic_suburb:Oakleigh
 reason_for_visit:Vaccination
-availability:True
+availability:False
 |
 clinic_name:Mount Waverley Medical
 gp_name:Dr. James
@@ -24,7 +24,7 @@ start_time:16:45
 duration:60
 clinic_suburb:Mulgrave
 reason_for_visit:Specialist Referral
-availability:True
+availability:False
 |
 clinic_name:Clayton Clinic
 gp_name:Dr. Nina
@@ -60,7 +60,7 @@ start_time:12:15
 duration:40
 clinic_suburb:Mount
 reason_for_visit:General Consultation
-availability:True
+availability:False
 |
 clinic_name:Clayton Clinic
 gp_name:Dr. Thomas
@@ -69,7 +69,7 @@ start_time:9:15
 duration:25
 clinic_suburb:Clayton
 reason_for_visit:Vaccination
-availability:True
+availability:False
 |
 clinic_name:Oakleigh Health Centre
 gp_name:Dr. Ryan
@@ -131,6 +131,15 @@ date:02-06-2025
 start_time:13:00
 duration:25
 clinic_suburb:Clayton
+reason_for_visit:General Consultation
+availability:True
+|
+clinic_name:HDIWJI
+gp_name:Dr. GDJH
+date:25-12-2025
+start_time:12:00
+duration:15
+clinic_suburb:GWDUHIQJ
 reason_for_visit:General Consultation
 availability:True
 |

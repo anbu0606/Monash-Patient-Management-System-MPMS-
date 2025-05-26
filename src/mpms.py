@@ -343,6 +343,7 @@ class MPMS:
 
     def cancel_appointment(self, patient, appointment):
         """
+        
         Handles the cancellation process for a given appointment by a patient.
 
         Args:
@@ -563,7 +564,7 @@ class MPMS:
         elif user_action == "logout":
             self.logout(admin)
         else:
-            raise ValueError(f"Invalid value for user_action:{user_action} received in delete_clinic() in MPMS")
+            return self.delete_clinic(admin)
         
 
     def delete_gp(self, admin):
@@ -585,7 +586,7 @@ class MPMS:
         elif user_action == "logout":
             self.logout(admin)
         else:
-            raise ValueError(f"Invalid value for user_action:{user_action} received in delete_gp() in MPMS")
+            return self.delete_gp(admin)
 
     def export_report(self, admin, report_data, type):
         """

@@ -23,12 +23,6 @@ assigned_clinics:Clayton Clinic,Oakleigh Clinic
 specialisation:Specialist Referral
 availability:Saturday
 |
-gp_name:Dr. Amina
-email:apatel@monashclinic.com
-assigned_clinics:Oakleigh Clinic
-specialisation:Vaccination
-availability:Monday
-|
 gp_name:Dr. Thomas
 email:tlee@monashclinic.com
 assigned_clinics:Mount Waverley Medical,Clayton Clinic

@@ -19,11 +19,6 @@ suburb:JB Hills
 available_services:Opthomologist, General Consultation
 operating_hours:06:00 - 14:00
 |
-clinic_name:Caulfied Clinic
-suburb:Caulfied
-available_services:Dentist, Paediatrician, General Consultation
-operating_hours:09:00 - 18:00
-|
 clinic_name:Saint Kilda Clinic
 suburb:Saint Kilda
 available_services:Specialist Referral, Blood Test
