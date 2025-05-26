@@ -180,15 +180,35 @@ class Validator:
         return False
     
     @staticmethod
-    def is_valid_gp_name(name):
+    def is_valid_email(email, email_list = None):
+        '''
+        Check if the email entered is valid or not, and not already existing.
+        Args:
+            email(str)
+            email_list(list)
+        '''
+        if email_list != None:
+            if re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', email) is not None and email not in email_list:
+                return True
+        else:
+            if re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', email) is not None:
+                return True
+        return False
+    
+    @staticmethod
+    def is_valid_gp_name(name, gp_list = None):
         '''
         Check if the entered name has "Dr." as a prefix or not and if there is a name after the title.
         Args:
             name(str): name of gp
         '''
+        if gp_list is None:
         # Check if the name starts with "Dr." and has more than 3 characters (to ensure there's a name after the title)
-        if name[:3] == "Dr." and len(name) > 3:
-            return True
+            if name[:3] == "Dr." and len(name) > 3:
+                return True
+        elif gp_list is not None:
+            if name[:3] == "Dr." and len(name) > 3 and name not in gp_list:
+                return True
         return False
     
 
