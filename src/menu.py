@@ -413,7 +413,7 @@ Please enter the Option Number or LOGOUT
         new_date = input(f"New Date (dd-mm-yyyy format only. Cannot enter date from past): ").strip() or slot_to_update.get_date()
         if not Validator.is_valid_date_format(new_date, allow_past=False):
             return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
-        new_duration = input(f"New Duration (Valid duration values: 15, 20, 45, 60): ").strip() or str(slot_to_update.get_duration())
+        new_duration = input(f"New Duration (Valid duration values: 15, 25, 45, 60): ").strip() or str(slot_to_update.get_duration())
         if not Validator.is_valid_duration(new_duration):
             return self.show_appointment_slot_update_menu(slot_to_update, attempt_number+1)
         new_gp_name = input(f"New GP Name (Enter 'Dr.' as prefix. Name cannot be empty): ") or slot_to_update.get_gp_name()
@@ -767,7 +767,7 @@ availability:       True
             if new_date in ["back", "logout"]:
                 return new_date
 
-            new_duration = self.get_valid_input("New Duration (Valid: 15, 20, 45, 60): ", Validator.is_valid_duration)
+            new_duration = self.get_valid_input("New Duration (Valid: 15, 25, 45, 60): ", Validator.is_valid_duration)
             if new_duration in ["back", "logout"]:
                 return new_duration
 

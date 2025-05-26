@@ -175,7 +175,7 @@ class Validator:
             duration(str): duration value.
         '''
         # Check if the duration is one of the allowed values
-        if duration in ["15", "20", "45", "60"]:
+        if duration in ["15", "25", "45", "60"]:
             return True
         return False
     

@@ -48,7 +48,7 @@ clinic_name:Clayton Clinic
 gp_name:Dr. Amina
 date:13-07-2025
 start_time:13:45
-duration:20
+duration:25
 clinic_suburb:Clayton
 reason_for_visit:General Consultation
 availability:True
