@@ -1080,7 +1080,7 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
         elif user_input.isdigit():
             if slots:
                 slot_number = int(user_input)
-                if 1 <= slot_number < len(slots):
+                if 1 <= slot_number <= len(slots):
                     # Calculate the actual slot index across all pages
                     actual_slot_index = slot_number - 1
 
