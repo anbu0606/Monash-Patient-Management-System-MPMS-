@@ -56,7 +56,7 @@ class Report:
 
             reason_cell = reason.center(28)
             number_cell = str(number_of_appts).center(24)
-            percent_cell = (str(round(percentage_of_appts),2) + "%").center(32)
+            percent_cell = (str(round(percentage_of_appts,2)) + "%").center(32)
             report_txt_data.append(f"|{reason_cell}|{number_cell}|{percent_cell}|")
 
             report_csv_data.append(f"{reason},{number_of_appts},{percentage_of_appts}\n")

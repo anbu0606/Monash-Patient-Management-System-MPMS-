@@ -498,8 +498,10 @@ class MPMS:
                 admin (Admin): The admin user performing the operation.        
 
         """
-        Clinic_list = [clinic.get_clinic_name() for clinic in self.clinics]  
-        user_action = self.menu.show_create_gp_page(Clinic_list)
+        clinic_list = [clinic.get_clinic_name() for clinic in self.clinics]
+        gp_list = [gp.get_gp_name() for gp in self.gps]
+        gp_email_list = [gp.get_email() for gp in self.gps]
+        user_action = self.menu.show_create_gp_page(clinic_list, gp_list, gp_email_list)
         if isinstance(user_action, dict):
             new_gp = Gp(
                 gp_name=user_action["gp_name"],
@@ -1061,6 +1063,8 @@ class MPMS:
             admin (Admin): The admin user performing the update.
         """
         Clinic_list = [clinic.get_clinic_name() for clinic in self.clinics]
+        gp_list = [gp.get_gp_name() for gp in self.gps]
+        gp_email_list = [gp.get_email() for gp in self.gps]
         gps = self.gps
         user_action = input("\n Enter the Slot Number of the GP to Update or type 'BACK' to return to the Home Page: ").strip()
         if user_action == "BACK":
@@ -1080,11 +1084,22 @@ class MPMS:
 
         print("\n--- Update GP Details ---")
         print("\nLeave the field empty if you don't want to change it:")
-        new_name = input(f"New Name ({gp_to_update.get_gp_name()}): ") or gp_to_update.get_gp_name()
+        while True:
+            new_name = input(f"New Name ({gp_to_update.get_gp_name()}): ") or gp_to_update.get_gp_name()
+            if new_name == "" or not Validator.is_valid_gp_name(new_name, gp_list):
+                is_input_valid = False
+                print("\033[91m!! Invalid Name. Please enter new name. !!\033[0m")
+                continue
+
+            if Validator.is_valid_gp_name(new_name, gp_list):
+                break
+            else:
+                print("\033[91m!! Invalid Name. Please enter new name. !!\033[0m") 
         while True:
             new_email = input(f"New Email ({gp_to_update.get_email()}): ") or gp_to_update.get_email()
-            if new_email == "":
+            if new_email == "" or not Validator.is_valid_email(new_email, gp_email_list):
                 is_input_valid = False
+                print("\033[91m!! Invalid Email id Format. Please enter a valid id. !!\033[0m") 
                 continue
 
             if re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', new_email):

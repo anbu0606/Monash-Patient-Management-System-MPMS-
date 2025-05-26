@@ -182,19 +182,31 @@ class Menu:
         else:
             return self.get_report_date_range(attempt_number = 1)
 
-    def get_valid_input(self, prompt, validator_func):
+    def get_valid_input(self, prompt, validator_func, item_list = None):
         '''
         Helper function for input loop for wrong inputs while allowing the user to go Back or Logout.
         '''
-        while True:
-            value = input(prompt).strip()
-            if Validator.is_input_back(value):
-                return "back"
-            if Validator.is_input_logout(value):
-                return "logout"
-            if validator_func(value):
-                return value
-            print("\033[91m!! Input validation failed. Please try again !!\033[0m")
+        if item_list == None:
+            while True:
+                value = input(prompt).strip()
+                if Validator.is_input_back(value):
+                    return "back"
+                if Validator.is_input_logout(value):
+                    return "logout"
+                if validator_func(value):
+                    return value
+                print("\033[91m!! Input validation failed. Please try again !!\033[0m")
+        else:
+            while True:
+                value = input(prompt).strip()
+                if Validator.is_input_back(value):
+                    return "back"
+                if Validator.is_input_logout(value):
+                    return "logout"
+                if validator_func(value, item_list):
+                    return value
+                print("\033[91m!! Input validation failed. Please try again !!\033[0m")
+
     
     def paginate_items(self, items, page_size=10, current_page=1):
         """
@@ -870,7 +882,7 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
 
 
 
-    def show_create_gp_page(self,clinic_list, attempt_number = 0):
+    def show_create_gp_page(self,clinic_list, gp_list, gp_email_list, attempt_number = 0):
         """
         Displays the GP creation page with sample GP details and prompts for user input.
         Args:
@@ -906,7 +918,8 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
             # Get GP name with validation
             new_name = self.get_valid_input(
                 "New GP Name (must start with 'Dr.' e.g., Dr.David): ", 
-                Validator.is_valid_gp_name
+                Validator.is_valid_gp_name,
+                gp_list
             )
             if new_name in ["back", "logout"]:
                 return new_name
@@ -914,7 +927,8 @@ Please enter \033[96m"CONTINUE"\033[0m to start creating OR \033[34m"BACK"\033[0
             # Get email with validation using regex
             new_email = self.get_valid_input(
                 "New email-id (e.g., david1@monash.gp.in): ", 
-                lambda x: re.match(r'^[\w\.-]+@[a-zA-Z\d\.-]+\.[a-zA-Z]{2,}$', x) is not None
+                Validator.is_valid_email,
+                gp_email_list
             )
             if new_email in ["back", "logout"]:
                 return new_email
